@@ -10,7 +10,7 @@
     "prepare": "svelte-kit sync || echo ''",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
-    "format": "prettier --write .",
+    "format": "prettier --write . && eslint --fix .",
     "lint": "prettier --check . && eslint .",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
@@ -29,6 +29,7 @@
     "@types/node": "^22",
     "eslint": "^9.36.0",
     "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-simple-import-sort": "^12.1.1",
     "eslint-plugin-storybook": "^9.1.10",
     "eslint-plugin-svelte": "^3.12.4",
     "globals": "^16.4.0",
