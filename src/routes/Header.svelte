@@ -20,8 +20,8 @@
       <li aria-current={page.url.pathname === "/" ? "page" : undefined}>
         <a href={resolve("/")}>Home</a>
       </li>
-      <li aria-current={page.url.pathname === "/about" ? "page" : undefined}>
-        <a href={resolve("/about")}>About</a>
+      <li aria-current={page.url.pathname === "/wavelength" ? "page" : undefined}>
+        <a href={resolve("/wavelength")}>Wavelength</a>
       </li>
       <li aria-current={page.url.pathname.startsWith("/sverdle") ? "page" : undefined}>
         <a href={resolve("/sverdle")}>Sverdle</a>
