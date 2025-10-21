@@ -1,9 +1,17 @@
-import { differenceBy, shuffle } from "es-toolkit"
+import { differenceBy, random, shuffle } from "es-toolkit"
 
 import { type Prompt, prompts } from "./data"
 
+enum Screens {
+  LOBBY = "lobby",
+  PROMPT = "prompt",
+  SCORE = "score",
+}
+
 export class WavelengthGame {
+  screen: Screens = $state(Screens.LOBBY)
   selectedPrompt: Prompt | null = $state(null)
+  rating: number = $state(0)
   prompts: Prompt[] = $state([])
   playedPrompts: Prompt[] = $state([])
 
@@ -11,6 +19,12 @@ export class WavelengthGame {
    * Create a game object from the player's cookie, or initialise a new game
    */
   constructor() {}
+
+  startGame() {
+    this.screen = Screens.PROMPT
+    this.playedPrompts = []
+    this.drawPrompts()
+  }
 
   drawPrompts(): Prompt[] {
     let availablePrompts = differenceBy(
@@ -30,5 +44,17 @@ export class WavelengthGame {
     this.selectedPrompt = null
 
     return this.prompts
+  }
+
+  selectPrompt(prompt: Prompt) {
+    this.screen = Screens.SCORE
+    this.selectedPrompt = prompt
+    this.playedPrompts.push(prompt)
+    this.rating = Math.floor(random(101))
+  }
+
+  nextRound() {
+    this.screen = Screens.PROMPT
+    this.drawPrompts()
   }
 }
