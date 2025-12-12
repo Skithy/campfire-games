@@ -16,142 +16,39 @@
     }
 </script>
 
-<div class="guessing-view">
-    <h2>Make Your Guess</h2>
+<div class="flex flex-col items-center gap-4 w-full h-full p-4">
+    <h2 class="text-2xl font-bold">Make Your Guess</h2>
 
-    <div class="game-board">
-        <div class="prompt-top">{prompt[1]}</div>
+    <div class="flex flex-col items-center gap-4 w-full max-w-[400px] flex-1 justify-center">
+        <div class="text-2xl font-bold text-center p-2 bg-[#2a2a2a] rounded-lg w-full">{prompt[1]}</div>
         
-        <div class="spectrum-container">
+        <div class="relative h-[40vh] w-[120px] bg-[#333] rounded-[60px] border-2 border-[#555] p-2.5">
             <input 
                 type="range" 
                 min="0" 
                 max="100" 
                 bind:value={guess} 
-                class="guess-slider"
+                class="absolute top-0 left-0 w-full h-full opacity-0 z-10 m-0 cursor-pointer appearance-none"
                 orient="vertical"
             />
-            <div class="center-line"></div>
+            <div class="absolute left-0 right-0 top-1/2 h-0.5 bg-white/20 pointer-events-none"></div>
             
             <!-- Custom Thumb with Number -->
-            <div class="custom-thumb" style="bottom: {guess}%; transform: translateY(50%)">
+            <div 
+                class="absolute left-2.5 right-2.5 h-20 bg-[#646cff] border-4 border-white rounded-[40px] flex items-center justify-center text-3xl font-bold text-white pointer-events-none shadow-lg transition-transform z-5"
+                style="bottom: {guess}%; transform: translateY(50%)"
+            >
                 {guess}
             </div>
         </div>
 
-        <div class="prompt-bottom">{prompt[0]}</div>
+        <div class="text-2xl font-bold text-center p-2 bg-[#2a2a2a] rounded-lg w-full">{prompt[0]}</div>
     </div>
 
-    <button class="lock-in-btn" onclick={handleLockIn}>
+    <button 
+        class="px-12 py-4 text-2xl font-bold bg-[#4caf50] text-white border-none rounded-[50px] cursor-pointer shadow-lg hover:bg-[#45a049]"
+        onclick={handleLockIn}
+    >
         Lock In Guess
     </button>
 </div>
-
-<style>
-    .guessing-view {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 1rem;
-        width: 100%;
-        height: 100%;
-        padding: 1rem;
-    }
-
-    .game-board {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        width: 100%;
-        max-width: 400px;
-        gap: 1rem;
-    }
-
-    .prompt-top, .prompt-bottom {
-        font-size: 1.5rem;
-        font-weight: bold;
-        text-align: center;
-        padding: 0.5rem;
-        background: #2a2a2a;
-        border-radius: 8px;
-        width: 100%;
-    }
-
-    .spectrum-container {
-        position: relative;
-        height: 40vh; /* Reduced height */
-        width: 120px; /* Wider container */
-        background: #333;
-        border-radius: 60px;
-        border: 2px solid #555;
-        padding: 10px;
-    }
-
-    .guess-slider {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        opacity: 0; /* Hide native slider */
-        z-index: 10; /* Ensure it captures clicks */
-        margin: 0;
-        cursor: pointer;
-        writing-mode: bt-lr; /* IE */
-        -webkit-appearance: slider-vertical; /* WebKit */
-        appearance: slider-vertical;
-    }
-
-    /* Vertical slider support for Firefox/Standard */
-    input[type=range][orient=vertical] {
-        writing-mode: bt-lr; /* IE */
-        -webkit-appearance: slider-vertical; /* WebKit */
-        appearance: slider-vertical;
-        width: 100%;
-        height: 100%;
-    }
-
-    .center-line {
-        position: absolute;
-        left: 0;
-        right: 0;
-        top: 50%;
-        height: 2px;
-        background: rgba(255,255,255,0.2);
-        pointer-events: none;
-    }
-
-    .custom-thumb {
-        position: absolute;
-        left: 10px;
-        right: 10px;
-        height: 80px;
-        background: #646cff;
-        border: 4px solid white;
-        border-radius: 40px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 2rem;
-        font-weight: bold;
-        color: white;
-        pointer-events: none; /* Let clicks pass through to input */
-        box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-        transition: transform 0.1s;
-        z-index: 5;
-    }
-
-    .lock-in-btn {
-        padding: 1rem 3rem;
-        font-size: 1.5rem;
-        font-weight: bold;
-        background: #4caf50;
-        color: white;
-        border: none;
-        border-radius: 50px;
-        cursor: pointer;
-        box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
-    }
-</style>

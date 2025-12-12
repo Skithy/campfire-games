@@ -50,12 +50,14 @@
     }
 </script>
 
-<div class="game-container">
-    <header>
-        <h1>Wavelength</h1>
+<div class="min-h-screen flex flex-col p-4 bg-[#111] text-white font-sans">
+    <header class="text-center mb-8 pb-4 border-b border-[#333]">
+        <h1 class="m-0 text-4xl font-bold bg-gradient-to-r from-[#ff4444] via-[#ffff44] to-[#4444ff] bg-clip-text text-transparent">
+            Wavelength
+        </h1>
     </header>
 
-    <main>
+    <main class="flex-1 flex justify-center">
         {#if phase === 'psychic'}
             <PsychicView 
                 prompts={currentPrompts} 
@@ -83,40 +85,3 @@
         {/if}
     </main>
 </div>
-
-<style>
-    :global(body) {
-        margin: 0;
-        background: #111;
-        color: white;
-        font-family: 'Inter', system-ui, sans-serif;
-    }
-
-    .game-container {
-        min-height: 100vh;
-        display: flex;
-        flex-direction: column;
-        padding: 1rem;
-    }
-
-    header {
-        text-align: center;
-        margin-bottom: 2rem;
-        padding-bottom: 1rem;
-        border-bottom: 1px solid #333;
-    }
-
-    h1 {
-        margin: 0;
-        font-size: 2rem;
-        background: linear-gradient(90deg, #ff4444, #ffff44, #4444ff);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-    }
-
-    main {
-        flex: 1;
-        display: flex;
-        justify-content: center;
-    }
-</style>

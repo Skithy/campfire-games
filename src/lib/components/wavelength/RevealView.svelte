@@ -23,154 +23,50 @@
     });
 </script>
 
-<div class="reveal-view">
-    <div class="result-header">
-        <h2>{scoreMessage}</h2>
+<div class="flex flex-col items-center gap-4 w-full h-full p-4">
+    <div class="text-center">
+        <h2 class="text-5xl m-0 bg-gradient-to-r from-[#ff4444] to-[#ffff44] bg-clip-text text-transparent font-bold">
+            {scoreMessage}
+        </h2>
         <p>Target: {target}% | Guess: {guess}%</p>
     </div>
 
-    <div class="game-board">
-        <div class="prompt-top">{prompt[1]}</div>
+    <div class="flex-1 flex flex-col items-center justify-center w-full max-w-[400px] gap-4">
+        <div class="text-2xl font-bold text-center p-2 bg-[#2a2a2a] rounded-lg w-full">{prompt[1]}</div>
         
-        <div class="spectrum-container">
+        <div class="relative h-[40vh] w-[80px] bg-[#333] rounded-[40px] border-2 border-[#555]">
             <!-- Bullseye Zone -->
-            <div class="bullseye" style="bottom: {target}%; transform: translateY(50%)"></div>
+            <div 
+                class="absolute left-0 right-0 h-[10%] bg-white/10 border-t-2 border-b-2 border-white/20 pointer-events-none"
+                style="bottom: {target}%; transform: translateY(50%)"
+            ></div>
 
             <!-- Target Marker -->
-            <div class="marker target-marker" style="bottom: {target}%">
-                <div class="marker-label">Target</div>
-                <div class="marker-line"></div>
+            <div 
+                class="absolute -left-20 right-0 h-0.5 flex items-center translate-y-1/2 pointer-events-none z-20"
+                style="bottom: {target}%"
+            >
+                <div class="bg-[#4caf50] text-white px-2 py-1 rounded text-xs whitespace-nowrap mr-2 w-[60px] text-center">Target</div>
+                <div class="flex-1 h-1 rounded-sm bg-[#4caf50]"></div>
             </div>
 
             <!-- Guess Marker -->
-            <div class="marker guess-marker" style="bottom: {guess}%">
-                <div class="marker-label">Guess</div>
-                <div class="marker-line"></div>
+            <div 
+                class="absolute -left-20 right-0 h-0.5 flex items-center translate-y-1/2 pointer-events-none z-10"
+                style="bottom: {guess}%"
+            >
+                <div class="bg-[#646cff] text-white px-2 py-1 rounded text-xs whitespace-nowrap mr-2 w-[60px] text-center">Guess</div>
+                <div class="flex-1 h-1 rounded-sm bg-[#646cff]"></div>
             </div>
         </div>
 
-        <div class="prompt-bottom">{prompt[0]}</div>
+        <div class="text-2xl font-bold text-center p-2 bg-[#2a2a2a] rounded-lg w-full">{prompt[0]}</div>
     </div>
 
-    <button class="next-btn" onclick={onNextRound}>
+    <button 
+        class="px-12 py-4 text-2xl font-bold bg-white text-black border-none rounded-[50px] cursor-pointer transition-transform active:scale-95 shadow-lg hover:bg-gray-100"
+        onclick={onNextRound}
+    >
         Start Next Round
     </button>
 </div>
-
-<style>
-    .reveal-view {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 1rem;
-        width: 100%;
-        height: 100%;
-        padding: 1rem;
-    }
-
-    .result-header {
-        text-align: center;
-    }
-
-    .result-header h2 {
-        font-size: 3rem;
-        margin: 0;
-        background: linear-gradient(45deg, #ff4444, #ffff44);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-    }
-
-    .game-board {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        width: 100%;
-        max-width: 400px;
-        gap: 1rem;
-    }
-
-    .prompt-top, .prompt-bottom {
-        font-size: 1.5rem;
-        font-weight: bold;
-        text-align: center;
-        padding: 0.5rem;
-        background: #2a2a2a;
-        border-radius: 8px;
-        width: 100%;
-    }
-
-    .spectrum-container {
-        position: relative;
-        height: 40vh; /* Reduced height */
-        width: 80px;
-        background: #333;
-        border-radius: 40px;
-        border: 2px solid #555;
-    }
-
-    .bullseye {
-        position: absolute;
-        left: 0;
-        right: 0;
-        height: 10%; /* 10% tolerance zone */
-        background: rgba(255, 255, 255, 0.1);
-        border-top: 2px solid rgba(255, 255, 255, 0.2);
-        border-bottom: 2px solid rgba(255, 255, 255, 0.2);
-        pointer-events: none;
-    }
-
-    .marker {
-        position: absolute;
-        left: -80px;
-        right: 0;
-        height: 2px;
-        display: flex;
-        align-items: center;
-        transform: translateY(50%);
-        pointer-events: none;
-    }
-
-    .marker-label {
-        background: #000;
-        color: white;
-        padding: 4px 8px;
-        border-radius: 4px;
-        font-size: 0.8rem;
-        white-space: nowrap;
-        margin-right: 8px;
-        width: 60px;
-        text-align: center;
-    }
-
-    .marker-line {
-        flex: 1;
-        height: 4px;
-        border-radius: 2px;
-    }
-
-    .target-marker .marker-label { background: #4caf50; }
-    .target-marker .marker-line { background: #4caf50; }
-
-    .guess-marker .marker-label { background: #646cff; }
-    .guess-marker .marker-line { background: #646cff; }
-
-    .next-btn {
-        padding: 1rem 3rem;
-        font-size: 1.5rem;
-        font-weight: bold;
-        background: white;
-        color: black;
-        border: none;
-        border-radius: 50px;
-        cursor: pointer;
-        transition: transform 0.1s;
-        box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
-    }
-
-    .next-btn:active {
-        transform: scale(0.98);
-    }
-</style>
