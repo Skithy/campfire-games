@@ -1,8 +1,8 @@
 <script lang="ts">
-    import { wavelengthPrompts, type Prompt } from '$lib/data/wavelengthPrompts';
-    import PsychicView from '$lib/components/wavelength/PsychicView.svelte';
     import GuessingView from '$lib/components/wavelength/GuessingView.svelte';
+    import PsychicView from '$lib/components/wavelength/PsychicView.svelte';
     import RevealView from '$lib/components/wavelength/RevealView.svelte';
+    import { type Prompt,wavelengthPrompts } from '$lib/data/wavelengthPrompts';
 
     type GamePhase = 'psychic' | 'guessing' | 'reveal';
 
