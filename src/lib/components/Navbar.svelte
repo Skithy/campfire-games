@@ -35,7 +35,7 @@
 
 <nav class="sticky top-0 z-50 flex w-full items-center justify-between border-b border-white/10 bg-black/20 px-6 py-4 backdrop-blur-md">
   <div class="flex items-center gap-4">
-    <a href="/" class="text-xl font-bold tracking-tight text-white transition-colors hover:text-white/80" onclick={closeMenu}>
+    <a href={title === 'Wavelength' ? '/wavelength?reset=true' : '/'} class="text-xl font-bold tracking-tight text-white transition-colors hover:text-white/80" onclick={closeMenu}>
       {title}
     </a>
   </div>

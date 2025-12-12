@@ -2,11 +2,14 @@
     import GuessingView from '$lib/components/wavelength/GuessingView.svelte';
     import PsychicView from '$lib/components/wavelength/PsychicView.svelte';
     import RevealView from '$lib/components/wavelength/RevealView.svelte';
+    import SplashScreen from '$lib/components/wavelength/SplashScreen.svelte';
+    import { page } from '$app/stores';
+    import { goto } from '$app/navigation';
     import { type Prompt,wavelengthPrompts } from '$lib/data/wavelengthPrompts';
 
-    type GamePhase = 'psychic' | 'guessing' | 'reveal';
+    type GamePhase = 'splash' | 'psychic' | 'guessing' | 'reveal';
 
-    let phase = $state<GamePhase>('psychic');
+    let phase = $state<GamePhase>('splash');
     let currentPrompts = $state<Prompt[]>([]);
     let selectedPrompt = $state<Prompt | null>(null);
     let target = $state<number>(50);
@@ -25,8 +28,9 @@
         phase = 'psychic';
     }
 
-    // Initialize first round
-    startNewRound();
+    function handleStartGame() {
+        startNewRound();
+    }
 
     function handleSelectPrompt(prompt: Prompt) {
         selectedPrompt = prompt;
@@ -48,17 +52,21 @@
     function handleNextRound() {
         startNewRound();
     }
+
+    $effect(() => {
+        if ($page.url.searchParams.has('reset')) {
+            phase = 'splash';
+            goto('/wavelength', { replaceState: true });
+        }
+    });
 </script>
 
 <div class="min-h-screen flex flex-col p-4 bg-[#111] text-white font-sans">
-    <header class="text-center mb-8 pb-4 border-b border-[#333]">
-        <h1 class="m-0 text-4xl font-bold bg-gradient-to-r from-[#ff4444] via-[#ffff44] to-[#4444ff] bg-clip-text text-transparent">
-            Wavelength
-        </h1>
-    </header>
 
     <main class="flex-1 flex justify-center">
-        {#if phase === 'psychic'}
+        {#if phase === 'splash'}
+            <SplashScreen onStart={handleStartGame} />
+        {:else if phase === 'psychic'}
             <PsychicView 
                 prompts={currentPrompts} 
                 {target}
