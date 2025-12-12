@@ -28,7 +28,8 @@
                 min="0" 
                 max="100" 
                 bind:value={guess} 
-                class="absolute top-0 left-0 w-full h-full opacity-0 z-10 m-0 cursor-pointer appearance-none"
+                class="absolute top-0 left-0 w-full h-full opacity-0 z-10 m-0 cursor-pointer"
+                style="-webkit-appearance: slider-vertical; appearance: slider-vertical;"
                 orient="vertical"
             />
             <div class="absolute left-0 right-0 top-1/2 h-0.5 bg-white/20 pointer-events-none"></div>
