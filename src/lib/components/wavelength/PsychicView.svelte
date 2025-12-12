@@ -1,5 +1,6 @@
 <script lang="ts">
     import type { Prompt } from '$lib/data/wavelengthPrompts';
+    import { getPromptColors, getSliderColor } from '$lib/utils/colors';
 
     let { 
         prompts, 
@@ -21,6 +22,12 @@
         selectedPromptIndex = index;
         onSelectPrompt(prompts[index]);
     }
+
+    let [leftColor, rightColor] = $derived(
+        selectedPromptIndex !== null 
+            ? getPromptColors(selectedPromptIndex, prompts.length) 
+            : ['#fff', '#fff']
+    );
 </script>
 
 <div class="flex flex-col items-center gap-4 w-full max-w-[600px] mx-auto h-full p-4">
@@ -31,13 +38,20 @@
             <h3 class="text-xl font-semibold">Pick a Prompt</h3>
             <div class="flex flex-col gap-4 w-full">
                 {#each prompts as prompt, i}
+                    {@const [leftColor, rightColor] = getPromptColors(i, prompts.length)}
                     <button 
-                        class="flex justify-between items-center p-6 bg-[#2a2a2a] border-2 border-[#3a3a3a] rounded-xl text-white text-lg cursor-pointer transition-all hover:border-[#646cff] hover:-translate-y-0.5"
+                        class="flex justify-between items-center p-6 border-2 rounded-xl text-white text-lg cursor-pointer transition-all hover:-translate-y-0.5"
+                        style="
+                            background: linear-gradient(90deg, {leftColor}22 0%, #2a2a2a 30%, #2a2a2a 70%, {rightColor}22 100%);
+                            border-color: #3a3a3a;
+                        "
+                        onmouseenter={(e) => e.currentTarget.style.borderColor = leftColor}
+                        onmouseleave={(e) => e.currentTarget.style.borderColor = '#3a3a3a'}
                         onclick={() => handleSelect(i)}
                     >
-                        <span class="font-bold">{prompt[0]}</span>
+                        <span class="font-bold" style="color: {leftColor}">{prompt[0]}</span>
                         <span class="text-[#888] text-sm uppercase mx-4">vs</span>
-                        <span class="font-bold">{prompt[1]}</span>
+                        <span class="font-bold" style="color: {rightColor}">{prompt[1]}</span>
                     </button>
                 {/each}
             </div>
@@ -57,7 +71,11 @@
             </div>
 
             <div class="flex flex-col items-center gap-4 w-full max-w-[400px] flex-1 justify-center">
-                <div class="text-2xl font-bold text-center p-2 bg-[#2a2a2a] rounded-lg w-full">
+                
+                <div 
+                    class="text-2xl font-bold text-center p-2 rounded-lg w-full text-black transition-colors"
+                    style="background-color: {rightColor}"
+                >
                     {prompts[selectedPromptIndex][1]}
                 </div>
                 
@@ -66,14 +84,21 @@
                     
                     <!-- Custom Thumb with Target Number -->
                     <div 
-                        class="absolute left-2.5 right-2.5 h-20 bg-[#4caf50] border-4 border-white rounded-[40px] flex items-center justify-center text-3xl font-bold text-white shadow-lg z-10"
-                        style="bottom: {target}%; transform: translateY(50%)"
+                        class="absolute left-2.5 right-2.5 h-20 border-4 border-white rounded-[40px] flex items-center justify-center text-3xl font-bold text-black shadow-lg z-10"
+                        style="
+                            bottom: {target}%; 
+                            transform: translateY(50%);
+                            background-color: {getSliderColor(target, selectedPromptIndex, prompts.length)};
+                        "
                     >
                         {target}
                     </div>
                 </div>
 
-                <div class="text-2xl font-bold text-center p-2 bg-[#2a2a2a] rounded-lg w-full">
+                <div 
+                    class="text-2xl font-bold text-center p-2 rounded-lg w-full text-black transition-colors"
+                    style="background-color: {leftColor}"
+                >
                     {prompts[selectedPromptIndex][0]}
                 </div>
             </div>

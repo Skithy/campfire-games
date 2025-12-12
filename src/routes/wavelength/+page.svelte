@@ -34,6 +34,8 @@
 
     function handleSelectPrompt(prompt: Prompt) {
         selectedPrompt = prompt;
+        // Regenerate target when a prompt is selected so players get a fresh value if they switch
+        target = Math.floor(Math.random() * 101);
     }
 
     function handleReroll() {
