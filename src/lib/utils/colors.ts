@@ -16,7 +16,6 @@ export function getPromptColors(index: number, total: number): [string, string] 
   const complementHue = (baseHue + 180) % 360
 
   // We can use HSL strings directly for easy manipulation
-  // We can use HSL strings directly for easy manipulation
   // Saturation: Lower for pastel (~60-70%)
   // Lightness: Higher for pastel (~75-85%)
   const leftColor = `hsl(${Math.round(baseHue)}, 70%, 80%)`
@@ -26,21 +25,47 @@ export function getPromptColors(index: number, total: number): [string, string] 
 }
 
 /**
- * Generates a color that interpolates between the prompt's left and right colors based on the value.
+ * Generates a color that interpolates between the prompt's left and right colors based on the slider position.
+ * The scale goes: 100% (bottom/left) -> 0% (center) -> 100% (top/right)
  *
- * @param value - The slider value (0-100)
+ * @param sliderValue - The internal slider value (-10 to 10, where 0 is center)
  * @param index - The prompt index
  * @param total - Total number of prompts
  * @returns color string (HSL)
  */
-export function getSliderColor(value: number, index: number, total: number): string {
+export function getSliderColor(sliderValue: number, index: number, total: number): string {
   const hueStep = 360 / total
   const baseHue = (index * hueStep) % 360
 
-  // Calculate hue difference to interpolate
-  // We want to go from baseHue to baseHue + 180
-  // If we just lerp, we go 180 degrees around the wheel
-  const currentHue = (baseHue + (value / 100) * 180) % 360
+  // Convert slider position to hue:
+  // -10 (bottom, 100% left) = baseHue
+  // 0 (center, 0%) = baseHue + 90 (neutral)
+  // 10 (top, 100% right) = baseHue + 180 (complement)
+  const normalized = (sliderValue + 10) / 20 // Convert -10..10 to 0..1
+  const currentHue = (baseHue + normalized * 180) % 360
 
   return `hsl(${Math.round(currentHue)}, 75%, 75%)`
+}
+
+/**
+ * Converts internal slider value (-10 to 10) to display percentage.
+ * Scale: 100% at ends (-10 and 10), 0% at center (0)
+ *
+ * @param sliderValue - Internal value (-10 to 10)
+ * @returns Display percentage (0-100)
+ */
+export function sliderToDisplayValue(sliderValue: number): number {
+  // Absolute value * 10 to get percentage
+  return Math.abs(sliderValue) * 10
+}
+
+/**
+ * Gets the visual position (0-100%) for CSS positioning from slider value.
+ * -10 slider = 0% position (bottom), 10 slider = 100% position (top)
+ *
+ * @param sliderValue - Internal value (-10 to 10)
+ * @returns CSS position percentage (0-100)
+ */
+export function sliderToPosition(sliderValue: number): number {
+  return ((sliderValue + 10) / 20) * 100
 }
