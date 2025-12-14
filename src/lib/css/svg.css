@@ -3,7 +3,8 @@
  * License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License)
  * Copyright 2025 Fonticons, Inc.
  */
-:root, :host {
+:root,
+:host {
   --fa-font-solid: normal 900 1em/1 "Font Awesome 7 Free";
   --fa-font-regular: normal 400 1em/1 "Font Awesome 7 Free";
   --fa-font-light: normal 300 1em/1 "Font Awesome 7 Pro";
@@ -69,7 +70,8 @@
   inset-block-start: 0.25em; /* syncing vertical alignment with Web Font rendering */
 }
 
-.fa-layers-counter, .fa-layers-text {
+.fa-layers-counter,
+.fa-layers-text {
   display: inline-block;
   position: absolute;
   text-align: center;

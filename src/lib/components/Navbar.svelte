@@ -1,41 +1,46 @@
 <script lang="ts">
-  import { page } from '$app/stores';
-  import { onMount } from 'svelte';
+  import { page } from "$app/stores"
 
-  let title = $derived($page.url.pathname.includes('wavelength') ? 'Wavelength' : 'Campfire Games');
-  let isMenuOpen = $state(false);
-  let menuRef: HTMLElement | null = $state(null);
+  let title = $derived($page.url.pathname.includes("wavelength") ? "Wavelength" : "Campfire Games")
+  let isMenuOpen = $state(false)
+  let menuRef: HTMLElement | null = $state(null)
 
   function toggleMenu() {
-    isMenuOpen = !isMenuOpen;
+    isMenuOpen = !isMenuOpen
   }
 
   function closeMenu() {
-    isMenuOpen = false;
+    isMenuOpen = false
   }
 
   function handleClickOutside(event: MouseEvent) {
     if (isMenuOpen && menuRef && !menuRef.contains(event.target as Node)) {
-      closeMenu();
+      closeMenu()
     }
   }
 
   // Add event listener for click outside
   $effect(() => {
     if (isMenuOpen) {
-      window.addEventListener('click', handleClickOutside);
+      window.addEventListener("click", handleClickOutside)
     } else {
-      window.removeEventListener('click', handleClickOutside);
+      window.removeEventListener("click", handleClickOutside)
     }
     return () => {
-      window.removeEventListener('click', handleClickOutside);
-    };
-  });
+      window.removeEventListener("click", handleClickOutside)
+    }
+  })
 </script>
 
-<nav class="sticky top-0 z-50 flex w-full items-center justify-between border-b border-white/10 bg-black/20 px-6 py-4 backdrop-blur-md">
+<nav
+  class="sticky top-0 z-50 flex w-full items-center justify-between border-b border-white/10 bg-black/20 px-6 py-4 backdrop-blur-md"
+>
   <div class="flex items-center gap-4">
-    <a href={title === 'Wavelength' ? '/wavelength?reset=true' : '/'} class="text-xl font-bold tracking-tight text-white transition-colors hover:text-white/80" onclick={closeMenu}>
+    <a
+      href={title === "Wavelength" ? "/wavelength?reset=true" : "/"}
+      class="text-xl font-bold tracking-tight text-white transition-colors hover:text-white/80"
+      onclick={closeMenu}
+    >
       {title}
     </a>
   </div>
@@ -65,10 +70,10 @@
 
     {#if isMenuOpen}
       <div
-        class="absolute right-0 top-full mt-2 w-56 origin-top-right rounded-xl border border-white/10 bg-gray-900/90 p-2 shadow-xl backdrop-blur-xl transition-all focus:outline-none"
+        class="absolute top-full right-0 mt-2 w-56 origin-top-right rounded-xl border border-white/10 bg-gray-900/90 p-2 shadow-xl backdrop-blur-xl transition-all focus:outline-none"
         role="menu"
       >
-        <div class="px-2 py-2 text-xs font-semibold uppercase tracking-wider text-gray-400">
+        <div class="px-2 py-2 text-xs font-semibold tracking-wider text-gray-400 uppercase">
           Navigation
         </div>
         <a
@@ -81,7 +86,7 @@
         </a>
 
         <div class="mt-2 border-t border-white/10 pt-2">
-          <div class="px-2 py-2 text-xs font-semibold uppercase tracking-wider text-gray-400">
+          <div class="px-2 py-2 text-xs font-semibold tracking-wider text-gray-400 uppercase">
             Games
           </div>
           <a

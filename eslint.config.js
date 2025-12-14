@@ -1,4 +1,3 @@
-
 import { fileURLToPath } from "node:url"
 
 import { includeIgnoreFile } from "@eslint/compat"
@@ -34,6 +33,8 @@ export default defineConfig(
       "no-undef": "off",
       "simple-import-sort/imports": "error",
       "simple-import-sort/exports": "error",
+      // Disable navigation resolve rule since this app is deployed at root (no base path)
+      "svelte/no-navigation-without-resolve": "off",
     },
   },
   {
