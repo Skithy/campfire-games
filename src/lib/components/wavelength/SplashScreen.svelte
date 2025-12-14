@@ -13,7 +13,7 @@
 <div class="flex h-full flex-col items-center justify-center space-y-12" in:fade>
   <div class="space-y-4 text-center">
     <h2
-      class="bg-gradient-to-r from-[#ff4444] via-[#ffff44] to-[#4444ff] bg-clip-text text-6xl font-bold text-transparent drop-shadow-lg filter"
+      class="bg-linear-to-r from-[#ff4444] via-[#ffff44] to-[#4444ff] bg-clip-text text-6xl font-bold text-transparent drop-shadow-lg filter"
     >
       Wavelength
     </h2>

@@ -1,15 +1,15 @@
 <script lang="ts">
   import { goto } from "$app/navigation"
   import { page } from "$app/stores"
-  import GuessingView from "$lib/components/wavelength/GuessingView.svelte"
+  import GuessPhase from "$lib/components/wavelength/GuessPhase.svelte"
   import PromptPhase from "$lib/components/wavelength/PromptPhase.svelte"
-  import PsychicView from "$lib/components/wavelength/PsychicView.svelte"
-  import RevealView from "$lib/components/wavelength/RevealView.svelte"
+  import PsychicPhase from "$lib/components/wavelength/PsychicPhase.svelte"
+  import RevealPhase from "$lib/components/wavelength/RevealPhase.svelte"
   import SplashScreen from "$lib/components/wavelength/SplashScreen.svelte"
   import { type Prompt, wavelengthPrompts } from "$lib/data/wavelengthPrompts"
   import { getPromptColors } from "$lib/utils/colors"
 
-  type GamePhase = "splash" | "prompt" | "psychic" | "guessing" | "reveal"
+  type GamePhase = "splash" | "prompt" | "psychic" | "guess" | "reveal"
 
   let phase = $state<GamePhase>("splash")
   let currentPrompts = $state<Prompt[]>([])
@@ -58,7 +58,7 @@
   }
 
   function handleReadyToGuess() {
-    phase = "guessing"
+    phase = "guess"
   }
 
   function handleLockIn(playerGuess: number) {
@@ -90,7 +90,7 @@
       />
     {:else if phase === "psychic"}
       {#if selectedPrompt}
-        <PsychicView
+        <PsychicPhase
           {selectedPrompt}
           {selectedPromptIndex}
           {target}
@@ -100,9 +100,9 @@
           onBack={handleBackToPrompts}
         />
       {/if}
-    {:else if phase === "guessing"}
+    {:else if phase === "guess"}
       {#if selectedPrompt}
-        <GuessingView
+        <GuessPhase
           prompt={selectedPrompt}
           leftColor={promptColors[0]}
           rightColor={promptColors[1]}
@@ -111,7 +111,7 @@
       {/if}
     {:else if phase === "reveal"}
       {#if selectedPrompt}
-        <RevealView
+        <RevealPhase
           prompt={selectedPrompt}
           {target}
           {guess}

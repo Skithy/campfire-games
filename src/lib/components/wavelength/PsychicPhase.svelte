@@ -34,12 +34,12 @@
   )
 </script>
 
-<div class="mx-auto flex h-full w-full max-w-[600px] flex-col items-center gap-4 p-4">
+<div class="mx-auto flex h-full w-full max-w-150 flex-col items-center gap-4 p-4">
   <h2 class="text-2xl font-bold">Make a clue!</h2>
 
   <div class="flex w-full flex-1 flex-col items-center justify-between gap-4">
 
-    <div class="flex w-full max-w-[400px] flex-1 flex-col items-center justify-center gap-4">
+    <div class="flex w-full max-w-100 flex-1 flex-col items-center justify-center gap-4">
       <div
         class="w-full rounded-lg p-2 text-center text-2xl font-bold text-black transition-colors"
         style="background-color: {leftColor}"
@@ -118,7 +118,7 @@
       </div>
     </div>
 
-    <div class="flex w-full max-w-[300px] flex-col gap-4">
+    <div class="flex w-full max-w-75 flex-col gap-4">
       <button
         class="w-full cursor-pointer rounded-lg border-none bg-[#646cff] p-4 text-xl font-bold text-white hover:bg-[#535bf2]"
         onclick={onReadyToGuess}
