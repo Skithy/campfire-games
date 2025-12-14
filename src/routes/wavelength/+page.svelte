@@ -13,6 +13,7 @@
 
   let phase = $state<GamePhase>("splash")
   let currentPrompts = $state<Prompt[]>([])
+  let viewedPrompts = $state<Set<string>>(new Set())
   let selectedPrompt = $state<Prompt | null>(null)
   let selectedPromptIndex = $state<number>(0)
   // Target and guess are now -10 to 10 internal values (10% increments)
@@ -21,8 +22,25 @@
   let guess = $state<number>(0)
   let promptColors = $state<[string, string]>(["#fff", "#fff"])
 
+  function getPromptKey(prompt: Prompt): string {
+    return `${prompt[0]}|${prompt[1]}`
+  }
+
   function getRandomPrompts(count: number): Prompt[] {
-    const shuffled = [...wavelengthPrompts].sort(() => 0.5 - Math.random())
+    // Get unviewed prompts
+    const unviewedPrompts = wavelengthPrompts.filter(
+      (prompt) => !viewedPrompts.has(getPromptKey(prompt))
+    )
+
+    // If all prompts have been viewed, reset
+    if (unviewedPrompts.length < count) {
+      viewedPrompts.clear()
+      const shuffled = [...wavelengthPrompts].sort(() => 0.5 - Math.random())
+      return shuffled.slice(0, count)
+    }
+
+    // Select random prompts from unviewed
+    const shuffled = [...unviewedPrompts].sort(() => 0.5 - Math.random())
     return shuffled.slice(0, count)
   }
 
@@ -44,6 +62,8 @@
     selectedPromptIndex = index
     promptColors = getPromptColors(index, 3)
     target = Math.floor(Math.random() * 21) - 10 // -10 to 10
+    // Mark prompt as viewed
+    viewedPrompts.add(getPromptKey(prompt))
     phase = "psychic"
   }
 
