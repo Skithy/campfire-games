@@ -14,8 +14,8 @@
   } = $props()
 </script>
 
-<div class="mx-auto flex h-full w-full max-w-[600px] flex-col items-center gap-4 p-4">
-  <h2 class="text-2xl font-bold">Pick Your Spectrum</h2>
+<div class="mx-auto flex h-full w-full max-w-150 flex-col items-center gap-4 p-4">
+  <h2 class="text-2xl font-bold">Pick your spectrum!</h2>
 
   <PromptPicker {prompts} {onSelectPrompt} {onReroll} />
 </div>

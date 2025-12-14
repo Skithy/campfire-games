@@ -35,19 +35,16 @@
 </script>
 
 <div class="mx-auto flex h-full w-full max-w-[600px] flex-col items-center gap-4 p-4">
-  <h2 class="text-2xl font-bold">You are the Psychic!</h2>
+  <h2 class="text-2xl font-bold">Make a clue!</h2>
 
   <div class="flex w-full flex-1 flex-col items-center justify-between gap-4">
-    <div class="text-center">
-      <p class="text-lg">Give a verbal clue that belongs at this position.</p>
-    </div>
 
     <div class="flex w-full max-w-[400px] flex-1 flex-col items-center justify-center gap-4">
       <div
         class="w-full rounded-lg p-2 text-center text-2xl font-bold text-black transition-colors"
-        style="background-color: {rightColor}"
+        style="background-color: {leftColor}"
       >
-        {selectedPrompt[1]}
+        {selectedPrompt[0]}
       </div>
 
       <!-- Number Line Container -->
@@ -115,9 +112,9 @@
 
       <div
         class="w-full rounded-lg p-2 text-center text-2xl font-bold text-black transition-colors"
-        style="background-color: {leftColor}"
+        style="background-color: {rightColor}"
       >
-        {selectedPrompt[0]}
+        {selectedPrompt[1]}
       </div>
     </div>
 

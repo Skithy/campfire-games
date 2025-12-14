@@ -71,9 +71,9 @@
   <div class="flex w-full max-w-[400px] flex-1 flex-col items-center justify-center gap-4">
     <div
       class="w-full rounded-lg p-2 text-center text-2xl font-bold text-black"
-      style="background-color: {rightColor}"
+      style="background-color: {leftColor}"
     >
-      {prompt[1]}
+      {prompt[0]}
     </div>
 
     <!-- Number Line Container -->
@@ -157,9 +157,9 @@
 
     <div
       class="w-full rounded-lg p-2 text-center text-2xl font-bold text-black"
-      style="background-color: {leftColor}"
+      style="background-color: {rightColor}"
     >
-      {prompt[0]}
+      {prompt[1]}
     </div>
   </div>
 
