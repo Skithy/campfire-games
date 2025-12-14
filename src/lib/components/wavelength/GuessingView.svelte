@@ -1,7 +1,6 @@
 <script lang="ts">
   import { type Prompt, wavelengthPrompts } from "$lib/data/wavelengthPrompts"
   import {
-    getPromptColors,
     getSliderColor,
     sliderToDisplayValue,
     sliderToPosition,
@@ -9,9 +8,13 @@
 
   let {
     prompt,
+    leftColor,
+    rightColor,
     onLockIn,
   }: {
     prompt: Prompt
+    leftColor: string
+    rightColor: string
     onLockIn: (guess: number) => void
   } = $props()
 
@@ -55,9 +58,6 @@
   }
 
   let index = $derived(wavelengthPrompts.findIndex((p) => p[0] === prompt[0] && p[1] === prompt[1]))
-  let [leftColor, rightColor] = $derived(
-    index !== -1 ? getPromptColors(index, wavelengthPrompts.length) : ["#fff", "#fff"],
-  )
   let displayValue = $derived(sliderToDisplayValue(value))
   let position = $derived(sliderToPosition(value))
   let arrowColor = $derived(

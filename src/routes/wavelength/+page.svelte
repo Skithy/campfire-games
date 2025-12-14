@@ -7,6 +7,7 @@
   import RevealView from "$lib/components/wavelength/RevealView.svelte"
   import SplashScreen from "$lib/components/wavelength/SplashScreen.svelte"
   import { type Prompt, wavelengthPrompts } from "$lib/data/wavelengthPrompts"
+  import { getPromptColors } from "$lib/utils/colors"
 
   type GamePhase = "splash" | "prompt" | "psychic" | "guessing" | "reveal"
 
@@ -18,6 +19,7 @@
   // -10 = 100% left, 0 = 0% center, 10 = 100% right
   let target = $state<number>(0)
   let guess = $state<number>(0)
+  let promptColors = $state<[string, string]>(["#fff", "#fff"])
 
   function getRandomPrompts(count: number): Prompt[] {
     const shuffled = [...wavelengthPrompts].sort(() => 0.5 - Math.random())
@@ -40,6 +42,7 @@
   function handleSelectPrompt(prompt: Prompt, index: number) {
     selectedPrompt = prompt
     selectedPromptIndex = index
+    promptColors = getPromptColors(index, 3)
     target = Math.floor(Math.random() * 21) - 10 // -10 to 10
     phase = "psychic"
   }
@@ -91,17 +94,31 @@
           {selectedPrompt}
           {selectedPromptIndex}
           {target}
+          leftColor={promptColors[0]}
+          rightColor={promptColors[1]}
           onReadyToGuess={handleReadyToGuess}
           onBack={handleBackToPrompts}
         />
       {/if}
     {:else if phase === "guessing"}
       {#if selectedPrompt}
-        <GuessingView prompt={selectedPrompt} onLockIn={handleLockIn} />
+        <GuessingView
+          prompt={selectedPrompt}
+          leftColor={promptColors[0]}
+          rightColor={promptColors[1]}
+          onLockIn={handleLockIn}
+        />
       {/if}
     {:else if phase === "reveal"}
       {#if selectedPrompt}
-        <RevealView prompt={selectedPrompt} {target} {guess} onNextRound={handleNextRound} />
+        <RevealView
+          prompt={selectedPrompt}
+          {target}
+          {guess}
+          leftColor={promptColors[0]}
+          rightColor={promptColors[1]}
+          onNextRound={handleNextRound}
+        />
       {/if}
     {/if}
   </main>

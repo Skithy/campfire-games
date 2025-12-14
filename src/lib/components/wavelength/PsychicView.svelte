@@ -1,7 +1,6 @@
 <script lang="ts">
   import type { Prompt } from "$lib/data/wavelengthPrompts"
   import {
-    getPromptColors,
     getSliderColor,
     sliderToDisplayValue,
     sliderToPosition,
@@ -11,12 +10,16 @@
     selectedPrompt,
     selectedPromptIndex,
     target,
+    leftColor,
+    rightColor,
     onReadyToGuess,
     onBack,
   }: {
     selectedPrompt: Prompt
     selectedPromptIndex: number
     target: number // -10 to 10 internal value
+    leftColor: string
+    rightColor: string
     onReadyToGuess: () => void
     onBack: () => void
   } = $props()
@@ -24,9 +27,6 @@
   // Tick marks from -10 to 10
   const ticks = [-10, -8, -6, -4, -2, 0, 2, 4, 6, 8, 10]
 
-  let [leftColor, rightColor] = $derived(
-    getPromptColors(selectedPromptIndex, 3),
-  )
   let displayValue = $derived(sliderToDisplayValue(target))
   let position = $derived(sliderToPosition(target))
   let arrowColor = $derived(
