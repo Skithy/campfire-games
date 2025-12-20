@@ -2,6 +2,8 @@
   import type { Prompt } from "$lib/data/wavelengthPrompts"
   import { getPromptColors } from "$lib/utils/colors"
 
+  import PhaseHeader from "./PhaseHeader.svelte"
+
   let {
     prompts,
     onSelectPrompt,
@@ -21,14 +23,15 @@
   }
 </script>
 
-<div class="mx-auto flex h-full w-full max-w-md flex-col items-center gap-4 px-2 py-4">
-  <div class="flex w-full flex-col items-center gap-2 rounded-xl bg-purple-500/15 px-6 py-3">
-    <span class="text-xs font-semibold uppercase tracking-widest text-purple-400">Psychic's Turn</span>
-    <h2 class="text-2xl font-bold text-white">Pick a Spectrum</h2>
-    <p class="text-center text-sm text-gray-400">Choose a prompt for your team</p>
-  </div>
+<div class="mx-auto flex h-full w-full max-w-md flex-col items-center gap-4">
+  <PhaseHeader
+    label="Psychic's Turn"
+    title="Pick a Spectrum"
+    description="Choose a prompt for your team"
+    bgClass="bg-purple-500/15"
+  />
 
-  <div class="flex w-full flex-1 flex-col items-center justify-between gap-4 pt-4">
+  <div class="flex w-full flex-1 flex-col items-center justify-between gap-4">
     <div class="flex w-full flex-col gap-5">
       {#each prompts as prompt, i (i)}
         {@const [leftColor, rightColor] = getPromptColors(i, prompts.length)}
@@ -36,18 +39,26 @@
         <div
           class="rounded-2xl p-0.5 transition-all"
           style="
-            background: {isSelected ? `linear-gradient(90deg, ${leftColor}, ${rightColor})` : '#444'};
+            background: {isSelected
+            ? `linear-gradient(90deg, ${leftColor}, ${rightColor})`
+            : '#444'};
             box-shadow: {isSelected ? `0 0 20px ${leftColor}40` : 'none'};
           "
         >
           <button
-            class="flex w-full cursor-pointer items-stretch rounded-[14px] bg-[#1a1a1a] text-base transition-all overflow-hidden"
+            class="flex w-full cursor-pointer items-stretch overflow-hidden rounded-[14px] bg-[#1a1a1a] text-base transition-all"
             onclick={() => (selectedIndex = i)}
             type="button"
           >
-            <span class="flex flex-1 items-center justify-center whitespace-nowrap px-3 py-5 text-center text-base font-bold" style="color: {leftColor}">{prompt[0]}</span>
+            <span
+              class="flex flex-1 items-center justify-center px-3 py-5 text-center text-base font-bold whitespace-nowrap"
+              style="color: {leftColor}">{prompt[0]}</span
+            >
             <div class="w-px self-stretch bg-white/20"></div>
-            <span class="flex flex-1 items-center justify-center whitespace-nowrap px-3 py-5 text-center text-base font-bold" style="color: {rightColor}">{prompt[1]}</span>
+            <span
+              class="flex flex-1 items-center justify-center px-3 py-5 text-center text-base font-bold whitespace-nowrap"
+              style="color: {rightColor}">{prompt[1]}</span
+            >
           </button>
         </div>
       {/each}
@@ -64,9 +75,10 @@
         <i class="fa-solid fa-rotate text-lg"></i>
       </button>
       <button
-        class="flex-1 cursor-pointer rounded-xl px-6 py-4 text-lg font-semibold transition-all active:scale-[0.98] {selectedIndex !== null
+        class="flex-1 cursor-pointer rounded-xl px-6 py-4 text-lg font-semibold transition-all active:scale-[0.98] {selectedIndex !==
+        null
           ? 'bg-white/15 text-white hover:bg-white/25'
-          : 'bg-white/5 text-white/40 cursor-not-allowed'}"
+          : 'cursor-not-allowed bg-white/5 text-white/40'}"
         onclick={handleSubmit}
         type="button"
         disabled={selectedIndex === null}

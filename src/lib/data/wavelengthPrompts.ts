@@ -144,4 +144,9 @@ export const wavelengthPrompts: Prompt[] = [
   ["Read", "Watch"],
   ["Listen", "Talk"],
   ["Give", "Receive"],
+  ["Autism", "ADHD"],
+  ["Neurodivergent", "Neurotypical"],
+  ["Straight", "Gay"],
+  ["Hotdog", "Not Hotdog"],
+  ["Funny", "Cringe"],
 ]

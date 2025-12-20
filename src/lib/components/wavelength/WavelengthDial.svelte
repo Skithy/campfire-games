@@ -112,36 +112,38 @@
   let diffAngle = $derived(diffEnd - diffStart)
 </script>
 
-{#if interactive}
-  <div
-    bind:this={dialEl}
-    class="relative aspect-2/1 w-full max-w-xs touch-none select-none"
-    role="slider"
-    tabindex="0"
-    aria-valuemin={-10}
-    aria-valuemax={10}
-    aria-valuenow={value}
-    onpointerdown={handlePointerDown}
-    onpointermove={handlePointerMove}
-    onpointerup={handlePointerUp}
-    onpointercancel={handlePointerUp}
-    onkeydown={(e) => {
-      if (e.key === "ArrowLeft") value = Math.max(-10, value - 1)
-      if (e.key === "ArrowRight") value = Math.min(10, value + 1)
-    }}
-  >
-    {@render dialContent()}
-  </div>
-{:else}
-  <div bind:this={dialEl} class="relative aspect-2/1 w-full max-w-xs">
-    {@render dialContent()}
-  </div>
-{/if}
+<div class="w-full px-8">
+  {#if interactive}
+    <div
+      bind:this={dialEl}
+      class="relative aspect-2/1 w-full max-w-xs touch-none select-none"
+      role="slider"
+      tabindex="0"
+      aria-valuemin={-10}
+      aria-valuemax={10}
+      aria-valuenow={value}
+      onpointerdown={handlePointerDown}
+      onpointermove={handlePointerMove}
+      onpointerup={handlePointerUp}
+      onpointercancel={handlePointerUp}
+      onkeydown={(e) => {
+        if (e.key === "ArrowLeft") value = Math.max(-10, value - 1)
+        if (e.key === "ArrowRight") value = Math.min(10, value + 1)
+      }}
+    >
+      {@render dialContent()}
+    </div>
+  {:else}
+    <div bind:this={dialEl} class="relative aspect-2/1 w-full max-w-xs">
+      {@render dialContent()}
+    </div>
+  {/if}
+</div>
 
 {#snippet dialContent()}
   <!-- Semicircle background -->
   <div
-    class="absolute inset-0 overflow-hidden rounded-t-full border-4 border-b-0 border-[#555] bg-[#222]"
+    class="absolute inset-0 overflow-hidden rounded-t-full border-2 border-b-0 border-[#444] bg-[#222]"
   >
     <!-- Gradient overlay showing spectrum -->
     <div
@@ -156,8 +158,8 @@
     {@const rad = (tick.angle * Math.PI) / 180}
     {@const outerX = 50 + Math.cos(rad) * 48}
     {@const outerY = 100 - Math.sin(rad) * 96}
-    {@const innerX = 50 + Math.cos(rad) * 40}
-    {@const innerY = 100 - Math.sin(rad) * 80}
+    {@const innerX = 50 + Math.cos(rad) * 44}
+    {@const innerY = 100 - Math.sin(rad) * 88}
     <svg class="pointer-events-none absolute inset-0 h-full w-full overflow-visible">
       <line
         x1="{outerX}%"
@@ -230,9 +232,9 @@
           x2={50 + Math.cos(rad) * 38}
           y2={50 - Math.sin(rad) * 38}
           stroke={arrow.color}
-          stroke-width="3"
-          stroke-linecap="round"
-          stroke-dasharray={isDashed ? "0.1 5" : undefined}
+          stroke-width="2"
+          stroke-linecap={isDashed ? "butt" : "round"}
+          stroke-dasharray={isDashed ? "6 4" : undefined}
         />
         <!-- Arrow head -->
         <polygon

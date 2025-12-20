@@ -1,6 +1,8 @@
 <script lang="ts">
   import type { Prompt } from "$lib/data/wavelengthPrompts"
   import { interpolateColor, sliderToDisplayValue } from "$lib/utils/colors"
+
+  import PhaseHeader from "./PhaseHeader.svelte"
   import WavelengthDial from "./WavelengthDial.svelte"
 
   let {
@@ -66,14 +68,13 @@
   ])
 </script>
 
-<div class="mx-auto flex h-full w-full max-w-md flex-col items-center gap-4 p-4">
-  <div class="flex w-full flex-col items-center gap-2 rounded-xl {scoreResult.bg} px-6 py-3">
-    <span class="text-xs font-semibold tracking-widest text-white/70 uppercase">Results</span>
-    <h2 class="m-0 text-2xl font-bold text-white">
-      {scoreResult.message}
-    </h2>
-    <p class="text-center text-sm text-white/60">{scoreResult.description}</p>
-  </div>
+<div class="mx-auto flex h-full w-full max-w-md flex-col items-center gap-4">
+  <PhaseHeader
+    label="Results"
+    title={scoreResult.message}
+    description={scoreResult.description}
+    bgClass={scoreResult.bg}
+  />
 
   <div class="flex w-full flex-1 flex-col items-center justify-between gap-4">
     <!-- Dial Container -->
