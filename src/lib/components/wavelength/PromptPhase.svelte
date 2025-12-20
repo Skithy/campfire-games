@@ -1,15 +1,16 @@
 <script lang="ts">
   import type { Prompt } from "$lib/data/wavelengthPrompts"
-  import { getPromptColors } from "$lib/utils/colors"
 
   import PhaseHeader from "./PhaseHeader.svelte"
 
   let {
     prompts,
+    promptColors,
     onSelectPrompt,
     onReroll,
   }: {
     prompts: Prompt[]
+    promptColors: Array<[string, string]>
     onSelectPrompt: (prompt: Prompt, index: number) => void
     onReroll: () => void
   } = $props()
@@ -34,7 +35,7 @@
   <div class="flex w-full flex-1 flex-col items-center justify-between gap-4">
     <div class="flex w-full flex-col gap-5">
       {#each prompts as prompt, i (i)}
-        {@const [leftColor, rightColor] = getPromptColors(i, prompts.length)}
+        {@const [leftColor, rightColor] = promptColors[i] || ["#888", "#888"]}
         {@const isSelected = selectedIndex === i}
         <div
           class="rounded-2xl p-0.5 transition-all"
