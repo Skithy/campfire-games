@@ -23,14 +23,12 @@
 
   function generatePromptColors(prompts: Prompt[]): Array<[string, string]> {
     const count = prompts.length
-    // Generate random distinct hues for each prompt
-    const hues = Array.from({ length: count }, (_, i) => {
-      const hueStep = 360 / count
-      const randomOffset = Math.random() * (360 / count)
-      return (i * hueStep + randomOffset) % 360
-    })
+    // Generate random starting hue, then space hues evenly for distinctness
+    const randomStartHue = Math.random() * 360
+    const hueStep = 360 / count
 
-    return hues.map((hue) => {
+    return Array.from({ length: count }, (_, i) => {
+      const hue = (randomStartHue + i * hueStep) % 360
       const complementHue = (hue + 180) % 360
       const leftColor = `hsl(${Math.round(hue)}, 70%, 80%)`
       const rightColor = `hsl(${Math.round(complementHue)}, 70%, 80%)`
@@ -117,7 +115,7 @@
   })
 </script>
 
-<div class="flex h-full flex-col overflow-hidden bg-[#111] p-4 font-sans text-white">
+<div class="flex h-full flex-col overflow-hidden bg-[#111] font-sans text-white">
   <main class="flex min-h-0 flex-1 justify-center overflow-auto">
     {#if phase === "splash"}
       <SplashScreen onStart={handleStartGame} />

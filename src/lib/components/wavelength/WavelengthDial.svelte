@@ -141,16 +141,13 @@
 </div>
 
 {#snippet dialContent()}
-  <!-- Semicircle background -->
+  <!-- Semicircle background with gradient -->
   <div
-    class="absolute inset-0 overflow-hidden rounded-t-full border-2 border-b-0 border-[#444] bg-[#222]"
-  >
-    <!-- Gradient overlay showing spectrum -->
-    <div
-      class="absolute inset-0 rounded-t-full opacity-50"
-      style="background: linear-gradient(to right, {leftColor}, {rightColor})"
-    ></div>
-  </div>
+    class="absolute inset-0 rounded-t-full"
+    style="background: linear-gradient(to right, {leftColor}, {rightColor}); opacity: 0.35"
+  ></div>
+  <!-- Border overlay -->
+  <div class="absolute inset-0 rounded-t-full border-2 border-b-0 border-white/20"></div>
 
   <!-- Tick marks on the arc -->
   {#each tickAngles as tick (tick.value)}
@@ -158,16 +155,17 @@
     {@const rad = (tick.angle * Math.PI) / 180}
     {@const outerX = 50 + Math.cos(rad) * 48}
     {@const outerY = 100 - Math.sin(rad) * 96}
-    {@const innerX = 50 + Math.cos(rad) * 44}
-    {@const innerY = 100 - Math.sin(rad) * 88}
+    {@const innerX = 50 + Math.cos(rad) * 42}
+    {@const innerY = 100 - Math.sin(rad) * 84}
     <svg class="pointer-events-none absolute inset-0 h-full w-full overflow-visible">
       <line
         x1="{outerX}%"
         y1="{outerY}%"
         x2="{innerX}%"
         y2="{innerY}%"
-        stroke={isCenter ? "rgba(255,255,255,0.7)" : "rgba(255,255,255,0.3)"}
-        stroke-width={isCenter ? 3 : 2}
+        stroke={isCenter ? "rgba(255,255,255,0.6)" : "rgba(255,255,255,0.25)"}
+        stroke-width={isCenter ? 2 : 1}
+        stroke-linecap="round"
       />
     </svg>
   {/each}
@@ -210,8 +208,8 @@
   {#each arrows as arrow, i (i)}
     {@const angle = sliderToAngle(arrow.value)}
     {@const rad = (angle * Math.PI) / 180}
-    {@const headAngle1 = ((angle + 150) * Math.PI) / 180}
-    {@const headAngle2 = ((angle - 150) * Math.PI) / 180}
+    {@const headAngle1 = ((angle + 165) * Math.PI) / 180}
+    {@const headAngle2 = ((angle - 165) * Math.PI) / 180}
     {@const isDashed = arrow.style === "dashed"}
     <svg
       class="pointer-events-none absolute inset-0 h-full w-full"
@@ -232,18 +230,20 @@
           x2={50 + Math.cos(rad) * 38}
           y2={50 - Math.sin(rad) * 38}
           stroke={arrow.color}
-          stroke-width="2"
+          stroke-opacity="0.9"
+          stroke-width="2.5"
           stroke-linecap={isDashed ? "butt" : "round"}
           stroke-dasharray={isDashed ? "6 4" : undefined}
         />
-        <!-- Arrow head -->
+        <!-- Arrow head (pointy triangle) -->
         <polygon
-          points="{50 + Math.cos(rad) * 42},{50 - Math.sin(rad) * 42} {50 +
-            Math.cos(rad) * 42 +
-            Math.cos(headAngle1) * 4},{50 - Math.sin(rad) * 42 - Math.sin(headAngle1) * 4} {50 +
-            Math.cos(rad) * 42 +
-            Math.cos(headAngle2) * 4},{50 - Math.sin(rad) * 42 - Math.sin(headAngle2) * 4}"
+          points="{50 + Math.cos(rad) * 44},{50 - Math.sin(rad) * 44} {50 +
+            Math.cos(rad) * 38 +
+            Math.cos(headAngle1) * 3},{50 - Math.sin(rad) * 38 - Math.sin(headAngle1) * 3} {50 +
+            Math.cos(rad) * 38 +
+            Math.cos(headAngle2) * 3},{50 - Math.sin(rad) * 38 - Math.sin(headAngle2) * 3}"
           fill={arrow.color}
+          fill-opacity="0.9"
         />
       </g>
     </svg>
@@ -254,17 +254,17 @@
     <!-- Single arrow with percentage display -->
     <div class="pointer-events-none absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2">
       <div
-        class="flex h-14 w-14 items-center justify-center rounded-full text-lg font-bold text-black"
-        style="background-color: {arrows[0].color}"
+        class="flex h-14 w-14 items-center justify-center rounded-full border-2 border-white/30 text-lg font-bold shadow-lg"
+        style="background-color: {arrows[0].color}; color: rgba(0,0,0,0.8)"
       >
         {arrows[0].displayValue}%
       </div>
     </div>
   {:else}
     <!-- Multiple arrows or no display value: just show pivot point -->
-    <svg class="pointer-events-none absolute inset-0 h-full w-full overflow-visible">
-      <circle cx="50%" cy="100%" r="8" fill="#333" stroke="#fff" stroke-width="3" />
-    </svg>
+    <div class="pointer-events-none absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2">
+      <div class="h-4 w-4 rounded-full border-2 border-white/40 bg-white/60 shadow-md"></div>
+    </div>
   {/if}
 
   <!-- Prompt labels integrated at dial ends -->

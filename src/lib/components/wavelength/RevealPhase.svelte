@@ -68,7 +68,7 @@
   ])
 </script>
 
-<div class="mx-auto flex h-full w-full max-w-md flex-col items-center gap-4">
+<div class="mx-auto flex h-full w-full max-w-md flex-col items-center gap-4 p-6">
   <PhaseHeader
     label="Results"
     title={scoreResult.message}
