@@ -110,22 +110,34 @@
           </svg>
         {/each}
 
-        <!-- Difference arc between target and guess -->
+        <!-- Difference wedge between target and guess -->
         {#if diffAngle > 0}
-          {@const radius = 30}
-          {@const startRad = (diffStart * Math.PI) / 180}
-          {@const endRad = (diffEnd * Math.PI) / 180}
-          {@const startX = 50 + Math.cos(endRad) * radius}
-          {@const startY = 100 - Math.sin(endRad) * radius * 2}
-          {@const endX = 50 + Math.cos(startRad) * radius}
-          {@const endY = 100 - Math.sin(startRad) * radius * 2}
-          <svg class="pointer-events-none absolute inset-0 h-full w-full overflow-visible">
+          {@const radius = 50}
+          {@const targetRad = (targetAngle * Math.PI) / 180}
+          {@const guessRad = (guessAngle * Math.PI) / 180}
+          {@const targetX = 50 + Math.cos(targetRad) * radius}
+          {@const targetY = 50 - Math.sin(targetRad) * radius}
+          {@const guessX = 50 + Math.cos(guessRad) * radius}
+          {@const guessY = 50 - Math.sin(guessRad) * radius}
+          {@const largeArc = diffAngle > 90 ? 1 : 0}
+          {@const sweepFlag = targetAngle > guessAngle ? 1 : 0}
+          <svg
+            class="pointer-events-none absolute inset-0 h-full w-full overflow-hidden"
+            viewBox="0 0 100 50"
+            preserveAspectRatio="xMidYMax meet"
+          >
+            <defs>
+              <clipPath id="semicircle-clip">
+                <path d="M 0 50 A 50 50 0 0 1 100 50 L 100 50 L 0 50 Z" />
+              </clipPath>
+            </defs>
             <path
-              d="M {startX}% {startY}% A {radius}% {radius * 2}% 0 0 1 {endX}% {endY}%"
-              fill="none"
-              stroke="rgba(255, 100, 100, 0.5)"
-              stroke-width="8"
-              stroke-linecap="round"
+              clip-path="url(#semicircle-clip)"
+              d="M 50 50
+                 L {targetX} {targetY}
+                 A {radius} {radius} 0 {largeArc} {sweepFlag} {guessX} {guessY}
+                 Z"
+              fill="rgba(255, 100, 100, 0.35)"
             />
           </svg>
         {/if}
@@ -181,7 +193,7 @@
               stroke={guessColor}
               stroke-width="6"
               stroke-linecap="round"
-              stroke-dasharray="8 4"
+              stroke-dasharray="0.1 10"
             />
             <!-- Arrow head -->
             <polygon
