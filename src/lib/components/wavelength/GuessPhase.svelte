@@ -1,96 +1,123 @@
 <script lang="ts">
-  import { type Prompt, wavelengthPrompts } from "$lib/data/wavelengthPrompts"
-  import {
-    getSliderColor,
-    sliderToDisplayValue,
-    sliderToPosition,
-  } from "$lib/utils/colors"
+  import type { Prompt } from "$lib/data/wavelengthPrompts"
+  import { sliderToDisplayValue } from "$lib/utils/colors"
 
   let {
     prompt,
+    promptIndex,
     leftColor,
     rightColor,
     onLockIn,
   }: {
     prompt: Prompt
+    promptIndex: number
     leftColor: string
     rightColor: string
     onLockIn: (guess: number) => void
   } = $props()
 
   // Internal value: -10 to 10 (representing 10% increments)
-  // -10 = bottom (100% left), 0 = center (0%), 10 = top (100% right)
   let value = $state(0)
   let isDragging = $state(false)
-  let numberLineEl: HTMLDivElement | null = $state(null)
+  let dialEl: HTMLDivElement | null = $state(null)
 
-  // Tick marks from -10 to 10
-  const ticks = [-10, -8, -6, -4, -2, 0, 2, 4, 6, 8, 10]
-
-  function handleLockIn() {
-    onLockIn(value)
+  // Convert slider value (-10 to 10) to dial angle
+  // -10 = 180° (left), 0 = 90° (center/up), 10 = 0° (right)
+  function sliderToAngle(val: number): number {
+    return 90 - val * 9
   }
 
-  function positionToValue(clientY: number): number {
-    if (!numberLineEl) return 0
-    const rect = numberLineEl.getBoundingClientRect()
-    // Convert Y position to value (-10 to 10)
-    // Top of element = 10, bottom = -10
-    const relativeY = (clientY - rect.top) / rect.height
-    const rawValue = 10 - relativeY * 20
-    // Snap to nearest integer
-    return Math.max(-10, Math.min(10, Math.round(rawValue)))
+  // Convert pointer position to slider value
+  function pointerToValue(clientX: number, clientY: number): number {
+    if (!dialEl) return 0
+    const rect = dialEl.getBoundingClientRect()
+    // Center point is at bottom center of the dial
+    const centerX = rect.left + rect.width / 2
+    const centerY = rect.bottom
+    // Calculate angle from center to pointer
+    const dx = clientX - centerX
+    const dy = centerY - clientY
+
+    // If pointer is below the dial baseline, clamp to nearest edge
+    if (dy < 0) {
+      return dx < 0 ? -10 : 10
+    }
+
+    // atan2 gives angle in radians, convert to degrees
+    const angleDeg = Math.atan2(dy, dx) * (180 / Math.PI)
+    // Convert angle to value: 180° = -10, 90° = 0, 0° = 10
+    const val = (90 - angleDeg) / 9
+    // Snap to nearest integer and clamp
+    return Math.max(-10, Math.min(10, Math.round(val)))
   }
 
   function handlePointerDown(e: PointerEvent) {
     isDragging = true
-    value = positionToValue(e.clientY)
+    value = pointerToValue(e.clientX, e.clientY)
     ;(e.target as HTMLElement).setPointerCapture(e.pointerId)
   }
 
   function handlePointerMove(e: PointerEvent) {
     if (!isDragging) return
-    value = positionToValue(e.clientY)
+    value = pointerToValue(e.clientX, e.clientY)
   }
 
   function handlePointerUp() {
     isDragging = false
   }
 
-  let index = $derived(wavelengthPrompts.findIndex((p) => p[0] === prompt[0] && p[1] === prompt[1]))
+  function handleLockIn() {
+    onLockIn(value)
+  }
+
+  // Tick marks for the dial (every 20% = every 2 slider units)
+  const tickAngles = [
+    { value: -8, angle: 162 },
+    { value: -6, angle: 144 },
+    { value: -4, angle: 126 },
+    { value: -2, angle: 108 },
+    { value: 0, angle: 90 },
+    { value: 2, angle: 72 },
+    { value: 4, angle: 54 },
+    { value: 6, angle: 36 },
+    { value: 8, angle: 18 },
+  ]
+
+  // Interpolate color between left and right based on slider value
+  function getArrowColor(val: number): string {
+    // Extract hue from leftColor and rightColor (they're in HSL format)
+    const leftMatch = leftColor.match(/hsl\((\d+),/)
+    const rightMatch = rightColor.match(/hsl\((\d+),/)
+    if (!leftMatch || !rightMatch) return "#646cff"
+
+    const leftHue = parseInt(leftMatch[1])
+    const rightHue = parseInt(rightMatch[1])
+
+    // Normalize slider value to 0-1 range (-10 = 0, +10 = 1)
+    const normalized = (val + 10) / 20
+    // Interpolate hue (handle wraparound)
+    let hueDiff = rightHue - leftHue
+    if (hueDiff > 180) hueDiff -= 360
+    if (hueDiff < -180) hueDiff += 360
+    const currentHue = (leftHue + normalized * hueDiff + 360) % 360
+
+    return `hsl(${Math.round(currentHue)}, 75%, 75%)`
+  }
+
   let displayValue = $derived(sliderToDisplayValue(value))
-  let position = $derived(sliderToPosition(value))
-  let arrowColor = $derived(
-    index !== -1 ? getSliderColor(value, index, wavelengthPrompts.length) : "#646cff",
-  )
+  let angle = $derived(sliderToAngle(value))
+  let arrowColor = $derived(getArrowColor(value))
 </script>
 
-<div class="flex h-full w-full flex-col items-center gap-4 p-4">
+<div class="mx-auto flex h-full w-full max-w-md flex-col items-center gap-4 p-4">
   <h2 class="text-2xl font-bold">Make Your Guess</h2>
 
-  <div class="flex w-full max-w-[400px] flex-1 flex-col items-center justify-center gap-4">
-    <div
-      class="w-full rounded-lg p-2 text-center text-2xl font-bold text-black"
-      style="background-color: {leftColor}"
-    >
-      {prompt[0]}
-    </div>
-
-    <!-- Number Line Container -->
-    <div class="relative flex h-[50vh] items-center gap-4">
-      <!-- Tick Labels (left side) -->
-      <div class="relative flex h-full w-12 flex-col justify-between py-1 text-right text-sm">
-        {#each ticks.toReversed() as tick (tick)}
-          <span class="text-gray-400 {tick === 0 ? 'font-bold text-white' : ''}">
-            {sliderToDisplayValue(tick)}%
-          </span>
-        {/each}
-      </div>
-
-      <!-- Number Line -->
+  <div class="flex w-full flex-1 flex-col items-center justify-between gap-4">
+    <!-- Dial Container -->
+    <div class="flex w-full flex-1 flex-col items-center justify-center">
       <div
-        bind:this={numberLineEl}
-        class="relative h-full w-16 cursor-pointer rounded-lg border-2 border-[#555] bg-[#222]"
+        bind:this={dialEl}
+        class="relative aspect-2/1 w-full max-w-xs touch-none select-none"
         role="slider"
         tabindex="0"
         aria-valuemin={-10}
@@ -101,72 +128,117 @@
         onpointerup={handlePointerUp}
         onpointercancel={handlePointerUp}
         onkeydown={(e) => {
-          if (e.key === "ArrowUp") value = Math.min(10, value + 1)
-          if (e.key === "ArrowDown") value = Math.max(-10, value - 1)
+          if (e.key === "ArrowLeft") value = Math.max(-10, value - 1)
+          if (e.key === "ArrowRight") value = Math.min(10, value + 1)
         }}
       >
-        <!-- Tick marks -->
-        {#each ticks as tick (tick)}
-          {@const tickPos = sliderToPosition(tick)}
-          <div
-            class="pointer-events-none absolute right-0 left-0 h-0.5 {tick === 0
-              ? 'bg-white/50'
-              : 'bg-white/20'}"
-            style="bottom: {tickPos}%"
-          ></div>
-        {/each}
-
-        <!-- Arrow from center to value -->
-        {#if value !== 0}
-          <div
-            class="pointer-events-none absolute left-1/2 w-1 -translate-x-1/2 rounded-full transition-all"
-            style="
-              background-color: {arrowColor};
-              {value > 0
-              ? `bottom: 50%; height: ${(value / 10) * 50}%;`
-              : `top: 50%; height: ${(-value / 10) * 50}%;`}
-            "
-          ></div>
-        {/if}
-
-        <!-- Arrow head / Current value indicator -->
+        <!-- Semicircle background -->
         <div
-          class="pointer-events-none absolute left-1/2 flex h-10 w-10 -translate-x-1/2 items-center justify-center rounded-full border-3 border-white text-sm font-bold text-black shadow-lg transition-all"
-          style="
-            bottom: {position}%;
-            transform: translate(-50%, 50%);
-            background-color: {arrowColor};
-          "
+          class="absolute inset-0 overflow-hidden rounded-t-full border-4 border-b-0 border-[#555] bg-[#222]"
         >
-          {displayValue}%
+          <!-- Gradient overlay showing spectrum -->
+          <div
+            class="absolute inset-0 rounded-t-full opacity-30"
+            style="background: linear-gradient(to right, {leftColor}, {rightColor})"
+          ></div>
         </div>
 
-        <!-- Center dot -->
+        <!-- Tick marks on the arc -->
+        {#each tickAngles as tick (tick.value)}
+          {@const isCenter = tick.value === 0}
+          {@const rad = (tick.angle * Math.PI) / 180}
+          {@const outerX = 50 + Math.cos(rad) * 48}
+          {@const outerY = 100 - Math.sin(rad) * 96}
+          {@const innerX = 50 + Math.cos(rad) * 40}
+          {@const innerY = 100 - Math.sin(rad) * 80}
+          <svg class="pointer-events-none absolute inset-0 h-full w-full overflow-visible">
+            <line
+              x1="{outerX}%"
+              y1="{outerY}%"
+              x2="{innerX}%"
+              y2="{innerY}%"
+              stroke={isCenter ? "rgba(255,255,255,0.7)" : "rgba(255,255,255,0.3)"}
+              stroke-width={isCenter ? 3 : 2}
+            />
+          </svg>
+        {/each}
+
+        <!-- Arrow pointing to value -->
+        {#if true}
+          {@const rad = (angle * Math.PI) / 180}
+          {@const tipX = 50 + Math.cos(rad) * 42}
+          {@const tipY = 100 - Math.sin(rad) * 84}
+          {@const headSize = 4}
+          {@const headAngle1 = ((angle + 150) * Math.PI) / 180}
+          {@const headAngle2 = ((angle - 150) * Math.PI) / 180}
+          <svg class="pointer-events-none absolute inset-0 h-full w-full overflow-visible">
+            <!-- Arrow line -->
+            <line
+              x1="50%"
+              y1="100%"
+              x2="{50 + Math.cos(rad) * 38}%"
+              y2="{100 - Math.sin(rad) * 76}%"
+              stroke={arrowColor}
+              stroke-width="6"
+              stroke-linecap="round"
+            />
+            <!-- Arrow head -->
+            <polygon
+              points="
+                {tipX}%,{tipY}%
+                {tipX + Math.cos(headAngle1) * headSize}%,{tipY - Math.sin(headAngle1) * headSize * 2}%
+                {tipX + Math.cos(headAngle2) * headSize}%,{tipY - Math.sin(headAngle2) * headSize * 2}%
+              "
+              fill={arrowColor}
+            />
+            <!-- Center pivot point (draggable indicator) -->
+            <circle
+              cx="50%"
+              cy="100%"
+              r="12"
+              fill="#333"
+              stroke={arrowColor}
+              stroke-width="4"
+              class="cursor-grab active:cursor-grabbing"
+            />
+          </svg>
+        {/if}
+
+        <!-- Percentage display -->
+        <div class="pointer-events-none absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-full pt-4 text-center">
+          <span
+            class="rounded-full px-4 py-2 text-2xl font-bold text-black"
+            style="background-color: {arrowColor}"
+          >
+            {displayValue}%
+          </span>
+        </div>
+      </div>
+
+      <!-- Prompt labels at the ends -->
+      <div class="mt-16 flex w-full max-w-sm items-stretch justify-between gap-4">
         <div
-          class="pointer-events-none absolute bottom-1/2 left-1/2 h-3 w-3 -translate-x-1/2 translate-y-1/2 rounded-full bg-white/70"
-        ></div>
-      </div>
-
-      <!-- Direction labels (right side) -->
-      <div class="flex h-full flex-col justify-between py-1 text-left text-xs text-gray-500">
-        <span>↑ {prompt[1]}</span>
-        <span class="text-gray-400">center</span>
-        <span>↓ {prompt[0]}</span>
+          class="flex-1 rounded-lg p-3 text-center text-lg font-bold text-black"
+          style="background-color: {leftColor}"
+        >
+          {prompt[0]}
+        </div>
+        <div
+          class="flex-1 rounded-lg p-3 text-center text-lg font-bold text-black"
+          style="background-color: {rightColor}"
+        >
+          {prompt[1]}
+        </div>
       </div>
     </div>
 
-    <div
-      class="w-full rounded-lg p-2 text-center text-2xl font-bold text-black"
-      style="background-color: {rightColor}"
+    <!-- Lock in button -->
+    <button
+      class="w-full max-w-xs cursor-pointer rounded-lg border-none bg-[#4caf50] p-4 text-xl font-bold text-white hover:bg-[#45a049]"
+      onclick={handleLockIn}
+      type="button"
     >
-      {prompt[1]}
-    </div>
+      Lock In Guess
+    </button>
   </div>
-
-  <button
-    class="cursor-pointer rounded-[50px] border-none bg-[#4caf50] px-12 py-4 text-2xl font-bold text-white shadow-lg hover:bg-[#45a049]"
-    onclick={handleLockIn}
-  >
-    Lock In Guess
-  </button>
 </div>

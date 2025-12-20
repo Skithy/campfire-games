@@ -124,6 +124,7 @@
       {#if selectedPrompt}
         <GuessPhase
           prompt={selectedPrompt}
+          promptIndex={selectedPromptIndex}
           leftColor={promptColors[0]}
           rightColor={promptColors[1]}
           onLockIn={handleLockIn}
