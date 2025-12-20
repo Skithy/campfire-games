@@ -208,8 +208,8 @@
   {#each arrows as arrow, i (i)}
     {@const angle = sliderToAngle(arrow.value)}
     {@const rad = (angle * Math.PI) / 180}
-    {@const headAngle1 = ((angle + 165) * Math.PI) / 180}
-    {@const headAngle2 = ((angle - 165) * Math.PI) / 180}
+    {@const headAngle1 = ((angle + 135) * Math.PI) / 180}
+    {@const headAngle2 = ((angle - 135) * Math.PI) / 180}
     {@const isDashed = arrow.style === "dashed"}
     <svg
       class="pointer-events-none absolute inset-0 h-full w-full"
@@ -223,25 +223,25 @@
         </filter>
       </defs>
       <g filter="url(#arrow-shadow-{i})">
-        <!-- Arrow line -->
+        <!-- Arrow arm -->
         <line
           x1="50"
           y1="50"
-          x2={50 + Math.cos(rad) * 38}
-          y2={50 - Math.sin(rad) * 38}
+          x2={50 + Math.cos(rad) * 34}
+          y2={50 - Math.sin(rad) * 34}
           stroke={arrow.color}
           stroke-opacity="0.9"
           stroke-width="2.5"
-          stroke-linecap={isDashed ? "butt" : "round"}
+          stroke-linecap="butt"
           stroke-dasharray={isDashed ? "6 4" : undefined}
         />
-        <!-- Arrow head (pointy triangle) -->
+        <!-- Arrow head -->
         <polygon
-          points="{50 + Math.cos(rad) * 44},{50 - Math.sin(rad) * 44} {50 +
-            Math.cos(rad) * 38 +
-            Math.cos(headAngle1) * 3},{50 - Math.sin(rad) * 38 - Math.sin(headAngle1) * 3} {50 +
-            Math.cos(rad) * 38 +
-            Math.cos(headAngle2) * 3},{50 - Math.sin(rad) * 38 - Math.sin(headAngle2) * 3}"
+          points="{50 + Math.cos(rad) * 40},{50 - Math.sin(rad) * 40} {50 +
+            Math.cos(rad) * 34 +
+            Math.cos(headAngle1) * 4},{50 - Math.sin(rad) * 34 - Math.sin(headAngle1) * 4} {50 +
+            Math.cos(rad) * 34 +
+            Math.cos(headAngle2) * 4},{50 - Math.sin(rad) * 34 - Math.sin(headAngle2) * 4}"
           fill={arrow.color}
           fill-opacity="0.9"
         />

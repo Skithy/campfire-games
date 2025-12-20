@@ -21,15 +21,15 @@
       <div class="absolute inset-0 rounded-t-full border-2 border-b-0 border-white/30"></div>
       <!-- Dial hand with circular pivot and triangular pointer -->
       <div class="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2">
-        <!-- Pointer using SVG for clean triangle with rounded tip -->
+        <!-- Pointer using SVG with arrow tip -->
         <svg
           class="absolute bottom-1/2 left-1/2 origin-bottom -translate-x-1/2 rotate-[30deg]"
           width="20"
           height="80"
           viewBox="0 0 20 80"
         >
-          <path d="M 10 4 C 6 4, 4 6, 2 80 L 18 80 C 16 6, 14 4, 10 4 Z" fill="black" />
-          <ellipse cx="10" cy="4" rx="4" ry="4" fill="black" />
+          <line x1="10" y1="16" x2="10" y2="80" stroke="black" stroke-width="8" stroke-linecap="round" />
+          <polygon points="10,0 2,16 18,16" fill="black" />
         </svg>
         <!-- Pivot circle -->
         <div class="relative h-10 w-10 rounded-full bg-black">
