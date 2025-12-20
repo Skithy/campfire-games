@@ -11,40 +11,68 @@
     onSelectPrompt: (prompt: Prompt, index: number) => void
     onReroll: () => void
   } = $props()
+
+  let selectedIndex = $state<number | null>(null)
+
+  function handleSubmit() {
+    if (selectedIndex !== null) {
+      onSelectPrompt(prompts[selectedIndex], selectedIndex)
+    }
+  }
 </script>
 
-<div class="mx-auto flex h-full w-full max-w-150 flex-col items-center gap-4 p-4">
-  <h2 class="text-2xl font-bold">Pick your spectrum!</h2>
-
-  
-<div class="flex w-full flex-col items-center gap-4">
-  <div class="flex w-full flex-col gap-6">
-    {#each prompts as prompt, i (i)}
-      {@const [leftColor, rightColor] = getPromptColors(i, prompts.length)}
-      <button
-        class="relative flex cursor-pointer items-center justify-between rounded-xl border-2 p-6 text-lg text-white transition-all overflow-hidden"
-        style="
-          background: linear-gradient(90deg, {leftColor}22 0%, #2a2a2a 30%, #2a2a2a 70%, {rightColor}22 100%);
-          border-color: #3a3a3a;
-        "
-        onmouseenter={(e) => (e.currentTarget.style.borderColor = leftColor)}
-        onmouseleave={(e) => (e.currentTarget.style.borderColor = "#3a3a3a")}
-        onclick={() => onSelectPrompt(prompt, i)}
-        type="button"
-      >
-        <span class="font-bold" style="color: {leftColor}">{prompt[0]}</span>
-        <div class="absolute top-0 bottom-0 left-1/2 w-0.5 -translate-x-1/2" style="background-color: #555;"></div>
-        <span class="font-bold" style="color: {rightColor}">{prompt[1]}</span>
-      </button>
-    {/each}
+<div class="mx-auto flex h-full w-full max-w-md flex-col items-center gap-4 px-2 py-4">
+  <div class="flex w-full flex-col items-center gap-2 rounded-xl bg-purple-500/15 px-6 py-3">
+    <span class="text-xs font-semibold uppercase tracking-widest text-purple-400">Psychic's Turn</span>
+    <h2 class="text-2xl font-bold text-white">Pick a Spectrum</h2>
+    <p class="text-center text-sm text-gray-400">Choose a prompt for your team</p>
   </div>
-  <button
-    class="mt-6 cursor-pointer rounded-lg border border-[#666] bg-transparent px-6 py-3 text-[#ccc] hover:bg-white/5"
-    onclick={onReroll}
-    type="button"
-  >
-    Reroll Prompts
-  </button>
-</div>
 
+  <div class="flex w-full flex-1 flex-col items-center justify-between gap-4 pt-4">
+    <div class="flex w-full flex-col gap-5">
+      {#each prompts as prompt, i (i)}
+        {@const [leftColor, rightColor] = getPromptColors(i, prompts.length)}
+        {@const isSelected = selectedIndex === i}
+        <div
+          class="rounded-2xl p-0.5 transition-all"
+          style="
+            background: {isSelected ? `linear-gradient(90deg, ${leftColor}, ${rightColor})` : '#444'};
+            box-shadow: {isSelected ? `0 0 20px ${leftColor}40` : 'none'};
+          "
+        >
+          <button
+            class="flex w-full cursor-pointer items-stretch rounded-[14px] bg-[#1a1a1a] text-base transition-all overflow-hidden"
+            onclick={() => (selectedIndex = i)}
+            type="button"
+          >
+            <span class="flex flex-1 items-center justify-center whitespace-nowrap px-3 py-5 text-center text-base font-bold" style="color: {leftColor}">{prompt[0]}</span>
+            <div class="w-px self-stretch bg-white/20"></div>
+            <span class="flex flex-1 items-center justify-center whitespace-nowrap px-3 py-5 text-center text-base font-bold" style="color: {rightColor}">{prompt[1]}</span>
+          </button>
+        </div>
+      {/each}
+    </div>
+
+    <!-- Action buttons -->
+    <div class="flex w-full max-w-sm items-center gap-3">
+      <button
+        class="flex h-14 w-14 cursor-pointer items-center justify-center rounded-xl border border-white/20 text-white/60 transition-all hover:bg-white/10 hover:text-white active:scale-[0.98]"
+        onclick={onReroll}
+        type="button"
+        aria-label="Reroll prompts"
+      >
+        <i class="fa-solid fa-rotate text-lg"></i>
+      </button>
+      <button
+        class="flex-1 cursor-pointer rounded-xl px-6 py-4 text-lg font-semibold transition-all active:scale-[0.98] {selectedIndex !== null
+          ? 'bg-white/15 text-white hover:bg-white/25'
+          : 'bg-white/5 text-white/40 cursor-not-allowed'}"
+        onclick={handleSubmit}
+        type="button"
+        disabled={selectedIndex === null}
+      >
+        Continue
+      </button>
+    </div>
+  </div>
 </div>

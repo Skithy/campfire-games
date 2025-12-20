@@ -77,6 +77,10 @@
     selectedPromptIndex = 0
   }
 
+  function handleBackToPsychic() {
+    phase = "psychic"
+  }
+
   function handleReadyToGuess() {
     phase = "guess"
   }
@@ -98,8 +102,8 @@
   })
 </script>
 
-<div class="flex min-h-screen flex-col bg-[#111] p-4 font-sans text-white">
-  <main class="flex flex-1 justify-center">
+<div class="flex h-full flex-col overflow-hidden bg-[#111] p-4 font-sans text-white">
+  <main class="flex min-h-0 flex-1 justify-center overflow-auto">
     {#if phase === "splash"}
       <SplashScreen onStart={handleStartGame} />
     {:else if phase === "prompt"}
@@ -128,6 +132,7 @@
           leftColor={promptColors[0]}
           rightColor={promptColors[1]}
           onLockIn={handleLockIn}
+          onBack={handleBackToPsychic}
         />
       {/if}
     {:else if phase === "reveal"}

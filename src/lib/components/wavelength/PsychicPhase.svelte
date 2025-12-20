@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { Prompt } from "$lib/data/wavelengthPrompts"
-  import { getSliderColor, sliderToDisplayValue } from "$lib/utils/colors"
+  import { interpolateColor, sliderToDisplayValue } from "$lib/utils/colors"
+  import WavelengthDial from "./WavelengthDial.svelte"
 
   let {
     selectedPrompt,
@@ -20,149 +21,49 @@
     onBack: () => void
   } = $props()
 
-  // Convert slider value (-10 to 10) to dial angle
-  // -10 = 180° (left, pointing left)
-  // 0 = 90° (center, pointing up)
-  // 10 = 0° (right, pointing right)
-  function sliderToAngle(value: number): number {
-    // Map -10..10 to 180..0 degrees
-    return 90 - value * 9
-  }
-
   let displayValue = $derived(sliderToDisplayValue(target))
-  let angle = $derived(sliderToAngle(target))
-  let arrowColor = $derived(getSliderColor(target, selectedPromptIndex, 3))
+  let arrowColor = $derived(interpolateColor(target, leftColor, rightColor))
 
-  // Tick marks for the dial (every 20% = every 2 slider units)
-  const tickAngles = [
-    { value: -8, angle: 162 },
-    { value: -6, angle: 144 },
-    { value: -4, angle: 126 },
-    { value: -2, angle: 108 },
-    { value: 0, angle: 90 },
-    { value: 2, angle: 72 },
-    { value: 4, angle: 54 },
-    { value: 6, angle: 36 },
-    { value: 8, angle: 18 },
-  ]
+  let arrows = $derived([
+    {
+      value: target,
+      color: arrowColor,
+      displayValue,
+    },
+  ])
 </script>
 
 <div class="mx-auto flex h-full w-full max-w-md flex-col items-center gap-4 p-4">
-  <h2 class="text-2xl font-bold">Make a clue!</h2>
+  <div class="flex w-full flex-col items-center gap-2 rounded-xl bg-purple-500/15 px-6 py-3">
+    <span class="text-xs font-semibold tracking-widest text-purple-400 uppercase"
+      >Psychic's Turn</span
+    >
+    <h2 class="text-2xl font-bold text-white">Give a Clue</h2>
+    <p class="text-center text-sm text-gray-400">Help your team find the target</p>
+  </div>
 
   <div class="flex w-full flex-1 flex-col items-center justify-between gap-4">
     <!-- Dial Container -->
     <div class="flex w-full flex-1 flex-col items-center justify-center">
-      <div class="relative aspect-2/1 w-full max-w-xs">
-        <!-- Semicircle background -->
-        <div
-          class="absolute inset-0 overflow-hidden rounded-t-full border-4 border-b-0 border-[#555] bg-[#222]"
-        >
-          <!-- Gradient overlay showing spectrum -->
-          <div
-            class="absolute inset-0 rounded-t-full opacity-30"
-            style="background: linear-gradient(to right, {leftColor}, {rightColor})"
-          ></div>
-        </div>
-
-        <!-- Tick marks on the arc -->
-        {#each tickAngles as tick (tick.value)}
-          {@const isCenter = tick.value === 0}
-          {@const rad = (tick.angle * Math.PI) / 180}
-          {@const outerX = 50 + Math.cos(rad) * 48}
-          {@const outerY = 100 - Math.sin(rad) * 96}
-          {@const innerX = 50 + Math.cos(rad) * 40}
-          {@const innerY = 100 - Math.sin(rad) * 80}
-          <svg class="absolute inset-0 h-full w-full overflow-visible">
-            <line
-              x1="{outerX}%"
-              y1="{outerY}%"
-              x2="{innerX}%"
-              y2="{innerY}%"
-              stroke={isCenter ? "rgba(255,255,255,0.7)" : "rgba(255,255,255,0.3)"}
-              stroke-width={isCenter ? 3 : 2}
-            />
-          </svg>
-        {/each}
-
-        <!-- Arrow pointing to target -->
-        {#if true}
-          {@const rad = (angle * Math.PI) / 180}
-          {@const tipX = 50 + Math.cos(rad) * 42}
-          {@const tipY = 100 - Math.sin(rad) * 84}
-          {@const headSize = 4}
-          {@const headAngle1 = ((angle + 150) * Math.PI) / 180}
-          {@const headAngle2 = ((angle - 150) * Math.PI) / 180}
-          <svg class="absolute inset-0 h-full w-full overflow-visible">
-            <!-- Arrow line -->
-            <line
-              x1="50%"
-              y1="100%"
-              x2="{50 + Math.cos(rad) * 38}%"
-              y2="{100 - Math.sin(rad) * 76}%"
-              stroke={arrowColor}
-              stroke-width="6"
-              stroke-linecap="round"
-            />
-            <!-- Arrow head -->
-            <polygon
-              points="
-                {tipX}%,{tipY}%
-                {tipX + Math.cos(headAngle1) * headSize}%,{tipY -
-                Math.sin(headAngle1) * headSize * 2}%
-                {tipX + Math.cos(headAngle2) * headSize}%,{tipY -
-                Math.sin(headAngle2) * headSize * 2}%
-              "
-              fill={arrowColor}
-            />
-            <!-- Center pivot point -->
-            <circle cx="50%" cy="100%" r="8" fill="#333" stroke={arrowColor} stroke-width="3" />
-          </svg>
-        {/if}
-
-        <!-- Percentage display -->
-        <div class="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-full pt-4 text-center">
-          <span
-            class="rounded-full px-4 py-2 text-2xl font-bold text-black"
-            style="background-color: {arrowColor}"
-          >
-            {displayValue}%
-          </span>
-        </div>
-      </div>
-
-      <!-- Prompt labels at the ends -->
-      <div class="mt-16 flex w-full max-w-sm items-stretch justify-between gap-4">
-        <div
-          class="flex-1 rounded-lg p-3 text-center text-lg font-bold text-black"
-          style="background-color: {leftColor}"
-        >
-          {selectedPrompt[0]}
-        </div>
-        <div
-          class="flex-1 rounded-lg p-3 text-center text-lg font-bold text-black"
-          style="background-color: {rightColor}"
-        >
-          {selectedPrompt[1]}
-        </div>
-      </div>
+      <WavelengthDial prompt={selectedPrompt} {leftColor} {rightColor} {arrows} />
     </div>
 
     <!-- Action buttons -->
-    <div class="flex w-full max-w-xs flex-col gap-4">
+    <div class="flex w-full max-w-sm items-center gap-3">
       <button
-        class="w-full cursor-pointer rounded-lg border-none bg-[#646cff] p-4 text-xl font-bold text-white hover:bg-[#535bf2]"
+        class="flex h-14 w-14 cursor-pointer items-center justify-center rounded-xl border border-white/20 text-white/60 transition-all hover:bg-white/10 hover:text-white active:scale-[0.98]"
+        onclick={onBack}
+        type="button"
+        aria-label="Go back"
+      >
+        <i class="fa-solid fa-arrow-left text-lg"></i>
+      </button>
+      <button
+        class="flex-1 cursor-pointer rounded-xl bg-white/15 px-6 py-4 text-lg font-semibold text-white transition-all hover:bg-white/25 active:scale-[0.98]"
         onclick={onReadyToGuess}
         type="button"
       >
-        Ready!
-      </button>
-      <button
-        class="cursor-pointer border-none bg-transparent text-[#888] underline hover:text-white"
-        onclick={onBack}
-        type="button"
-      >
-        Back to Prompts
+        Continue
       </button>
     </div>
   </div>
