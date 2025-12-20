@@ -227,8 +227,8 @@
         <line
           x1="50"
           y1="50"
-          x2={50 + Math.cos(rad) * 34}
-          y2={50 - Math.sin(rad) * 34}
+          x2={50 + Math.cos(rad) * 31.2}
+          y2={50 - Math.sin(rad) * 31.2}
           stroke={arrow.color}
           stroke-opacity="0.9"
           stroke-width="2.5"
