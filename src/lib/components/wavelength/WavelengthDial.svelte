@@ -150,6 +150,8 @@
     <div
       bind:this={dialEl}
       class="relative aspect-2/1 w-full max-w-xs touch-none select-none"
+      class:cursor-grab={!isDragging}
+      class:cursor-grabbing={isDragging}
       role="slider"
       tabindex="0"
       aria-valuemin={-10}

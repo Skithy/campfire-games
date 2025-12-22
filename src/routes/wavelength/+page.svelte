@@ -10,7 +10,7 @@
   import PsychicPhase from "$lib/components/wavelength/PsychicPhase.svelte"
   import RevealPhase from "$lib/components/wavelength/RevealPhase.svelte"
   import SplashScreen from "$lib/components/wavelength/SplashScreen.svelte"
-  import { GOLD, GREEN, PURPLE, RED } from "$lib/constants/wavelengthColors"
+  import { GOLD, GREEN, PURPLE, RED } from "$lib/constants/colors"
   import { type Prompt, wavelengthPrompts } from "$lib/data/wavelengthPrompts"
   import { Color, sliderToDisplayValue } from "$lib/utils/colors"
 

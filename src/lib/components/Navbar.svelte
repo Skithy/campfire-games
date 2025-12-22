@@ -1,6 +1,6 @@
 <script lang="ts">
   import { page } from "$app/stores"
-  import { GOLD, PURPLE } from "$lib/constants/wavelengthColors"
+  import { GOLD, ORANGE, PURPLE } from "$lib/constants/colors"
   import { Color } from "$lib/utils/colors"
 
   let isWavelength = $derived($page.url.pathname.includes("wavelength"))
@@ -55,7 +55,7 @@
       <a
         href="/wavelength?reset=true"
         class="text-xl font-bold tracking-tight transition-opacity hover:opacity-80"
-        style:background={Color.toGradient(PURPLE, GOLD)}
+        style:background={Color.toGradient(ORANGE, GOLD)}
         style:-webkit-background-clip="text"
         style:background-clip="text"
         style:color="transparent"
@@ -69,7 +69,7 @@
   <div class="relative" bind:this={menuRef}>
     <button
       onclick={toggleMenu}
-      class="text-2xl transition-transform duration-200 hover:scale-110 active:scale-95"
+      class="cursor-pointer text-2xl transition-transform duration-200 hover:scale-110 active:scale-95"
       aria-expanded={isMenuOpen}
       aria-haspopup="true"
       aria-label="Menu"

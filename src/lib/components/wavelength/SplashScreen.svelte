@@ -1,7 +1,7 @@
 <script lang="ts">
   import { fade, scale } from "svelte/transition"
 
-  import { GOLD, PURPLE } from "$lib/constants/wavelengthColors"
+  import { GOLD, PURPLE } from "$lib/constants/colors"
   import { Color } from "$lib/utils/colors"
 
   let { onStart } = $props<{ onStart: () => void }>()
@@ -85,7 +85,7 @@
 
   <div class="flex w-full max-w-xs flex-col gap-3">
     <button
-      class="group relative overflow-hidden rounded-2xl p-0.5 transition-all hover:scale-[1.02] active:scale-[0.98]"
+      class="group relative cursor-pointer overflow-hidden rounded-2xl p-0.5 transition-all hover:scale-[1.02] active:scale-[0.98]"
       style:background={gradient}
       onclick={onStart}
     >
@@ -97,7 +97,7 @@
       </span>
     </button>
     <button
-      class="flex items-center justify-center gap-2 rounded-2xl border border-white/20 bg-white/10 px-8 py-4 text-lg font-semibold text-white/80 transition-all hover:bg-white/15 hover:text-white active:scale-[0.98]"
+      class="flex cursor-pointer items-center justify-center gap-2 rounded-2xl border border-white/20 bg-white/10 px-8 py-4 text-lg font-semibold text-white/80 transition-all hover:bg-white/15 hover:text-white active:scale-[0.98]"
       onclick={toggleInstructions}
     >
       <i class="fa-solid fa-circle-question text-base"></i>
@@ -172,7 +172,7 @@
 
         <div class="flex justify-end pt-2">
           <button
-            class="rounded-xl bg-white/10 px-6 py-3 font-semibold text-white transition-colors hover:bg-white/20"
+            class="cursor-pointer rounded-xl bg-white/10 px-6 py-3 font-semibold text-white transition-colors hover:bg-white/20"
             onclick={toggleInstructions}
           >
             Got it!
