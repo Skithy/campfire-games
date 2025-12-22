@@ -10,6 +10,25 @@
 
   const gradient = Color.toGradient(PURPLE, GOLD)
 
+  let rotation = $state(30)
+  let animationDirection = $state(1)
+
+  // Animate the dial back and forth
+  $effect(() => {
+    const interval = setInterval(() => {
+      rotation += animationDirection * 2
+      if (rotation >= 60) {
+        rotation = 60
+        animationDirection = -1
+      } else if (rotation <= -60) {
+        rotation = -60
+        animationDirection = 1
+      }
+    }, 50)
+
+    return () => clearInterval(interval)
+  })
+
   function toggleInstructions() {
     showInstructions = !showInstructions
   }
@@ -26,7 +45,8 @@
       <div class="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2">
         <!-- Pointer using SVG with arrow tip -->
         <svg
-          class="absolute bottom-1/2 left-1/2 origin-bottom -translate-x-1/2 rotate-30"
+          class="absolute bottom-1/2 left-1/2 origin-bottom -translate-x-1/2 transition-transform duration-100"
+          style:transform="rotate({rotation}deg)"
           width="20"
           height="80"
           viewBox="0 0 20 80"
