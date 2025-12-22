@@ -1,9 +1,24 @@
 <script lang="ts">
   import { fade, scale } from "svelte/transition"
 
+  import { GOLD, PURPLE } from "$lib/constants/wavelengthColors"
+  import { hsl, interpolateColor } from "$lib/utils/colors"
+
   let { onStart } = $props<{ onStart: () => void }>()
 
   let showInstructions = $state(false)
+
+  // Purple (psychic phase) to Gold (guess phase) color scheme
+  const leftColor = hsl(PURPLE)
+  const rightColor = hsl(GOLD)
+
+  // Generate gradient stops using interpolateColor
+  const gradientStops = [-10, -5, 0, 5, 10].map((value) => {
+    const color = interpolateColor(value, leftColor, rightColor)
+    const percent = ((value + 10) / 20) * 100
+    return `${color} ${percent}%`
+  })
+  const gradient = `linear-gradient(to right, ${gradientStops.join(", ")})`
 
   function toggleInstructions() {
     showInstructions = !showInstructions
@@ -15,10 +30,7 @@
   <div class="relative flex flex-col items-center gap-6">
     <!-- Mini dial illustration -->
     <div class="relative h-24 w-48">
-      <div
-        class="absolute inset-0 rounded-t-full"
-        style="background: linear-gradient(to right, hsl(0, 75%, 80%) 0%, hsl(0, 0%, 95%) 50%, hsl(180, 75%, 80%) 100%);"
-      ></div>
+      <div class="absolute inset-0 rounded-t-full" style:background={gradient}></div>
       <div class="absolute inset-0 rounded-t-full border-2 border-b-0 border-white/30"></div>
       <!-- Dial hand with circular pivot and triangular pointer -->
       <div class="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2">
@@ -50,7 +62,10 @@
     <div class="space-y-3 text-center">
       <h1
         class="pb-1 text-5xl font-black tracking-tight sm:text-6xl"
-        style="background: linear-gradient(to right, hsl(0, 75%, 70%) 0%, hsl(0, 0%, 85%) 50%, hsl(180, 75%, 70%) 100%); -webkit-background-clip: text; background-clip: text; color: transparent;"
+        style:background={gradient}
+        style:-webkit-background-clip="text"
+        style:background-clip="text"
+        style:color="transparent"
       >
         Wavelength
       </h1>
@@ -61,7 +76,7 @@
   <div class="flex w-full max-w-xs flex-col gap-3">
     <button
       class="group relative overflow-hidden rounded-2xl p-0.5 transition-all hover:scale-[1.02] active:scale-[0.98]"
-      style="background: linear-gradient(to right, hsl(0, 75%, 70%) 0%, hsl(0, 0%, 85%) 50%, hsl(180, 75%, 70%) 100%);"
+      style:background={gradient}
       onclick={onStart}
     >
       <span

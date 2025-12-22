@@ -1,4 +1,7 @@
 <script lang="ts">
+  import { AMBER, GOLD, GREEN, PURPLE, RED } from "$lib/constants/wavelengthColors"
+  import { rgb } from "$lib/utils/colors"
+
   type Phase = "splash" | "prompt" | "psychic" | "guess" | "reveal"
 
   let {
@@ -14,28 +17,28 @@
     if (phase === "reveal") {
       switch (scoreLevel) {
         case "great":
-          return { top: "rgb(80, 160, 120)", bottom: "rgb(80, 160, 120)" } // muted green
+          return { top: rgb(GREEN), bottom: rgb(GREEN) }
         case "good":
-          return { top: "rgb(80, 160, 120)", bottom: "rgb(80, 160, 120)" } // muted green
+          return { top: rgb(GREEN), bottom: rgb(GREEN) }
         case "okay":
-          return { top: "rgb(180, 150, 80)", bottom: "rgb(180, 150, 80)" } // muted amber
+          return { top: rgb(AMBER), bottom: rgb(AMBER) }
         case "miss":
-          return { top: "rgb(180, 100, 100)", bottom: "rgb(180, 100, 100)" } // muted red
+          return { top: rgb(RED), bottom: rgb(RED) }
         default:
-          return { top: "rgb(140, 100, 180)", bottom: "rgb(140, 100, 180)" } // muted purple
+          return { top: rgb(PURPLE), bottom: rgb(PURPLE) }
       }
     }
 
     switch (phase) {
       case "splash":
-        return { top: "rgb(180, 80, 80)", bottom: "rgb(80, 120, 180)" } // red top, blue bottom
+        return { top: rgb(PURPLE), bottom: rgb(GOLD) }
       case "prompt":
       case "psychic":
-        return { top: "rgb(140, 100, 180)", bottom: "rgb(140, 100, 180)" } // muted purple
+        return { top: rgb(PURPLE), bottom: rgb(PURPLE) }
       case "guess":
-        return { top: "rgb(180, 140, 80)", bottom: "rgb(180, 140, 80)" } // muted amber
+        return { top: rgb(GOLD), bottom: rgb(GOLD) }
       default:
-        return { top: "rgb(140, 100, 180)", bottom: "rgb(140, 100, 180)" } // muted purple
+        return { top: rgb(PURPLE), bottom: rgb(PURPLE) }
     }
   })
 </script>

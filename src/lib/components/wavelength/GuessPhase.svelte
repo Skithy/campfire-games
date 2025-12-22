@@ -1,6 +1,5 @@
 <script lang="ts">
   import type { Prompt } from "$lib/data/wavelengthPrompts"
-  import { interpolateColor, sliderToDisplayValue } from "$lib/utils/colors"
 
   import PhaseActions from "./PhaseActions.svelte"
   import WavelengthDial from "./WavelengthDial.svelte"
@@ -25,24 +24,13 @@
   function handleLockIn() {
     onLockIn(value)
   }
-
-  let displayValue = $derived(sliderToDisplayValue(value))
-  let arrowColor = $derived(interpolateColor(value, leftColor, rightColor))
-
-  let arrows = $derived([
-    {
-      value,
-      color: arrowColor,
-      displayValue,
-    },
-  ])
 </script>
 
 <div class="mx-auto flex h-full w-full max-w-md flex-col items-center gap-4 px-6 pb-6">
   <div class="flex w-full flex-1 flex-col items-center justify-between gap-4">
     <!-- Dial Container -->
     <div class="flex w-full flex-1 flex-col items-center justify-center">
-      <WavelengthDial {prompt} {leftColor} {rightColor} {arrows} interactive={true} bind:value />
+      <WavelengthDial {prompt} {leftColor} {rightColor} interactive={true} bind:value />
     </div>
 
     <!-- Action buttons -->

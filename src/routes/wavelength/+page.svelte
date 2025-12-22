@@ -10,8 +10,9 @@
   import PsychicPhase from "$lib/components/wavelength/PsychicPhase.svelte"
   import RevealPhase from "$lib/components/wavelength/RevealPhase.svelte"
   import SplashScreen from "$lib/components/wavelength/SplashScreen.svelte"
+  import { GOLD, GREEN, PURPLE, RED } from "$lib/constants/wavelengthColors"
   import { type Prompt, wavelengthPrompts } from "$lib/data/wavelengthPrompts"
-  import { sliderToDisplayValue } from "$lib/utils/colors"
+  import { rgba, sliderToDisplayValue } from "$lib/utils/colors"
 
   type GamePhase = "splash" | "prompt" | "psychic" | "guess" | "reveal"
 
@@ -51,7 +52,7 @@
           label: "Results",
           title: "Perfect!",
           description: "You nailed it exactly!",
-          bgColor: "rgba(80, 160, 120, 0.3)",
+          bgColor: rgba(GREEN, 0.3),
         }
       }
       if (difference <= 1) {
@@ -59,7 +60,7 @@
           label: "Results",
           title: "So Close!",
           description: `Almost there! Just ${diffPercent}% off`,
-          bgColor: "rgba(80, 160, 120, 0.25)",
+          bgColor: rgba(GREEN, 0.25),
         }
       }
       if (difference <= 3) {
@@ -67,14 +68,14 @@
           label: "Results",
           title: "Not Bad",
           description: `Good effort — ${diffPercent}% off`,
-          bgColor: "rgba(180, 140, 80, 0.25)",
+          bgColor: rgba(GOLD, 0.25),
         }
       }
       return {
         label: "Results",
         title: "Way Off...",
         description: "Better luck next time!",
-        bgColor: "rgba(180, 100, 100, 0.25)",
+        bgColor: rgba(RED, 0.25),
       }
     }
 
@@ -84,21 +85,21 @@
           label: "Psychic's Turn",
           title: "Pick a Spectrum",
           description: "Choose a prompt for your team",
-          bgColor: "rgba(140, 100, 180, 0.15)",
+          bgColor: rgba(PURPLE, 0.15),
         }
       case "psychic":
         return {
           label: "Psychic's Turn",
           title: "Give a Clue",
           description: "Help your team find the target",
-          bgColor: "rgba(140, 100, 180, 0.15)",
+          bgColor: rgba(PURPLE, 0.15),
         }
       case "guess":
         return {
           label: "Team's Turn",
           title: "Make a Guess",
           description: "Where on the spectrum is the clue?",
-          bgColor: "rgba(180, 140, 80, 0.15)",
+          bgColor: rgba(GOLD, 0.15),
         }
       default:
         return null
@@ -230,10 +231,7 @@
         />
       {/if}
     </div>
-    <main
-      class="relative flex min-h-0 flex-1"
-      in:fade={{ duration: 300, delay: 150 }}
-    >
+    <main class="relative flex min-h-0 flex-1" in:fade={{ duration: 300, delay: 150 }}>
       {#key phase}
         <div
           class="absolute inset-0 flex justify-center overflow-auto pt-4"

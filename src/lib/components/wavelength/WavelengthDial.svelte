@@ -1,11 +1,12 @@
 <script lang="ts">
   import type { Prompt } from "$lib/data/wavelengthPrompts"
+  import { interpolateColor, sliderToDisplayValue } from "$lib/utils/colors"
 
   type Arrow = {
     value: number
     color: string
     label?: string
-    displayValue?: number
+    displayValue: number
     style?: "solid" | "dashed"
   }
 
@@ -13,23 +14,55 @@
     prompt,
     leftColor,
     rightColor,
-    arrows = [],
-    showDifferenceWedge = false,
     interactive = false,
     value = $bindable(0),
+    targetValue,
     ondragstart,
     ondragend,
   }: {
     prompt: Prompt
     leftColor: string
     rightColor: string
-    arrows?: Arrow[]
-    showDifferenceWedge?: boolean
     interactive?: boolean
     value?: number
+    targetValue?: number
     ondragstart?: () => void
     ondragend?: () => void
   } = $props()
+
+  // Show difference wedge automatically when both value and targetValue exist
+  let showDifferenceWedge = $derived(targetValue !== undefined)
+
+  // Auto-generate arrows from value (and optionally targetValue for reveal)
+  let arrows = $derived.by((): Arrow[] => {
+    // If targetValue is provided, show both target and guess arrows
+    if (targetValue !== undefined) {
+      return [
+        {
+          value: targetValue,
+          color: interpolateColor(targetValue, leftColor, rightColor),
+          label: "Target",
+          displayValue: sliderToDisplayValue(targetValue),
+          style: "solid",
+        },
+        {
+          value,
+          color: interpolateColor(value, leftColor, rightColor),
+          label: "Guess",
+          displayValue: sliderToDisplayValue(value),
+          style: "dashed",
+        },
+      ]
+    }
+    // Single arrow for value
+    return [
+      {
+        value,
+        color: interpolateColor(value, leftColor, rightColor),
+        displayValue: sliderToDisplayValue(value),
+      },
+    ]
+  })
 
   let isDragging = $state(false)
   let dialEl: HTMLDivElement | null = $state(null)
