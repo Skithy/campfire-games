@@ -107,32 +107,35 @@
         <div class="space-y-4 text-white/70">
           <div class="flex gap-3">
             <span
-              class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-amber-500/20 text-sm font-bold text-amber-400"
-              >1</span
+              class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-sm font-bold"
+              style:background-color={PURPLE.toRgba(0.2)}
+              style:color={PURPLE.toHsl()}>1</span
             >
             <p>
-              <strong class="text-amber-400">The Psychic</strong> sees where the target is located on
-              the spectrum.
+              <strong style:color={PURPLE.toHsl()}>The Spectrum:</strong> The Psychic chooses a spectrum
+              and sees where the target is located.
             </p>
           </div>
           <div class="flex gap-3">
             <span
-              class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-rose-500/20 text-sm font-bold text-rose-400"
-              >2</span
+              class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-sm font-bold"
+              style:background-color={PURPLE.toRgba(0.2)}
+              style:color={PURPLE.toHsl()}>2</span
             >
             <p>
-              <strong class="text-rose-400">The Clue:</strong> The Psychic gives a clue that fits where
-              the target sits between two opposites.
+              <strong style:color={PURPLE.toHsl()}>The Clue:</strong> The Psychic gives a clue that hints
+              at where the target sits.
             </p>
           </div>
           <div class="flex gap-3">
             <span
-              class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-cyan-500/20 text-sm font-bold text-cyan-400"
-              >3</span
+              class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-sm font-bold"
+              style:background-color={GOLD.toRgba(0.2)}
+              style:color={GOLD.toHsl()}>3</span
             >
             <p>
-              <strong class="text-cyan-400">The Guess:</strong> Everyone else discusses and moves the
-              dial to where they think the target is.
+              <strong style:color={GOLD.toHsl()}>The Guess:</strong> Everyone else moves the dial to
+              where they think the target is.
             </p>
           </div>
           <div class="flex gap-3">

@@ -37,6 +37,32 @@
     return "miss" as const
   })
 
+  // Background gradient colors for each phase
+  let backgroundColors = $derived.by((): { top: Color; bottom: Color } => {
+    if (phase === "splash") {
+      return { top: PURPLE, bottom: GOLD }
+    }
+    if (phase === "prompt" || phase === "psychic") {
+      return { top: PURPLE, bottom: PURPLE }
+    }
+    if (phase === "guess") {
+      return { top: GOLD, bottom: GOLD }
+    }
+    if (phase === "reveal") {
+      switch (scoreLevel) {
+        case "great":
+        case "good":
+          return { top: GREEN, bottom: GREEN }
+        case "okay":
+          return { top: GOLD, bottom: GOLD }
+        case "miss":
+        default:
+          return { top: RED, bottom: RED }
+      }
+    }
+    return { top: PURPLE, bottom: PURPLE }
+  })
+
   // Header configuration for each phase
   let headerConfig = $derived.by(() => {
     if (phase === "splash") {
@@ -201,7 +227,7 @@
 </script>
 
 <div class="relative flex h-full flex-col overflow-hidden bg-[#111] font-sans text-white">
-  <PhaseBackground {phase} {scoreLevel} />
+  <PhaseBackground top={backgroundColors.top} bottom={backgroundColors.bottom} />
 
   <!-- Splash screen (absolutely positioned, full screen) -->
   {#key phase === "splash"}

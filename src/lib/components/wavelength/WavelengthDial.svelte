@@ -30,10 +30,6 @@
     ondragend?: () => void
   } = $props()
 
-  // Convert to HSL strings for CSS
-  let leftColorHsl = $derived(leftColor.toHsl())
-  let rightColorHsl = $derived(rightColor.toHsl())
-
   // Show difference wedge automatically when both value and targetValue exist
   let showDifferenceWedge = $derived(targetValue !== undefined)
 
@@ -304,10 +300,10 @@
 
   <!-- Prompt labels integrated at dial ends -->
   <div class="absolute bottom-0 -left-4 max-w-24 translate-y-full pt-2 text-center">
-    <span class="text-base font-bold" style:color={leftColorHsl}>{prompt[0]}</span>
+    <span class="text-base font-bold" style:color={leftColor.toHsl()}>{prompt[0]}</span>
   </div>
   <div class="absolute -right-4 bottom-0 max-w-24 translate-y-full pt-2 text-center">
-    <span class="text-base font-bold" style:color={rightColorHsl}>{prompt[1]}</span>
+    <span class="text-base font-bold" style:color={rightColor.toHsl()}>{prompt[1]}</span>
   </div>
 
   <!-- Legend for multiple arrows -->

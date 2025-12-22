@@ -3,8 +3,8 @@
   import { GOLD, PURPLE } from "$lib/constants/wavelengthColors"
   import { Color } from "$lib/utils/colors"
 
-  let title = $derived($page.url.pathname.includes("wavelength") ? "Wavelength" : "Campfire Games")
   let isWavelength = $derived($page.url.pathname.includes("wavelength"))
+
   let isMenuOpen = $state(false)
   let menuRef: HTMLElement | null = $state(null)
 
@@ -39,14 +39,31 @@
   class="sticky top-0 z-50 flex w-full items-center justify-between border-b border-white/10 bg-black/20 px-6 py-4 backdrop-blur-md"
 >
   <div class="flex items-center gap-4">
-    <a
-      href={title === "Wavelength" ? "/wavelength?reset=true" : "/"}
-      class="text-xl font-bold tracking-tight transition-opacity hover:opacity-80"
-      style:color={isWavelength ? Color.toGradient(PURPLE, GOLD) : "white"}
-      onclick={closeMenu}
-    >
-      {title}
-    </a>
+    {#if isWavelength}
+      <a
+        href="/"
+        class="text-xl font-bold tracking-tight transition-opacity hover:opacity-80"
+        style:background={Color.toGradient(PURPLE, GOLD)}
+        style:-webkit-background-clip="text"
+        style:background-clip="text"
+        style:color="transparent"
+        onclick={closeMenu}
+      >
+        Wavelength
+      </a>
+    {:else}
+      <a
+        href="/wavelength?reset=true"
+        class="text-xl font-bold tracking-tight transition-opacity hover:opacity-80"
+        style:background={Color.toGradient(PURPLE, GOLD)}
+        style:-webkit-background-clip="text"
+        style:background-clip="text"
+        style:color="transparent"
+        onclick={closeMenu}
+      >
+        Campfire Games
+      </a>
+    {/if}
   </div>
 
   <div class="relative" bind:this={menuRef}>
@@ -80,7 +97,7 @@
           role="menuitem"
           onclick={closeMenu}
         >
-          <span class="text-lg">📻</span>
+          <span class="text-lg">🎚️</span>
           Wavelength
         </a>
       </div>
