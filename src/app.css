@@ -8,3 +8,8 @@
   --font-mono: "Fira Mono", monospace;
   font-family: var(--font-body);
 }
+
+html,
+body {
+  overscroll-behavior: none;
+}

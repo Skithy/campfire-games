@@ -209,7 +209,7 @@
     {@const angle = sliderToAngle(arrow.value)}
     {@const rad = (angle * Math.PI) / 180}
     {@const isDashed = arrow.style === "dashed"}
-    {@const armStart = 8}
+    {@const armStart = 0}
     {@const armEnd = 30}
     {@const tipEnd = 38}
     {@const headWidth = 4}
@@ -236,9 +236,13 @@
       <polygon
         points="{50 + Math.cos(rad) * tipEnd},{50 - Math.sin(rad) * tipEnd} {50 +
           Math.cos(rad) * armEnd +
-          Math.cos(perpAngle1) * headWidth},{50 - Math.sin(rad) * armEnd - Math.sin(perpAngle1) * headWidth} {50 +
+          Math.cos(perpAngle1) * headWidth},{50 -
+          Math.sin(rad) * armEnd -
+          Math.sin(perpAngle1) * headWidth} {50 +
           Math.cos(rad) * armEnd +
-          Math.cos(perpAngle2) * headWidth},{50 - Math.sin(rad) * armEnd - Math.sin(perpAngle2) * headWidth}"
+          Math.cos(perpAngle2) * headWidth},{50 -
+          Math.sin(rad) * armEnd -
+          Math.sin(perpAngle2) * headWidth}"
         fill="black"
       />
     </svg>
@@ -252,11 +256,10 @@
   </div>
   <!-- Percentage display below pivot -->
   {#if arrows.length === 1 && arrows[0].displayValue !== undefined}
-    <div class="pointer-events-none absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-[calc(100%+1.5rem)]">
-      <div
-        class="text-2xl font-bold"
-        style="color: {arrows[0].color}"
-      >
+    <div
+      class="pointer-events-none absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-[calc(100%+1.5rem)]"
+    >
+      <div class="text-2xl font-bold" style="color: {arrows[0].color}">
         {arrows[0].displayValue}%
       </div>
     </div>
@@ -272,13 +275,11 @@
 
   <!-- Legend for multiple arrows -->
   {#if arrows.length > 1 && arrows.some((a) => a.label)}
-    <div
-      class="absolute bottom-0 left-1/2 flex -translate-x-1/2 translate-y-full gap-8 pt-12"
-    >
+    <div class="absolute bottom-0 left-1/2 flex -translate-x-1/2 translate-y-full gap-8 pt-12">
       {#each arrows as arrow, i (i)}
         {#if arrow.label}
           <div class="flex flex-col items-center gap-1">
-            <span class="text-xs text-gray-400 uppercase tracking-wide">{arrow.label}</span>
+            <span class="text-xs tracking-wide text-gray-400 uppercase">{arrow.label}</span>
             <span class="text-2xl font-bold" style="color: {arrow.color}"
               >{#if arrow.displayValue !== undefined}{arrow.displayValue}%{/if}</span
             >
