@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { Prompt } from "$lib/data/wavelengthPrompts"
-  import { interpolateColor, sliderToDisplayValue } from "$lib/utils/colors"
+  import { Color, sliderToDisplayValue } from "$lib/utils/colors"
 
   type Arrow = {
     value: number
@@ -21,14 +21,18 @@
     ondragend,
   }: {
     prompt: Prompt
-    leftColor: string
-    rightColor: string
+    leftColor: Color
+    rightColor: Color
     interactive?: boolean
     value?: number
     targetValue?: number
     ondragstart?: () => void
     ondragend?: () => void
   } = $props()
+
+  // Convert to HSL strings for CSS
+  let leftColorHsl = $derived(leftColor.toHsl())
+  let rightColorHsl = $derived(rightColor.toHsl())
 
   // Show difference wedge automatically when both value and targetValue exist
   let showDifferenceWedge = $derived(targetValue !== undefined)
@@ -40,14 +44,14 @@
       return [
         {
           value: targetValue,
-          color: interpolateColor(targetValue, leftColor, rightColor),
+          color: Color.interpolate(targetValue, leftColor, rightColor),
           label: "Target",
           displayValue: sliderToDisplayValue(targetValue),
           style: "solid",
         },
         {
           value,
-          color: interpolateColor(value, leftColor, rightColor),
+          color: Color.interpolate(value, leftColor, rightColor),
           label: "Guess",
           displayValue: sliderToDisplayValue(value),
           style: "dashed",
@@ -58,7 +62,7 @@
     return [
       {
         value,
-        color: interpolateColor(value, leftColor, rightColor),
+        color: Color.interpolate(value, leftColor, rightColor),
         displayValue: sliderToDisplayValue(value),
       },
     ]
@@ -177,7 +181,7 @@
   <!-- Semicircle background with gradient - solid like mini dial -->
   <div
     class="absolute inset-0 rounded-t-full"
-    style="background: linear-gradient(to right, {leftColor} 0%, hsl(0, 0%, 95%) 50%, {rightColor} 100%);"
+    style:background={Color.toGradient(leftColor, rightColor)}
   ></div>
   <!-- Border overlay -->
   <div class="absolute inset-0 rounded-t-full border-2 border-b-0 border-white/30"></div>
@@ -300,10 +304,10 @@
 
   <!-- Prompt labels integrated at dial ends -->
   <div class="absolute bottom-0 -left-4 max-w-24 translate-y-full pt-2 text-center">
-    <span class="text-base font-bold" style="color: {leftColor}">{prompt[0]}</span>
+    <span class="text-base font-bold" style="color: {leftColorHsl}">{prompt[0]}</span>
   </div>
   <div class="absolute -right-4 bottom-0 max-w-24 translate-y-full pt-2 text-center">
-    <span class="text-base font-bold" style="color: {rightColor}">{prompt[1]}</span>
+    <span class="text-base font-bold" style="color: {rightColorHsl}">{prompt[1]}</span>
   </div>
 
   <!-- Legend for multiple arrows -->

@@ -2,23 +2,13 @@
   import { fade, scale } from "svelte/transition"
 
   import { GOLD, PURPLE } from "$lib/constants/wavelengthColors"
-  import { hsl, interpolateColor } from "$lib/utils/colors"
+  import { Color } from "$lib/utils/colors"
 
   let { onStart } = $props<{ onStart: () => void }>()
 
   let showInstructions = $state(false)
 
-  // Purple (psychic phase) to Gold (guess phase) color scheme
-  const leftColor = hsl(PURPLE)
-  const rightColor = hsl(GOLD)
-
-  // Generate gradient stops using interpolateColor
-  const gradientStops = [-10, -5, 0, 5, 10].map((value) => {
-    const color = interpolateColor(value, leftColor, rightColor)
-    const percent = ((value + 10) / 20) * 100
-    return `${color} ${percent}%`
-  })
-  const gradient = `linear-gradient(to right, ${gradientStops.join(", ")})`
+  const gradient = Color.toGradient(PURPLE, GOLD)
 
   function toggleInstructions() {
     showInstructions = !showInstructions

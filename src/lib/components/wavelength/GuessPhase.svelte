@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { Prompt } from "$lib/data/wavelengthPrompts"
+  import type { Color } from "$lib/utils/colors"
 
   import PhaseActions from "./PhaseActions.svelte"
   import WavelengthDial from "./WavelengthDial.svelte"
@@ -12,8 +13,8 @@
     onBack,
   }: {
     prompt: Prompt
-    leftColor: string
-    rightColor: string
+    leftColor: Color
+    rightColor: Color
     onLockIn: (guess: number) => void
     onBack: () => void
   } = $props()

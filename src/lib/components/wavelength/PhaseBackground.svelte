@@ -1,6 +1,5 @@
 <script lang="ts">
   import { AMBER, GOLD, GREEN, PURPLE, RED } from "$lib/constants/wavelengthColors"
-  import { rgb } from "$lib/utils/colors"
 
   type Phase = "splash" | "prompt" | "psychic" | "guess" | "reveal"
 
@@ -17,28 +16,28 @@
     if (phase === "reveal") {
       switch (scoreLevel) {
         case "great":
-          return { top: rgb(GREEN), bottom: rgb(GREEN) }
+          return { top: GREEN.toRgb(), bottom: GREEN.toRgb() }
         case "good":
-          return { top: rgb(GREEN), bottom: rgb(GREEN) }
+          return { top: GREEN.toRgb(), bottom: GREEN.toRgb() }
         case "okay":
-          return { top: rgb(AMBER), bottom: rgb(AMBER) }
+          return { top: AMBER.toRgb(), bottom: AMBER.toRgb() }
         case "miss":
-          return { top: rgb(RED), bottom: rgb(RED) }
+          return { top: RED.toRgb(), bottom: RED.toRgb() }
         default:
-          return { top: rgb(PURPLE), bottom: rgb(PURPLE) }
+          return { top: PURPLE.toRgb(), bottom: PURPLE.toRgb() }
       }
     }
 
     switch (phase) {
       case "splash":
-        return { top: rgb(PURPLE), bottom: rgb(GOLD) }
+        return { top: PURPLE.toRgb(), bottom: GOLD.toRgb() }
       case "prompt":
       case "psychic":
-        return { top: rgb(PURPLE), bottom: rgb(PURPLE) }
+        return { top: PURPLE.toRgb(), bottom: PURPLE.toRgb() }
       case "guess":
-        return { top: rgb(GOLD), bottom: rgb(GOLD) }
+        return { top: GOLD.toRgb(), bottom: GOLD.toRgb() }
       default:
-        return { top: rgb(PURPLE), bottom: rgb(PURPLE) }
+        return { top: PURPLE.toRgb(), bottom: PURPLE.toRgb() }
     }
   })
 </script>

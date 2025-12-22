@@ -1,9 +1,14 @@
 <script lang="ts">
   import { page } from "$app/stores"
+  import { GOLD, PURPLE } from "$lib/constants/wavelengthColors"
+  import { Color } from "$lib/utils/colors"
 
   let title = $derived($page.url.pathname.includes("wavelength") ? "Wavelength" : "Campfire Games")
+  let isWavelength = $derived($page.url.pathname.includes("wavelength"))
   let isMenuOpen = $state(false)
   let menuRef: HTMLElement | null = $state(null)
+
+  const wavelengthGradient = Color.toGradient(PURPLE, GOLD)
 
   function toggleMenu() {
     isMenuOpen = !isMenuOpen
@@ -39,7 +44,12 @@
     <a
       href={title === "Wavelength" ? "/wavelength?reset=true" : "/"}
       class="text-xl font-bold tracking-tight transition-opacity hover:opacity-80"
-      style="background: linear-gradient(to right, hsl(0, 75%, 70%) 0%, hsl(0, 0%, 85%) 50%, hsl(180, 75%, 70%) 100%); -webkit-background-clip: text; background-clip: text; color: transparent;"
+      style:background={isWavelength
+        ? wavelengthGradient
+        : "linear-gradient(to right, hsl(270, 75%, 70%) 0%, hsl(30, 90%, 60%) 100%)"}
+      style:-webkit-background-clip="text"
+      style:background-clip="text"
+      style:color="transparent"
       onclick={closeMenu}
     >
       {title}
@@ -49,56 +59,37 @@
   <div class="relative" bind:this={menuRef}>
     <button
       onclick={toggleMenu}
-      class="group relative flex items-center justify-center rounded-full bg-white/10 px-4 py-2 text-sm font-medium text-white transition-all hover:bg-white/20 active:scale-95"
+      class="text-2xl transition-transform duration-200 hover:scale-110 active:scale-95"
       aria-expanded={isMenuOpen}
       aria-haspopup="true"
+      aria-label="Menu"
     >
-      <span>Menu</span>
-      <!-- Hamburger / Close Icon logic could go here, keeping simple arrow for now but rotating it -->
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 20 20"
-        fill="currentColor"
-        class="ml-2 h-4 w-4 transition-transform duration-200 {isMenuOpen ? 'rotate-180' : ''}"
-      >
-        <path
-          fill-rule="evenodd"
-          d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-          clip-rule="evenodd"
-        />
-      </svg>
+      🏕️
     </button>
 
     {#if isMenuOpen}
       <div
-        class="absolute top-full right-0 mt-2 w-56 origin-top-right rounded-xl border border-white/10 bg-gray-900/90 p-2 shadow-xl backdrop-blur-xl transition-all focus:outline-none"
+        class="absolute top-full right-0 mt-3 w-48 origin-top-right overflow-hidden rounded-2xl border border-white/10 bg-gray-900/95 shadow-2xl backdrop-blur-xl"
         role="menu"
       >
-        <div class="px-2 py-2 text-xs font-semibold tracking-wider text-gray-400 uppercase">
-          Navigation
-        </div>
         <a
           href="/"
-          class="block rounded-lg px-4 py-2 text-sm text-white transition-colors hover:bg-white/10"
+          class="flex items-center gap-3 px-4 py-3 text-sm text-white/80 transition-colors hover:bg-white/10 hover:text-white"
           role="menuitem"
           onclick={closeMenu}
         >
+          <span class="text-lg">🏠</span>
           Home
         </a>
-
-        <div class="mt-2 border-t border-white/10 pt-2">
-          <div class="px-2 py-2 text-xs font-semibold tracking-wider text-gray-400 uppercase">
-            Games
-          </div>
-          <a
-            href="/wavelength"
-            class="block rounded-lg px-4 py-2 text-sm text-white transition-colors hover:bg-white/10"
-            role="menuitem"
-            onclick={closeMenu}
-          >
-            Wavelength
-          </a>
-        </div>
+        <a
+          href="/wavelength"
+          class="flex items-center gap-3 px-4 py-3 text-sm text-white/80 transition-colors hover:bg-white/10 hover:text-white"
+          role="menuitem"
+          onclick={closeMenu}
+        >
+          <span class="text-lg">📻</span>
+          Wavelength
+        </a>
       </div>
     {/if}
   </div>

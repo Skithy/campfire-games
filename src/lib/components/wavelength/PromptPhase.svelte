@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { Prompt } from "$lib/data/wavelengthPrompts"
+  import { Color } from "$lib/utils/colors"
 
   let {
     prompts,
@@ -8,12 +9,13 @@
     onReroll,
   }: {
     prompts: Prompt[]
-    promptColors: Array<[string, string]>
+    promptColors: Array<[Color, Color]>
     onSelectPrompt: (prompt: Prompt, index: number) => void
     onReroll: () => void
   } = $props()
 
   let selectedIndex = $state<number | null>(null)
+  const defaultColor = Color.rgb(128, 128, 128)
 
   function handleSubmit() {
     if (selectedIndex !== null) {
@@ -26,15 +28,15 @@
   <div class="flex w-full flex-1 flex-col items-center justify-between gap-4">
     <div class="flex w-full flex-col gap-5">
       {#each prompts as prompt, i (i)}
-        {@const [leftColor, rightColor] = promptColors[i] || ["#888", "#888"]}
+        {@const colors = promptColors[i] || [defaultColor, defaultColor]}
+        {@const leftColorHsl = colors[0].toHsl()}
+        {@const rightColorHsl = colors[1].toHsl()}
         {@const isSelected = selectedIndex === i}
         <div
           class="rounded-2xl p-0.5 transition-all"
           style="
-            background: {isSelected
-            ? `linear-gradient(90deg, ${leftColor}, ${rightColor})`
-            : '#444'};
-            box-shadow: {isSelected ? `0 0 20px ${leftColor}40` : 'none'};
+            background: {isSelected ? Color.toGradient(colors[0], colors[1]) : '#444'};
+            box-shadow: {isSelected ? `0 0 20px ${leftColorHsl}40` : 'none'};
           "
         >
           <button
@@ -44,12 +46,12 @@
           >
             <span
               class="flex flex-1 items-center justify-center px-3 py-5 text-center text-base font-bold whitespace-nowrap"
-              style="color: {leftColor}">{prompt[0]}</span
+              style="color: {leftColorHsl}">{prompt[0]}</span
             >
             <div class="w-px self-stretch bg-white/20"></div>
             <span
               class="flex flex-1 items-center justify-center px-3 py-5 text-center text-base font-bold whitespace-nowrap"
-              style="color: {rightColor}">{prompt[1]}</span
+              style="color: {rightColorHsl}">{prompt[1]}</span
             >
           </button>
         </div>

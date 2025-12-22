@@ -12,20 +12,20 @@
   import SplashScreen from "$lib/components/wavelength/SplashScreen.svelte"
   import { GOLD, GREEN, PURPLE, RED } from "$lib/constants/wavelengthColors"
   import { type Prompt, wavelengthPrompts } from "$lib/data/wavelengthPrompts"
-  import { rgba, sliderToDisplayValue } from "$lib/utils/colors"
+  import { Color, sliderToDisplayValue } from "$lib/utils/colors"
 
   type GamePhase = "splash" | "prompt" | "psychic" | "guess" | "reveal"
 
   let phase = $state<GamePhase>("splash")
   let currentPrompts = $state<Prompt[]>([])
-  let promptListColors = $state<Array<[string, string]>>([])
+  let promptListColors = $state<Array<[Color, Color]>>([])
   let viewedPrompts = $state<Set<string>>(new Set())
   let selectedPrompt = $state<Prompt | null>(null)
   // Target and guess are now -10 to 10 internal values (10% increments)
   // -10 = 100% left, 0 = 0% center, 10 = 100% right
   let target = $state<number>(0)
   let guess = $state<number>(0)
-  let promptColors = $state<[string, string]>(["#fff", "#fff"])
+  let promptColors = $state<[Color, Color]>([Color.rgb(255, 255, 255), Color.rgb(255, 255, 255)])
 
   // Calculate score level for background color in reveal phase
   let scoreLevel = $derived.by(() => {
@@ -52,7 +52,7 @@
           label: "Results",
           title: "Perfect!",
           description: "You nailed it exactly!",
-          bgColor: rgba(GREEN, 0.3),
+          color: GREEN,
         }
       }
       if (difference <= 1) {
@@ -60,7 +60,7 @@
           label: "Results",
           title: "So Close!",
           description: `Almost there! Just ${diffPercent}% off`,
-          bgColor: rgba(GREEN, 0.25),
+          color: GREEN,
         }
       }
       if (difference <= 3) {
@@ -68,14 +68,14 @@
           label: "Results",
           title: "Not Bad",
           description: `Good effort — ${diffPercent}% off`,
-          bgColor: rgba(GOLD, 0.25),
+          color: GOLD,
         }
       }
       return {
         label: "Results",
         title: "Way Off...",
         description: "Better luck next time!",
-        bgColor: rgba(RED, 0.25),
+        color: RED,
       }
     }
 
@@ -85,28 +85,28 @@
           label: "Psychic's Turn",
           title: "Pick a Spectrum",
           description: "Choose a prompt for your team",
-          bgColor: rgba(PURPLE, 0.15),
+          color: PURPLE,
         }
       case "psychic":
         return {
           label: "Psychic's Turn",
           title: "Give a Clue",
           description: "Help your team find the target",
-          bgColor: rgba(PURPLE, 0.15),
+          color: PURPLE,
         }
       case "guess":
         return {
           label: "Team's Turn",
           title: "Make a Guess",
           description: "Where on the spectrum is the clue?",
-          bgColor: rgba(GOLD, 0.15),
+          color: GOLD,
         }
       default:
         return null
     }
   })
 
-  function generatePromptColors(prompts: Prompt[]): Array<[string, string]> {
+  function generatePromptColors(prompts: Prompt[]): Array<[Color, Color]> {
     const count = prompts.length
     // Generate random starting hue, then space hues evenly for distinctness
     const randomStartHue = Math.random() * 360
@@ -115,8 +115,8 @@
     return Array.from({ length: count }, (_, i) => {
       const hue = (randomStartHue + i * hueStep) % 360
       const complementHue = (hue + 180) % 360
-      const leftColor = `hsl(${Math.round(hue)}, 70%, 80%)`
-      const rightColor = `hsl(${Math.round(complementHue)}, 70%, 80%)`
+      const leftColor = Color.hsl(hue, 70, 80)
+      const rightColor = Color.hsl(complementHue, 70, 80)
       return [leftColor, rightColor]
     })
   }
@@ -227,7 +227,7 @@
           label={headerConfig.label}
           title={headerConfig.title}
           description={headerConfig.description}
-          bgColor={headerConfig.bgColor}
+          color={headerConfig.color}
         />
       {/if}
     </div>
