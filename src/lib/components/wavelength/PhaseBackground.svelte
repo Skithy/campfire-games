@@ -46,13 +46,13 @@
 >
   <!-- Top glow -->
   <div
-    class="animate-pulse-slow absolute top-0 h-[50%] w-[140%] rounded-[100%] blur-3xl transition-colors duration-700"
-    style="left: 50%; transform: translateX(-50%) translateY(-60%); background: radial-gradient(ellipse at center, {gradientColors.primary} 0%, transparent 60%);"
+    class="animate-pulse-slow absolute top-0 h-[50%] w-[140%] rounded-[100%] blur-3xl"
+    style="left: 50%; transform: translateX(-50%) translateY(-60%); background-color: {gradientColors.primary}; mask-image: radial-gradient(ellipse at center, black 0%, transparent 60%); -webkit-mask-image: radial-gradient(ellipse at center, black 0%, transparent 60%); transition: background-color 700ms;"
   ></div>
   <!-- Bottom glow -->
   <div
-    class="animate-pulse-slow absolute bottom-0 h-[50%] w-[140%] rounded-[100%] blur-3xl transition-colors duration-700"
-    style="left: 50%; transform: translateX(-50%) translateY(60%); background: radial-gradient(ellipse at center, {gradientColors.primary} 0%, transparent 60%);"
+    class="animate-pulse-slow absolute bottom-0 h-[50%] w-[140%] rounded-[100%] blur-3xl"
+    style="left: 50%; transform: translateX(-50%) translateY(60%); background-color: {gradientColors.primary}; mask-image: radial-gradient(ellipse at center, black 0%, transparent 60%); -webkit-mask-image: radial-gradient(ellipse at center, black 0%, transparent 60%); transition: background-color 700ms;"
   ></div>
 </div>
 
