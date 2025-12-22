@@ -14,28 +14,28 @@
     if (phase === "reveal") {
       switch (scoreLevel) {
         case "great":
-          return { primary: "rgb(34, 197, 94)", secondary: "rgb(22, 163, 74)" } // green
+          return { primary: "rgb(80, 160, 120)", secondary: "rgb(60, 140, 100)" } // muted green
         case "good":
-          return { primary: "rgb(34, 197, 94)", secondary: "rgb(22, 163, 74)" } // green
+          return { primary: "rgb(80, 160, 120)", secondary: "rgb(60, 140, 100)" } // muted green
         case "okay":
-          return { primary: "rgb(234, 179, 8)", secondary: "rgb(202, 138, 4)" } // amber/yellow
+          return { primary: "rgb(180, 150, 80)", secondary: "rgb(160, 130, 60)" } // muted amber
         case "miss":
-          return { primary: "rgb(239, 68, 68)", secondary: "rgb(220, 38, 38)" } // red
+          return { primary: "rgb(180, 100, 100)", secondary: "rgb(160, 80, 80)" } // muted red
         default:
-          return { primary: "rgb(168, 85, 247)", secondary: "rgb(147, 51, 234)" } // purple
+          return { primary: "rgb(140, 100, 180)", secondary: "rgb(120, 80, 160)" } // muted purple
       }
     }
 
     switch (phase) {
       case "splash":
-        return { primary: "rgb(99, 102, 241)", secondary: "rgb(79, 70, 229)" } // indigo
+        return { primary: "rgb(120, 120, 130)", secondary: "rgb(100, 100, 110)" } // muted grey
       case "prompt":
       case "psychic":
-        return { primary: "rgb(168, 85, 247)", secondary: "rgb(147, 51, 234)" } // purple
+        return { primary: "rgb(140, 100, 180)", secondary: "rgb(120, 80, 160)" } // muted purple
       case "guess":
-        return { primary: "rgb(245, 158, 11)", secondary: "rgb(217, 119, 6)" } // amber
+        return { primary: "rgb(180, 140, 80)", secondary: "rgb(160, 120, 60)" } // muted amber
       default:
-        return { primary: "rgb(168, 85, 247)", secondary: "rgb(147, 51, 234)" } // purple
+        return { primary: "rgb(140, 100, 180)", secondary: "rgb(120, 80, 160)" } // muted purple
     }
   })
 </script>

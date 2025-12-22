@@ -141,20 +141,20 @@
 </div>
 
 {#snippet dialContent()}
-  <!-- Semicircle background with gradient -->
+  <!-- Semicircle background with gradient - solid like mini dial -->
   <div
     class="absolute inset-0 rounded-t-full"
-    style="background: linear-gradient(to right, {leftColor}, {rightColor}); opacity: 0.35"
+    style="background: linear-gradient(to right, {leftColor} 0%, hsl(0, 0%, 95%) 50%, {rightColor} 100%);"
   ></div>
   <!-- Border overlay -->
-  <div class="absolute inset-0 rounded-t-full border-2 border-b-0 border-white/20"></div>
+  <div class="absolute inset-0 rounded-t-full border-2 border-b-0 border-white/30"></div>
 
-  <!-- Tick marks on the arc -->
+  <!-- Notches on the arc -->
   {#each tickAngles as tick (tick.value)}
     {@const isCenter = tick.value === 0}
     {@const rad = (tick.angle * Math.PI) / 180}
-    {@const outerX = 50 + Math.cos(rad) * 48}
-    {@const outerY = 100 - Math.sin(rad) * 96}
+    {@const outerX = 50 + Math.cos(rad) * 50}
+    {@const outerY = 100 - Math.sin(rad) * 100}
     {@const innerX = 50 + Math.cos(rad) * 42}
     {@const innerY = 100 - Math.sin(rad) * 84}
     <svg class="pointer-events-none absolute inset-0 h-full w-full overflow-visible">
@@ -163,8 +163,8 @@
         y1="{outerY}%"
         x2="{innerX}%"
         y2="{innerY}%"
-        stroke={isCenter ? "rgba(255,255,255,0.6)" : "rgba(255,255,255,0.25)"}
-        stroke-width={isCenter ? 2 : 1}
+        stroke={isCenter ? "rgba(0,0,0,0.4)" : "rgba(0,0,0,0.2)"}
+        stroke-width={isCenter ? 2 : 1.5}
         stroke-linecap="round"
       />
     </svg>
@@ -208,62 +208,57 @@
   {#each arrows as arrow, i (i)}
     {@const angle = sliderToAngle(arrow.value)}
     {@const rad = (angle * Math.PI) / 180}
-    {@const headAngle1 = ((angle + 135) * Math.PI) / 180}
-    {@const headAngle2 = ((angle - 135) * Math.PI) / 180}
     {@const isDashed = arrow.style === "dashed"}
+    {@const armStart = 8}
+    {@const armEnd = 30}
+    {@const tipEnd = 38}
+    {@const headWidth = 4}
+    {@const perpAngle1 = rad + Math.PI / 2}
+    {@const perpAngle2 = rad - Math.PI / 2}
     <svg
       class="pointer-events-none absolute inset-0 h-full w-full"
       style="overflow: visible"
       viewBox="0 0 100 50"
       preserveAspectRatio="xMidYMax meet"
     >
-      <defs>
-        <filter id="arrow-shadow-{i}" x="-50%" y="-50%" width="200%" height="200%">
-          <feDropShadow dx="0" dy="1" stdDeviation="1.5" flood-opacity="0.5" />
-        </filter>
-      </defs>
-      <g filter="url(#arrow-shadow-{i})">
-        <!-- Arrow arm -->
-        <line
-          x1="50"
-          y1="50"
-          x2={50 + Math.cos(rad) * 31.2}
-          y2={50 - Math.sin(rad) * 31.2}
-          stroke={arrow.color}
-          stroke-opacity="0.9"
-          stroke-width="2.5"
-          stroke-linecap="butt"
-          stroke-dasharray={isDashed ? "6 4" : undefined}
-        />
-        <!-- Arrow head -->
-        <polygon
-          points="{50 + Math.cos(rad) * 40},{50 - Math.sin(rad) * 40} {50 +
-            Math.cos(rad) * 34 +
-            Math.cos(headAngle1) * 4},{50 - Math.sin(rad) * 34 - Math.sin(headAngle1) * 4} {50 +
-            Math.cos(rad) * 34 +
-            Math.cos(headAngle2) * 4},{50 - Math.sin(rad) * 34 - Math.sin(headAngle2) * 4}"
-          fill={arrow.color}
-          fill-opacity="0.9"
-        />
-      </g>
+      <!-- Arrow arm - thicker line like mini dial -->
+      <line
+        x1={50 + Math.cos(rad) * armStart}
+        y1={50 - Math.sin(rad) * armStart}
+        x2={50 + Math.cos(rad) * armEnd}
+        y2={50 - Math.sin(rad) * armEnd}
+        stroke="black"
+        stroke-width="4"
+        stroke-linecap={isDashed ? "butt" : "round"}
+        stroke-dasharray={isDashed ? "4 3" : undefined}
+      />
+      <!-- Arrow head - triangle like mini dial -->
+      <polygon
+        points="{50 + Math.cos(rad) * tipEnd},{50 - Math.sin(rad) * tipEnd} {50 +
+          Math.cos(rad) * armEnd +
+          Math.cos(perpAngle1) * headWidth},{50 - Math.sin(rad) * armEnd - Math.sin(perpAngle1) * headWidth} {50 +
+          Math.cos(rad) * armEnd +
+          Math.cos(perpAngle2) * headWidth},{50 - Math.sin(rad) * armEnd - Math.sin(perpAngle2) * headWidth}"
+        fill="black"
+      />
     </svg>
   {/each}
 
-  <!-- Center pivot (different rendering based on mode) -->
+  <!-- Center pivot - black like mini dial -->
+  <div class="pointer-events-none absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2">
+    <div class="relative h-10 w-10 rounded-full bg-black">
+      <div class="absolute inset-2.5 rounded-full bg-gray-600"></div>
+    </div>
+  </div>
+  <!-- Percentage display below pivot -->
   {#if arrows.length === 1 && arrows[0].displayValue !== undefined}
-    <!-- Single arrow with percentage display -->
-    <div class="pointer-events-none absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2">
+    <div class="pointer-events-none absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-[calc(100%+1.5rem)]">
       <div
-        class="flex h-14 w-14 items-center justify-center rounded-full border-2 border-white/30 text-lg font-bold shadow-lg"
-        style="background-color: {arrows[0].color}; color: rgba(0,0,0,0.8)"
+        class="text-2xl font-bold"
+        style="color: {arrows[0].color}"
       >
         {arrows[0].displayValue}%
       </div>
-    </div>
-  {:else}
-    <!-- Multiple arrows or no display value: just show pivot point -->
-    <div class="pointer-events-none absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2">
-      <div class="h-4 w-4 rounded-full border-2 border-white/40 bg-white/60 shadow-md"></div>
     </div>
   {/if}
 
@@ -278,21 +273,14 @@
   <!-- Legend for multiple arrows -->
   {#if arrows.length > 1 && arrows.some((a) => a.label)}
     <div
-      class="absolute bottom-0 left-1/2 flex -translate-x-1/2 translate-y-full gap-6 pt-12 text-sm"
+      class="absolute bottom-0 left-1/2 flex -translate-x-1/2 translate-y-full gap-8 pt-12"
     >
       {#each arrows as arrow, i (i)}
         {#if arrow.label}
-          <div class="flex items-center gap-2">
-            {#if arrow.style === "dashed"}
-              <div
-                class="h-3 w-6 rounded"
-                style="background: repeating-linear-gradient(90deg, {arrow.color} 0px, {arrow.color} 4px, transparent 4px, transparent 6px)"
-              ></div>
-            {:else}
-              <div class="h-3 w-6 rounded" style="background-color: {arrow.color}"></div>
-            {/if}
-            <span class="text-gray-300"
-              >{arrow.label}{#if arrow.displayValue !== undefined}: {arrow.displayValue}%{/if}</span
+          <div class="flex flex-col items-center gap-1">
+            <span class="text-xs text-gray-400 uppercase tracking-wide">{arrow.label}</span>
+            <span class="text-2xl font-bold" style="color: {arrow.color}"
+              >{#if arrow.displayValue !== undefined}{arrow.displayValue}%{/if}</span
             >
           </div>
         {/if}

@@ -38,7 +38,8 @@
   <div class="flex items-center gap-4">
     <a
       href={title === "Wavelength" ? "/wavelength?reset=true" : "/"}
-      class="bg-linear-to-r from-rose-400 via-amber-300 to-cyan-400 bg-clip-text text-xl font-bold tracking-tight text-transparent transition-opacity hover:opacity-80"
+      class="text-xl font-bold tracking-tight transition-opacity hover:opacity-80"
+      style="background: linear-gradient(to right, hsl(0, 75%, 70%) 0%, hsl(0, 0%, 85%) 50%, hsl(180, 75%, 70%) 100%); -webkit-background-clip: text; background-clip: text; color: transparent;"
       onclick={closeMenu}
     >
       {title}

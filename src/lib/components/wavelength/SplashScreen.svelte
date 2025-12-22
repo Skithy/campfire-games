@@ -16,7 +16,8 @@
     <!-- Mini dial illustration -->
     <div class="relative h-24 w-48">
       <div
-        class="absolute inset-0 rounded-t-full bg-gradient-to-r from-rose-300 via-amber-200 to-cyan-300"
+        class="absolute inset-0 rounded-t-full"
+        style="background: linear-gradient(to right, hsl(0, 75%, 80%) 0%, hsl(0, 0%, 95%) 50%, hsl(180, 75%, 80%) 100%);"
       ></div>
       <div class="absolute inset-0 rounded-t-full border-2 border-b-0 border-white/30"></div>
       <!-- Dial hand with circular pivot and triangular pointer -->
@@ -40,7 +41,8 @@
 
     <div class="space-y-3 text-center">
       <h1
-        class="bg-gradient-to-r from-rose-400 via-amber-300 to-cyan-400 bg-clip-text pb-1 text-5xl font-black tracking-tight text-transparent sm:text-6xl"
+        class="pb-1 text-5xl font-black tracking-tight sm:text-6xl"
+        style="background: linear-gradient(to right, hsl(0, 75%, 70%) 0%, hsl(0, 0%, 85%) 50%, hsl(180, 75%, 70%) 100%); -webkit-background-clip: text; background-clip: text; color: transparent;"
       >
         Wavelength
       </h1>
@@ -50,7 +52,8 @@
 
   <div class="flex w-full max-w-xs flex-col gap-3">
     <button
-      class="group relative overflow-hidden rounded-2xl bg-gradient-to-r from-rose-400 via-amber-300 to-cyan-400 p-0.5 transition-all hover:scale-[1.02] active:scale-[0.98]"
+      class="group relative overflow-hidden rounded-2xl p-0.5 transition-all hover:scale-[1.02] active:scale-[0.98]"
+      style="background: linear-gradient(to right, hsl(0, 75%, 70%) 0%, hsl(0, 0%, 85%) 50%, hsl(180, 75%, 70%) 100%);"
       onclick={onStart}
     >
       <span
