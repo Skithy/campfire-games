@@ -254,7 +254,7 @@
     {@const perpAngle2 = rad - Math.PI / 2}
     <svg
       class="pointer-events-none absolute inset-0 h-full w-full"
-      style="overflow: visible"
+      style:overflow="visible"
       viewBox="0 0 100 50"
       preserveAspectRatio="xMidYMax meet"
     >
@@ -296,7 +296,7 @@
     <div
       class="pointer-events-none absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-[calc(100%+1.5rem)]"
     >
-      <div class="text-2xl font-bold" style="color: {arrows[0].color}">
+      <div class="text-2xl font-bold" style:color={arrows[0].color}>
         {arrows[0].displayValue}%
       </div>
     </div>
@@ -304,10 +304,10 @@
 
   <!-- Prompt labels integrated at dial ends -->
   <div class="absolute bottom-0 -left-4 max-w-24 translate-y-full pt-2 text-center">
-    <span class="text-base font-bold" style="color: {leftColorHsl}">{prompt[0]}</span>
+    <span class="text-base font-bold" style:color={leftColorHsl}>{prompt[0]}</span>
   </div>
   <div class="absolute -right-4 bottom-0 max-w-24 translate-y-full pt-2 text-center">
-    <span class="text-base font-bold" style="color: {rightColorHsl}">{prompt[1]}</span>
+    <span class="text-base font-bold" style:color={rightColorHsl}>{prompt[1]}</span>
   </div>
 
   <!-- Legend for multiple arrows -->
@@ -317,7 +317,7 @@
         {#if arrow.label}
           <div class="flex flex-col items-center gap-1">
             <span class="text-xs tracking-wide text-gray-400 uppercase">{arrow.label}</span>
-            <span class="text-2xl font-bold" style="color: {arrow.color}"
+            <span class="text-2xl font-bold" style:color={arrow.color}
               >{#if arrow.displayValue !== undefined}{arrow.displayValue}%{/if}</span
             >
           </div>

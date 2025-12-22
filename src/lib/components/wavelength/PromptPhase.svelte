@@ -34,10 +34,8 @@
         {@const isSelected = selectedIndex === i}
         <div
           class="rounded-2xl p-0.5 transition-all"
-          style="
-            background: {isSelected ? Color.toGradient(colors[0], colors[1]) : '#444'};
-            box-shadow: {isSelected ? `0 0 20px ${leftColorHsl}40` : 'none'};
-          "
+          style:background={isSelected ? Color.toGradient(colors[0], colors[1]) : '#444'}
+          style:box-shadow={isSelected ? `0 0 20px ${leftColorHsl}40` : 'none'}
         >
           <button
             class="flex w-full cursor-pointer items-stretch overflow-hidden rounded-[14px] bg-[#1a1a1a] text-base transition-all"

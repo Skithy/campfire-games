@@ -45,13 +45,19 @@
 <div class="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
   <!-- Top glow -->
   <div
-    class="glow absolute top-0 h-[50%] w-[140%] rounded-[100%] blur-3xl"
-    style="left: 50%; transform: translateX(-50%) translateY(-60%); background-color: {gradientColors.top}; mask-image: radial-gradient(ellipse at center, black 0%, transparent 60%); -webkit-mask-image: radial-gradient(ellipse at center, black 0%, transparent 60%); transition: background-color 700ms;"
+    class="glow absolute top-0 left-1/2 h-[50%] w-[140%] -translate-x-1/2 rounded-[100%] blur-3xl transition-colors duration-700"
+    style:transform="translateY(-60%)"
+    style:background-color={gradientColors.top}
+    style:mask-image="radial-gradient(ellipse at center, black 0%, transparent 60%)"
+    style:-webkit-mask-image="radial-gradient(ellipse at center, black 0%, transparent 60%)"
   ></div>
   <!-- Bottom glow -->
   <div
-    class="glow absolute bottom-0 h-[50%] w-[140%] rounded-[100%] blur-3xl"
-    style="left: 50%; transform: translateX(-50%) translateY(60%); background-color: {gradientColors.bottom}; mask-image: radial-gradient(ellipse at center, black 0%, transparent 60%); -webkit-mask-image: radial-gradient(ellipse at center, black 0%, transparent 60%); transition: background-color 700ms;"
+    class="glow absolute bottom-0 left-1/2 h-[50%] w-[140%] -translate-x-1/2 rounded-[100%] blur-3xl transition-colors duration-700"
+    style:transform="translateY(60%)"
+    style:background-color={gradientColors.bottom}
+    style:mask-image="radial-gradient(ellipse at center, black 0%, transparent 60%)"
+    style:-webkit-mask-image="radial-gradient(ellipse at center, black 0%, transparent 60%)"
   ></div>
 </div>
 

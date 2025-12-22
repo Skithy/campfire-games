@@ -26,7 +26,7 @@
       <div class="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2">
         <!-- Pointer using SVG with arrow tip -->
         <svg
-          class="absolute bottom-1/2 left-1/2 origin-bottom -translate-x-1/2 rotate-[30deg]"
+          class="absolute bottom-1/2 left-1/2 origin-bottom -translate-x-1/2 rotate-30"
           width="20"
           height="80"
           viewBox="0 0 20 80"

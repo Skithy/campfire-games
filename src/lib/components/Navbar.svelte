@@ -8,8 +8,6 @@
   let isMenuOpen = $state(false)
   let menuRef: HTMLElement | null = $state(null)
 
-  const wavelengthGradient = Color.toGradient(PURPLE, GOLD)
-
   function toggleMenu() {
     isMenuOpen = !isMenuOpen
   }
@@ -44,12 +42,7 @@
     <a
       href={title === "Wavelength" ? "/wavelength?reset=true" : "/"}
       class="text-xl font-bold tracking-tight transition-opacity hover:opacity-80"
-      style:background={isWavelength
-        ? wavelengthGradient
-        : "linear-gradient(to right, hsl(270, 75%, 70%) 0%, hsl(30, 90%, 60%) 100%)"}
-      style:-webkit-background-clip="text"
-      style:background-clip="text"
-      style:color="transparent"
+      style:color={isWavelength ? Color.toGradient(PURPLE, GOLD) : "white"}
       onclick={closeMenu}
     >
       {title}
