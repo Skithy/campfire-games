@@ -103,6 +103,13 @@
       <i class="fa-solid fa-circle-question text-base"></i>
       How to Play
     </button>
+
+    <a
+      href="/"
+      class="rounded-2xl bg-white/5 px-8 py-4 text-center text-lg font-semibold text-white/70 backdrop-blur-sm transition-all hover:bg-white/10 hover:text-white active:scale-95"
+    >
+      Back to Games
+    </a>
   </div>
 
   {#if showInstructions}

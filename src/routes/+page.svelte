@@ -1,7 +1,7 @@
 <script lang="ts">
   import { fade } from "svelte/transition"
 
-  import { GOLD, ORANGE, PURPLE } from "$lib/constants/colors"
+  import { GOLD, GREEN, ORANGE, PURPLE, RED } from "$lib/constants/colors"
   import { Color } from "$lib/utils/colors"
 
   const games = [
@@ -10,6 +10,12 @@
       description: "A game of telepathy and empathy",
       url: "/wavelength",
       gradient: Color.toGradient(PURPLE, GOLD),
+    },
+    {
+      name: "Taboo",
+      description: "Guess the word without forbidden clues",
+      url: "/taboo",
+      gradient: Color.toGradient(RED, GREEN),
     },
   ]
 </script>
@@ -58,7 +64,7 @@
                   {game.name}
                 </span>
               </h3>
-              <p class="text-white/70 transition-colors group-hover:text-black/80">
+              <p class="text-sm text-white/70 transition-colors group-hover:text-black/80">
                 {game.description}
               </p>
             </div>

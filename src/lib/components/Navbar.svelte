@@ -1,9 +1,10 @@
 <script lang="ts">
   import { page } from "$app/stores"
-  import { GOLD, ORANGE, PURPLE } from "$lib/constants/colors"
+  import { GOLD, ORANGE, PURPLE, RED } from "$lib/constants/colors"
   import { Color } from "$lib/utils/colors"
 
   let isWavelength = $derived($page.url.pathname.includes("wavelength"))
+  let isTaboo = $derived($page.url.pathname.includes("taboo"))
 
   let isMenuOpen = $state(false)
   let menuRef: HTMLElement | null = $state(null)
@@ -41,7 +42,7 @@
   <div class="flex items-center gap-4">
     {#if isWavelength}
       <a
-        href="/"
+        href="/wavelength?reset=true"
         class="text-xl font-bold tracking-tight transition-opacity hover:opacity-80"
         style:background={Color.toGradient(PURPLE, GOLD)}
         style:-webkit-background-clip="text"
@@ -51,9 +52,21 @@
       >
         Wavelength
       </a>
+    {:else if isTaboo}
+      <a
+        href="/taboo"
+        class="text-xl font-bold tracking-tight transition-opacity hover:opacity-80"
+        style:background={Color.toGradient(RED, ORANGE)}
+        style:-webkit-background-clip="text"
+        style:background-clip="text"
+        style:color="transparent"
+        onclick={closeMenu}
+      >
+        Taboo
+      </a>
     {:else}
       <a
-        href="/wavelength?reset=true"
+        href="/"
         class="text-xl font-bold tracking-tight transition-opacity hover:opacity-80"
         style:background={Color.toGradient(ORANGE, GOLD)}
         style:-webkit-background-clip="text"
@@ -99,6 +112,15 @@
         >
           <span class="text-lg">🎚️</span>
           Wavelength
+        </a>
+        <a
+          href="/taboo"
+          class="flex items-center gap-3 px-4 py-3 text-sm text-white/80 transition-colors hover:bg-white/10 hover:text-white"
+          role="menuitem"
+          onclick={closeMenu}
+        >
+          <span class="text-lg">🤫</span>
+          Taboo
         </a>
       </div>
     {/if}
