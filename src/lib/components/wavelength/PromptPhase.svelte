@@ -1,8 +1,6 @@
 <script lang="ts">
   import type { Prompt } from "$lib/data/wavelengthPrompts"
 
-  import PhaseHeader from "./PhaseHeader.svelte"
-
   let {
     prompts,
     promptColors,
@@ -24,14 +22,7 @@
   }
 </script>
 
-<div class="mx-auto flex h-full w-full max-w-md flex-col items-center gap-4 p-6">
-  <PhaseHeader
-    label="Psychic's Turn"
-    title="Pick a Spectrum"
-    description="Choose a prompt for your team"
-    bgClass="bg-purple-500/15"
-  />
-
+<div class="mx-auto flex h-full w-full max-w-md flex-col items-center gap-4 px-6 pb-6">
   <div class="flex w-full flex-1 flex-col items-center justify-between gap-4">
     <div class="flex w-full flex-col gap-5">
       {#each prompts as prompt, i (i)}

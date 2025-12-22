@@ -2,7 +2,6 @@
   import type { Prompt } from "$lib/data/wavelengthPrompts"
   import { interpolateColor, sliderToDisplayValue } from "$lib/utils/colors"
 
-  import PhaseHeader from "./PhaseHeader.svelte"
   import WavelengthDial from "./WavelengthDial.svelte"
 
   let {
@@ -20,30 +19,6 @@
     rightColor: string
     onNextRound: () => void
   } = $props()
-
-  let scoreResult = $derived.by(() => {
-    const difference = Math.abs(target - guess)
-    const diffPercent = Math.abs(sliderToDisplayValue(target) - sliderToDisplayValue(guess))
-    if (difference === 0)
-      return { message: "Perfect!", bg: "bg-green-800/60", description: "You nailed it exactly!" }
-    if (difference <= 1)
-      return {
-        message: "So Close!",
-        bg: "bg-green-700/50",
-        description: `Almost there! Just ${diffPercent}% off`,
-      }
-    if (difference <= 3)
-      return {
-        message: "Not Bad",
-        bg: "bg-amber-700/50",
-        description: `Good effort — ${diffPercent}% off`,
-      }
-    return {
-      message: "Way Off...",
-      bg: "bg-red-800/50",
-      description: "Better luck next time!",
-    }
-  })
 
   let targetDisplay = $derived(sliderToDisplayValue(target))
   let guessDisplay = $derived(sliderToDisplayValue(guess))
@@ -68,14 +43,7 @@
   ])
 </script>
 
-<div class="mx-auto flex h-full w-full max-w-md flex-col items-center gap-4 p-6">
-  <PhaseHeader
-    label="Results"
-    title={scoreResult.message}
-    description={scoreResult.description}
-    bgClass={scoreResult.bg}
-  />
-
+<div class="mx-auto flex h-full w-full max-w-md flex-col items-center gap-4 px-6 pb-6">
   <div class="flex w-full flex-1 flex-col items-center justify-between gap-4">
     <!-- Dial Container -->
     <div class="flex w-full flex-1 flex-col items-center justify-center">

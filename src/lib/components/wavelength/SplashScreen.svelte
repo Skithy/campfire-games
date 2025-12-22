@@ -29,7 +29,15 @@
           height="80"
           viewBox="0 0 20 80"
         >
-          <line x1="10" y1="16" x2="10" y2="80" stroke="black" stroke-width="8" stroke-linecap="round" />
+          <line
+            x1="10"
+            y1="16"
+            x2="10"
+            y2="80"
+            stroke="black"
+            stroke-width="8"
+            stroke-linecap="round"
+          />
           <polygon points="10,0 2,16 18,16" fill="black" />
         </svg>
         <!-- Pivot circle -->

@@ -1,13 +1,17 @@
 <script lang="ts">
+  import { fade } from "svelte/transition"
+
   import { goto } from "$app/navigation"
   import { page } from "$app/stores"
   import GuessPhase from "$lib/components/wavelength/GuessPhase.svelte"
   import PhaseBackground from "$lib/components/wavelength/PhaseBackground.svelte"
+  import PhaseHeader from "$lib/components/wavelength/PhaseHeader.svelte"
   import PromptPhase from "$lib/components/wavelength/PromptPhase.svelte"
   import PsychicPhase from "$lib/components/wavelength/PsychicPhase.svelte"
   import RevealPhase from "$lib/components/wavelength/RevealPhase.svelte"
   import SplashScreen from "$lib/components/wavelength/SplashScreen.svelte"
   import { type Prompt, wavelengthPrompts } from "$lib/data/wavelengthPrompts"
+  import { sliderToDisplayValue } from "$lib/utils/colors"
 
   type GamePhase = "splash" | "prompt" | "psychic" | "guess" | "reveal"
 
@@ -30,6 +34,75 @@
     if (difference <= 1) return "good" as const
     if (difference <= 3) return "okay" as const
     return "miss" as const
+  })
+
+  // Header configuration for each phase
+  let headerConfig = $derived.by(() => {
+    if (phase === "splash") {
+      return null // No header for splash
+    }
+
+    if (phase === "reveal") {
+      const difference = Math.abs(target - guess)
+      const diffPercent = Math.abs(sliderToDisplayValue(target) - sliderToDisplayValue(guess))
+
+      if (difference === 0) {
+        return {
+          label: "Results",
+          title: "Perfect!",
+          description: "You nailed it exactly!",
+          bgColor: "rgba(80, 160, 120, 0.3)",
+        }
+      }
+      if (difference <= 1) {
+        return {
+          label: "Results",
+          title: "So Close!",
+          description: `Almost there! Just ${diffPercent}% off`,
+          bgColor: "rgba(80, 160, 120, 0.25)",
+        }
+      }
+      if (difference <= 3) {
+        return {
+          label: "Results",
+          title: "Not Bad",
+          description: `Good effort — ${diffPercent}% off`,
+          bgColor: "rgba(180, 140, 80, 0.25)",
+        }
+      }
+      return {
+        label: "Results",
+        title: "Way Off...",
+        description: "Better luck next time!",
+        bgColor: "rgba(180, 100, 100, 0.25)",
+      }
+    }
+
+    switch (phase) {
+      case "prompt":
+        return {
+          label: "Psychic's Turn",
+          title: "Pick a Spectrum",
+          description: "Choose a prompt for your team",
+          bgColor: "rgba(140, 100, 180, 0.15)",
+        }
+      case "psychic":
+        return {
+          label: "Psychic's Turn",
+          title: "Give a Clue",
+          description: "Help your team find the target",
+          bgColor: "rgba(140, 100, 180, 0.15)",
+        }
+      case "guess":
+        return {
+          label: "Team's Turn",
+          title: "Make a Guess",
+          description: "Where on the spectrum is the clue?",
+          bgColor: "rgba(180, 140, 80, 0.15)",
+        }
+      default:
+        return null
+    }
   })
 
   function generatePromptColors(prompts: Prompt[]): Array<[string, string]> {
@@ -128,48 +201,87 @@
 
 <div class="relative flex h-full flex-col overflow-hidden bg-[#111] font-sans text-white">
   <PhaseBackground {phase} {scoreLevel} />
-  <main class="relative flex min-h-0 flex-1 justify-center overflow-auto">
+
+  <!-- Splash screen (absolutely positioned, full screen) -->
+  {#key phase === "splash"}
     {#if phase === "splash"}
-      <SplashScreen onStart={handleStartGame} />
-    {:else if phase === "prompt"}
-      <PromptPhase
-        prompts={currentPrompts}
-        promptColors={promptListColors}
-        onSelectPrompt={handleSelectPrompt}
-        onReroll={handleReroll}
-      />
-    {:else if phase === "psychic"}
-      {#if selectedPrompt}
-        <PsychicPhase
-          {selectedPrompt}
-          {target}
-          leftColor={promptColors[0]}
-          rightColor={promptColors[1]}
-          onReadyToGuess={handleReadyToGuess}
-          onBack={handleBackToPrompts}
-        />
-      {/if}
-    {:else if phase === "guess"}
-      {#if selectedPrompt}
-        <GuessPhase
-          prompt={selectedPrompt}
-          leftColor={promptColors[0]}
-          rightColor={promptColors[1]}
-          onLockIn={handleLockIn}
-          onBack={handleBackToPsychic}
-        />
-      {/if}
-    {:else if phase === "reveal"}
-      {#if selectedPrompt}
-        <RevealPhase
-          prompt={selectedPrompt}
-          {target}
-          {guess}
-          leftColor={promptColors[0]}
-          rightColor={promptColors[1]}
-          onNextRound={handleNextRound}
-        />
-      {/if}
+      <div
+        class="absolute inset-0 z-20 flex justify-center overflow-auto"
+        in:fade={{ duration: 300, delay: 150 }}
+        out:fade={{ duration: 150 }}
+      >
+        <SplashScreen onStart={handleStartGame} />
+      </div>
     {/if}
-  </main>
+  {/key}
+
+  <!-- Game UI (header + content, only shown for non-splash phases) -->
+  {#if phase !== "splash"}
+    <div
+      class="relative z-10 mx-auto w-full max-w-md px-6 pt-6"
+      in:fade={{ duration: 300, delay: 150 }}
+    >
+      {#if headerConfig}
+        <PhaseHeader
+          label={headerConfig.label}
+          title={headerConfig.title}
+          description={headerConfig.description}
+          bgColor={headerConfig.bgColor}
+        />
+      {/if}
+    </div>
+    <main
+      class="relative flex min-h-0 flex-1"
+      in:fade={{ duration: 300, delay: 150 }}
+    >
+      {#key phase}
+        <div
+          class="absolute inset-0 flex justify-center overflow-auto pt-4"
+          in:fade={{ duration: 300, delay: 150 }}
+          out:fade={{ duration: 150 }}
+        >
+          {#if phase === "prompt"}
+            <PromptPhase
+              prompts={currentPrompts}
+              promptColors={promptListColors}
+              onSelectPrompt={handleSelectPrompt}
+              onReroll={handleReroll}
+            />
+          {:else if phase === "psychic"}
+            {#if selectedPrompt}
+              <PsychicPhase
+                {selectedPrompt}
+                {target}
+                leftColor={promptColors[0]}
+                rightColor={promptColors[1]}
+                onReadyToGuess={handleReadyToGuess}
+                onBack={handleBackToPrompts}
+              />
+            {/if}
+          {:else if phase === "guess"}
+            {#if selectedPrompt}
+              <GuessPhase
+                prompt={selectedPrompt}
+                leftColor={promptColors[0]}
+                rightColor={promptColors[1]}
+                onLockIn={handleLockIn}
+                onBack={handleBackToPsychic}
+              />
+            {/if}
+          {:else if phase === "reveal"}
+            {#if selectedPrompt}
+              <RevealPhase
+                prompt={selectedPrompt}
+                {target}
+                {guess}
+                leftColor={promptColors[0]}
+                rightColor={promptColors[1]}
+                onNextRound={handleNextRound}
+              />
+            {/if}
+          {/if}
+        </div>
+      {/key}
+    </main>
+  {/if}
 </div>

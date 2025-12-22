@@ -3,7 +3,6 @@
   import { interpolateColor, sliderToDisplayValue } from "$lib/utils/colors"
 
   import PhaseActions from "./PhaseActions.svelte"
-  import PhaseHeader from "./PhaseHeader.svelte"
   import WavelengthDial from "./WavelengthDial.svelte"
 
   let {
@@ -34,14 +33,7 @@
   ])
 </script>
 
-<div class="mx-auto flex h-full w-full max-w-md flex-col items-center gap-4 p-6">
-  <PhaseHeader
-    label="Psychic's Turn"
-    title="Give a Clue"
-    description="Help your team find the target"
-    bgClass="bg-purple-500/15"
-  />
-
+<div class="mx-auto flex h-full w-full max-w-md flex-col items-center gap-4 px-6 pb-6">
   <div class="flex w-full flex-1 flex-col items-center justify-between gap-4">
     <!-- Dial Container -->
     <div class="flex w-full flex-1 flex-col items-center justify-center">
