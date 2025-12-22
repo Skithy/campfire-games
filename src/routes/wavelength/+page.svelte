@@ -2,6 +2,7 @@
   import { goto } from "$app/navigation"
   import { page } from "$app/stores"
   import GuessPhase from "$lib/components/wavelength/GuessPhase.svelte"
+  import PhaseBackground from "$lib/components/wavelength/PhaseBackground.svelte"
   import PromptPhase from "$lib/components/wavelength/PromptPhase.svelte"
   import PsychicPhase from "$lib/components/wavelength/PsychicPhase.svelte"
   import RevealPhase from "$lib/components/wavelength/RevealPhase.svelte"
@@ -20,6 +21,16 @@
   let target = $state<number>(0)
   let guess = $state<number>(0)
   let promptColors = $state<[string, string]>(["#fff", "#fff"])
+
+  // Calculate score level for background color in reveal phase
+  let scoreLevel = $derived.by(() => {
+    if (phase !== "reveal") return "neutral" as const
+    const difference = Math.abs(target - guess)
+    if (difference === 0) return "great" as const
+    if (difference <= 1) return "good" as const
+    if (difference <= 3) return "okay" as const
+    return "miss" as const
+  })
 
   function generatePromptColors(prompts: Prompt[]): Array<[string, string]> {
     const count = prompts.length
@@ -115,8 +126,9 @@
   })
 </script>
 
-<div class="flex h-full flex-col overflow-hidden bg-[#111] font-sans text-white">
-  <main class="flex min-h-0 flex-1 justify-center overflow-auto">
+<div class="relative flex h-full flex-col overflow-hidden bg-[#111] font-sans text-white">
+  <PhaseBackground {phase} {scoreLevel} />
+  <main class="relative flex min-h-0 flex-1 justify-center overflow-auto">
     {#if phase === "splash"}
       <SplashScreen onStart={handleStartGame} />
     {:else if phase === "prompt"}
