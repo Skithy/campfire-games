@@ -1,6 +1,6 @@
 <script lang="ts">
   import { page } from "$app/stores"
-  import { GOLD, ORANGE, PURPLE, RED } from "$lib/constants/colors"
+  import { BLUE, GOLD, ORANGE, PURPLE, RED } from "$lib/constants/colors"
   import { Color } from "$lib/utils/colors"
 
   let isWavelength = $derived($page.url.pathname.includes("wavelength"))
@@ -56,7 +56,7 @@
       <a
         href="/taboo"
         class="text-xl font-bold tracking-tight transition-opacity hover:opacity-80"
-        style:background={Color.toGradient(RED, ORANGE)}
+        style:background={Color.toGradient(RED, BLUE)}
         style:-webkit-background-clip="text"
         style:background-clip="text"
         style:color="transparent"

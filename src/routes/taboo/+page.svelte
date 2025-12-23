@@ -1,27 +1,136 @@
 <script lang="ts">
-  import { fade, scale } from "svelte/transition"
+  import { fade } from "svelte/transition"
 
-  import { GREEN, ORANGE, RED } from "$lib/constants/colors"
-  import sshImage from "$lib/images/ssh.png"
-  import { Color } from "$lib/utils/colors"
+  import PageBackground from "$lib/components/layout/PageBackground.svelte"
+  import GetReadyScreen from "$lib/components/taboo/GetReadyScreen.svelte"
+  import PlayScreen from "$lib/components/taboo/PlayScreen.svelte"
+  import ResultsScreen from "$lib/components/taboo/ResultsScreen.svelte"
+  import SplashScreen from "$lib/components/taboo/SplashScreen.svelte"
+  import { BLUE, RED } from "$lib/constants/colors"
+  import { type Team, TEAM_BLUE, TEAM_RED } from "$lib/constants/teams"
+  import { type TabooCard, tabooCards } from "$lib/data/tabooCards"
 
-  type GamePhase = "splash" | "play"
+  type GamePhase = "splash" | "getReady" | "play" | "results"
 
+  const ROUND_TIME = 60
+
+  // Game state
   let phase = $state<GamePhase>("splash")
-  let showInstructions = $state(false)
+  let currentTeam = $state<Team>(TEAM_RED)
+  let currentCardIndex = $state(0)
+  let timeRemaining = $state(ROUND_TIME)
+  let isPaused = $state(false)
+  let timerInterval = $state<ReturnType<typeof setInterval> | null>(null)
 
-  const gradient = Color.toGradient(RED, GREEN)
+  // Round tracking
+  let correctCards = $state<TabooCard[]>([])
+  let skippedCards = $state<TabooCard[]>([])
+
+  // Card deck (shuffled)
+  let deck = $state<TabooCard[]>([])
+  let usedCardIndices = $state<Set<number>>(new Set())
+
+  // Current card
+  let currentCard = $derived(deck[currentCardIndex])
+
+  // Background colors based on phase and current team
+  let backgroundColors = $derived({
+    top: phase === "splash" ? RED : currentTeam.color,
+    bottom: phase === "splash" ? BLUE : currentTeam.color,
+  })
+
+  function shuffleDeck() {
+    // Get indices of unused cards
+    const availableIndices = tabooCards.map((_, i) => i).filter((i) => !usedCardIndices.has(i))
+
+    // If we've used all cards, reset
+    if (availableIndices.length < 10) {
+      usedCardIndices.clear()
+      deck = [...tabooCards].sort(() => Math.random() - 0.5)
+    } else {
+      // Shuffle available cards
+      const shuffledIndices = availableIndices.sort(() => Math.random() - 0.5)
+      deck = shuffledIndices.map((i) => tabooCards[i])
+    }
+    currentCardIndex = 0
+  }
+
+  function startTimer() {
+    if (timerInterval) clearInterval(timerInterval)
+    timerInterval = setInterval(() => {
+      if (!isPaused) {
+        timeRemaining--
+        if (timeRemaining <= 0) {
+          endRound()
+        }
+      }
+    }, 1000)
+  }
+
+  function stopTimer() {
+    if (timerInterval) {
+      clearInterval(timerInterval)
+      timerInterval = null
+    }
+  }
+
+  function togglePause() {
+    isPaused = !isPaused
+  }
 
   function startGame() {
+    currentTeam = TEAM_RED
+    correctCards = []
+    skippedCards = []
+    shuffleDeck()
+    phase = "getReady"
+  }
+
+  function startRound() {
+    timeRemaining = ROUND_TIME
+    isPaused = false
+    correctCards = []
+    skippedCards = []
     phase = "play"
+    startTimer()
   }
 
-  function backToSplash() {
-    phase = "splash"
+  function nextCard() {
+    // Mark current card as used
+    const cardIndex = tabooCards.findIndex((c) => c.word === currentCard.word)
+    if (cardIndex !== -1) {
+      usedCardIndices.add(cardIndex)
+    }
+
+    currentCardIndex++
+    // If we run out of cards in the deck, reshuffle
+    if (currentCardIndex >= deck.length) {
+      shuffleDeck()
+    }
   }
 
-  function toggleInstructions() {
-    showInstructions = !showInstructions
+  function handleCorrect() {
+    correctCards = [...correctCards, currentCard]
+    nextCard()
+  }
+
+  function handleSkip() {
+    skippedCards = [...skippedCards, currentCard]
+    nextCard()
+  }
+
+  function endRound() {
+    stopTimer()
+    phase = "results"
+  }
+
+  function nextTeamRound() {
+    // Switch teams
+    currentTeam = currentTeam === TEAM_RED ? TEAM_BLUE : TEAM_RED
+    correctCards = []
+    skippedCards = []
+    shuffleDeck()
+    phase = "getReady"
   }
 </script>
 
@@ -30,159 +139,58 @@
   <meta name="description" content="Guess the word without forbidden clues" />
 </svelte:head>
 
-<div class="relative flex h-full flex-col overflow-hidden">
-  <!-- Background -->
-  <div class="absolute inset-0 -z-10">
-    <div class="h-full w-full transition-all duration-1000" style:background={gradient}></div>
-  </div>
+<div class="relative flex h-full flex-col overflow-hidden bg-[#111] font-sans text-white">
+  <PageBackground top={backgroundColors.top} bottom={backgroundColors.bottom} />
 
-  {#if phase === "splash"}
-    <div class="flex h-full flex-col items-center justify-center gap-12 px-4 py-6" in:fade>
-      <!-- Shh gesture illustration -->
-      <div class="relative flex flex-col items-center gap-6">
-        <!-- Shh image -->
-        <div class="h-32 w-32">
-          <img
-            src={sshImage}
-            alt="Shh gesture"
-            class="h-full w-full object-contain"
-            style="filter: invert(1);"
-          />
-        </div>
-
-        <div class="space-y-3 text-center">
-          <h1
-            class="pb-1 text-5xl font-black tracking-tight sm:text-6xl"
-            style:background={gradient}
-            style:-webkit-background-clip="text"
-            style:background-clip="text"
-            style:color="transparent"
-          >
-            Taboo
-          </h1>
-          <p class="text-lg text-white/50">Guess the word without forbidden clues</p>
-        </div>
-      </div>
-
-      <div class="flex w-full max-w-xs flex-col gap-3">
-        <button
-          class="group relative cursor-pointer overflow-hidden rounded-2xl p-0.5 transition-all hover:scale-[1.02] active:scale-[0.98]"
-          style:background={gradient}
-          onclick={startGame}
-        >
-          <span
-            class="flex items-center justify-center gap-2 rounded-[14px] bg-[#1a1a1a] px-8 py-4 text-xl font-bold text-white transition-colors group-hover:bg-transparent group-hover:text-black"
-          >
-            <i class="fa-solid fa-play text-base"></i>
-            Start Game
-          </span>
-        </button>
-        <button
-          class="flex cursor-pointer items-center justify-center gap-2 rounded-2xl border border-white/20 bg-white/10 px-8 py-4 text-lg font-semibold text-white/80 transition-all hover:bg-white/15 hover:text-white active:scale-[0.98]"
-          onclick={toggleInstructions}
-        >
-          <i class="fa-solid fa-circle-question text-base"></i>
-          How to Play
-        </button>
-
-        <a
-          href="/"
-          class="rounded-2xl bg-white/5 px-8 py-4 text-center text-lg font-semibold text-white/70 backdrop-blur-sm transition-all hover:bg-white/10 hover:text-white active:scale-95"
-        >
-          Back to Games
-        </a>
-      </div>
-
-      {#if showInstructions}
-        <div
-          class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm"
-          transition:fade
-          onclick={toggleInstructions}
-          role="button"
-          tabindex="0"
-          onkeydown={(e) => e.key === "Escape" && toggleInstructions()}
-        >
-          <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
-          <div
-            class="w-full max-w-lg space-y-6 rounded-2xl border border-white/10 bg-[#1a1a1a] p-8 text-left shadow-2xl"
-            in:scale
-            onclick={(e) => e.stopPropagation()}
-            onkeydown={(e) => e.stopPropagation()}
-            role="document"
-          >
-            <h3 class="text-2xl font-bold text-white">How to Play</h3>
-
-            <div class="space-y-4 text-white/70">
-              <div class="flex gap-3">
-                <span
-                  class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-sm font-bold"
-                  style:background-color={RED.toRgba(0.2)}
-                  style:color={RED.toHsl()}>1</span
-                >
-                <p>
-                  <strong style:color={RED.toHsl()}>The Card:</strong> One player draws a card with a
-                  word and forbidden clues.
-                </p>
-              </div>
-              <div class="flex gap-3">
-                <span
-                  class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-sm font-bold"
-                  style:background-color={RED.toRgba(0.2)}
-                  style:color={RED.toHsl()}>2</span
-                >
-                <p>
-                  <strong style:color={RED.toHsl()}>The Clues:</strong> Give hints to help others guess
-                  the word without saying any forbidden words.
-                </p>
-              </div>
-              <div class="flex gap-3">
-                <span
-                  class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-sm font-bold"
-                  style:background-color={ORANGE.toRgba(0.2)}
-                  style:color={ORANGE.toHsl()}>3</span
-                >
-                <p>
-                  <strong style:color={ORANGE.toHsl()}>The Guess:</strong> Your team tries to guess the
-                  word before time runs out.
-                </p>
-              </div>
-              <div class="flex gap-3">
-                <span
-                  class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-white/10 text-sm font-bold text-white"
-                  >4</span
-                >
-                <p>
-                  <strong class="text-white">The Score:</strong> Get a point for each correct guess.
-                  Say a forbidden word and lose your turn!
-                </p>
-              </div>
-            </div>
-
-            <div class="flex justify-end pt-2">
-              <button
-                class="cursor-pointer rounded-xl bg-white/10 px-6 py-3 font-semibold text-white transition-colors hover:bg-white/20"
-                onclick={toggleInstructions}
-              >
-                Got it!
-              </button>
-            </div>
-          </div>
-        </div>
-      {/if}
-    </div>
-  {:else if phase === "play"}
-    <div class="flex h-full flex-col items-center justify-center gap-8 px-4 py-6" in:fade>
-      <div class="space-y-4 text-center">
-        <h2 class="text-4xl font-bold text-white">Game in Progress</h2>
-        <p class="text-white/70">Taboo gameplay coming soon...</p>
-      </div>
-
-      <button
-        onclick={backToSplash}
-        class="rounded-xl bg-white/10 px-8 py-4 text-lg font-semibold text-white backdrop-blur-sm transition-all hover:bg-white/20 active:scale-95"
+  <!-- Splash screen -->
+  {#key phase === "splash"}
+    {#if phase === "splash"}
+      <div
+        class="absolute inset-0 z-20 flex justify-center overflow-auto"
+        in:fade={{ duration: 300, delay: 150 }}
+        out:fade={{ duration: 150 }}
       >
-        Back to Menu
-      </button>
-    </div>
+        <SplashScreen onStart={startGame} />
+      </div>
+    {/if}
+  {/key}
+
+  <!-- Game screens -->
+  {#if phase !== "splash"}
+    <main class="relative flex h-full flex-1" in:fade={{ duration: 300, delay: 150 }}>
+      {#key phase}
+        <div
+          class="absolute inset-0 flex justify-center overflow-auto"
+          in:fade={{ duration: 300, delay: 150 }}
+          out:fade={{ duration: 150 }}
+        >
+          {#if phase === "getReady"}
+            <GetReadyScreen
+              teamName={currentTeam.name}
+              teamColor={currentTeam.color}
+              onStart={startRound}
+            />
+          {:else if phase === "play" && currentCard}
+            <PlayScreen
+              card={currentCard}
+              teamColor={currentTeam.color}
+              {timeRemaining}
+              {isPaused}
+              onCorrect={handleCorrect}
+              onSkip={handleSkip}
+              onTogglePause={togglePause}
+            />
+          {:else if phase === "results"}
+            <ResultsScreen
+              teamName={currentTeam.name}
+              teamColor={currentTeam.color}
+              {correctCards}
+              {skippedCards}
+              onNextRound={nextTeamRound}
+            />
+          {/if}
+        </div>
+      {/key}
+    </main>
   {/if}
 </div>
