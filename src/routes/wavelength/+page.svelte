@@ -3,12 +3,12 @@
 
   import { goto } from "$app/navigation"
   import { page } from "$app/stores"
-  import GuessPhase from "$lib/components/wavelength/GuessPhase.svelte"
-  import PhaseBackground from "$lib/components/wavelength/PhaseBackground.svelte"
-  import PhaseHeader from "$lib/components/wavelength/PhaseHeader.svelte"
-  import PromptPhase from "$lib/components/wavelength/PromptPhase.svelte"
-  import PsychicPhase from "$lib/components/wavelength/PsychicPhase.svelte"
-  import RevealPhase from "$lib/components/wavelength/RevealPhase.svelte"
+  import PageBackground from "$lib/components/layout/PageBackground.svelte"
+  import PageHeader from "$lib/components/layout/PageHeader.svelte"
+  import GuessScreen from "$lib/components/wavelength/GuessScreen.svelte"
+  import PromptScreen from "$lib/components/wavelength/PromptScreen.svelte"
+  import PsychicScreen from "$lib/components/wavelength/PsychicScreen.svelte"
+  import RevealScreen from "$lib/components/wavelength/RevealScreen.svelte"
   import SplashScreen from "$lib/components/wavelength/SplashScreen.svelte"
   import { GOLD, GREEN, PURPLE, RED } from "$lib/constants/colors"
   import { type Prompt, wavelengthPrompts } from "$lib/data/wavelengthPrompts"
@@ -227,7 +227,7 @@
 </script>
 
 <div class="relative flex h-full flex-col overflow-hidden bg-[#111] font-sans text-white">
-  <PhaseBackground top={backgroundColors.top} bottom={backgroundColors.bottom} />
+  <PageBackground top={backgroundColors.top} bottom={backgroundColors.bottom} />
 
   <!-- Splash screen (absolutely positioned, full screen) -->
   {#key phase === "splash"}
@@ -249,7 +249,7 @@
       in:fade={{ duration: 300, delay: 150 }}
     >
       {#if headerConfig}
-        <PhaseHeader
+        <PageHeader
           label={headerConfig.label}
           title={headerConfig.title}
           description={headerConfig.description}
@@ -265,7 +265,7 @@
           out:fade={{ duration: 150 }}
         >
           {#if phase === "prompt"}
-            <PromptPhase
+            <PromptScreen
               prompts={currentPrompts}
               promptColors={promptListColors}
               onSelectPrompt={handleSelectPrompt}
@@ -273,7 +273,7 @@
             />
           {:else if phase === "psychic"}
             {#if selectedPrompt}
-              <PsychicPhase
+              <PsychicScreen
                 {selectedPrompt}
                 {target}
                 leftColor={promptColors[0]}
@@ -284,7 +284,7 @@
             {/if}
           {:else if phase === "guess"}
             {#if selectedPrompt}
-              <GuessPhase
+              <GuessScreen
                 prompt={selectedPrompt}
                 leftColor={promptColors[0]}
                 rightColor={promptColors[1]}
@@ -294,7 +294,7 @@
             {/if}
           {:else if phase === "reveal"}
             {#if selectedPrompt}
-              <RevealPhase
+              <RevealScreen
                 prompt={selectedPrompt}
                 {target}
                 {guess}

@@ -2,7 +2,7 @@
   import type { Prompt } from "$lib/data/wavelengthPrompts"
   import type { Color } from "$lib/utils/colors"
 
-  import PhaseActions from "./PhaseActions.svelte"
+  import PageActions from "$lib/components/layout/PageActions.svelte"
   import WavelengthDial from "./WavelengthDial.svelte"
 
   let {
@@ -35,6 +35,6 @@
     </div>
 
     <!-- Action buttons -->
-    <PhaseActions {onBack} onPrimary={handleLockIn} primaryLabel="Lock In" />
+    <PageActions {onBack} onPrimary={handleLockIn} primaryLabel="Lock In" />
   </div>
 </div>
