@@ -142,9 +142,7 @@
   function endRound() {
     stopTimer()
     phase = "results"
-  }
 
-  function nextTeamRound() {
     // Add score to current team for correct cards
     // Add score to opposing team for skipped cards
     if (currentTeam.name === TEAM_RED.name) {
@@ -154,7 +152,9 @@
       blueTeamScore += correctCards.length
       redTeamScore += skippedCards.length
     }
+  }
 
+  function nextTeamRound() {
     // Switch teams
     const nextTeam = currentTeam.name === TEAM_RED.name ? TEAM_BLUE : TEAM_RED
     currentTeam = nextTeam
