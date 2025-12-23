@@ -1,4 +1,8 @@
 <script lang="ts">
+  import { fly } from "svelte/transition"
+
+  import PageActions from "$lib/components/layout/PageActions.svelte"
+  import GameMenu from "$lib/components/taboo/GameMenu.svelte"
   import TabooCard from "$lib/components/taboo/TabooCard.svelte"
   import type { TabooCard as TabooCardType } from "$lib/data/tabooCards"
   import type { Color } from "$lib/utils/colors"
@@ -11,6 +15,9 @@
     onCorrect,
     onSkip,
     onTogglePause,
+    onResetTurn,
+    onSkipTeam,
+    onResetGame,
   }: {
     card: TabooCardType
     teamColor: Color
@@ -19,60 +26,159 @@
     onCorrect: () => void
     onSkip: () => void
     onTogglePause: () => void
+    onResetTurn: () => void
+    onSkipTeam: () => void
+    onResetGame: () => void
   } = $props()
 
   let timerWarning = $derived(timeRemaining <= 10)
+
+  function handleResume() {
+    onTogglePause()
+  }
+
+  // Swipe handling
+  let dragX = $state(0)
+  let dragY = $state(0)
+  let isDragging = $state(false)
+  let isExiting = $state(false)
+  let startX = 0
+  let startY = 0
+
+  const SWIPE_THRESHOLD = 100
+  const ROTATION_FACTOR = 0.1
+
+  let rotation = $derived(dragX * ROTATION_FACTOR)
+  let opacity = $derived(Math.max(0, 1 - Math.abs(dragX) / 300))
+
+  function handlePointerDown(e: PointerEvent) {
+    if (isPaused || isExiting) return
+    isDragging = true
+    startX = e.clientX
+    startY = e.clientY
+    ;(e.target as HTMLElement).setPointerCapture(e.pointerId)
+  }
+
+  function handlePointerMove(e: PointerEvent) {
+    if (!isDragging) return
+    dragX = e.clientX - startX
+    dragY = e.clientY - startY
+  }
+
+  function handlePointerUp() {
+    if (!isDragging) return
+    isDragging = false
+
+    if (dragX > SWIPE_THRESHOLD) {
+      swipeOut(1, onCorrect)
+    } else if (dragX < -SWIPE_THRESHOLD) {
+      swipeOut(-1, onSkip)
+    } else {
+      dragX = 0
+      dragY = 0
+    }
+  }
+
+  function swipeOut(direction: number, callback: () => void) {
+    isExiting = true
+    dragX = direction * 400
+    setTimeout(() => {
+      callback()
+      isExiting = false
+      dragX = 0
+      dragY = 0
+    }, 200)
+  }
+
+  function handleCorrectClick() {
+    if (isExiting) return
+    swipeOut(1, onCorrect)
+  }
+
+  function handleSkipClick() {
+    if (isExiting) return
+    swipeOut(-1, onSkip)
+  }
 </script>
 
-<div class="flex h-full w-full flex-col items-center gap-6 px-4 py-6">
-  <!-- Timer -->
-  <div class="flex items-center gap-4">
-    <button
-      class="flex h-12 w-12 cursor-pointer items-center justify-center rounded-full bg-white/10 text-white transition-all hover:bg-white/20 active:scale-95"
-      onclick={onTogglePause}
-      aria-label={isPaused ? "Resume timer" : "Pause timer"}
-    >
-      {#if isPaused}
-        <i class="fa-solid fa-play text-lg"></i>
-      {:else}
-        <i class="fa-solid fa-pause text-lg"></i>
-      {/if}
-    </button>
+<!-- Pause/Menu button -->
+<button
+  class="absolute top-4 right-4 flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-white/10 text-white transition-all hover:bg-white/20 active:scale-95"
+  onclick={onTogglePause}
+  aria-label="Pause game"
+>
+  <i class="fa-solid fa-pause text-lg"></i>
+</button>
 
-    <div
-      class="flex min-w-25 items-center justify-center rounded-xl px-6 py-3 text-4xl font-black tabular-nums text-white transition-colors {timerWarning
-        ? 'bg-red-500'
-        : 'bg-white/10'} {timerWarning && !isPaused ? 'animate-pulse' : ''}"
-    >
-      {timeRemaining}
-    </div>
-
-    {#if isPaused}
-      <span class="text-sm font-medium uppercase tracking-wider text-white/60">Paused</span>
-    {/if}
-  </div>
-
-  <!-- Card -->
-  <div class="flex flex-1 items-center justify-center">
-    <TabooCard {card} {teamColor} />
-  </div>
-
-  <!-- Action buttons -->
-  <div class="flex w-full max-w-sm gap-3">
-    <button
-      class="flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-xl bg-white/10 px-6 py-4 text-lg font-semibold text-white transition-all hover:bg-white/20 active:scale-[0.98]"
-      onclick={onSkip}
-    >
-      <i class="fa-solid fa-forward text-base"></i>
-      Skip
-    </button>
-    <button
-      class="flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-xl px-6 py-4 text-lg font-semibold text-white transition-all hover:opacity-90 active:scale-[0.98]"
-      style:background-color={teamColor.toRgb()}
-      onclick={onCorrect}
-    >
-      <i class="fa-solid fa-check text-base"></i>
-      Correct!
-    </button>
+<!-- Timer -->
+<div class="flex items-center justify-center gap-4">
+  <div
+    class="flex min-w-25 items-center justify-center rounded-xl px-6 py-3 text-4xl font-black text-white tabular-nums transition-colors {timerWarning
+      ? 'bg-red-500'
+      : 'bg-white/10'} {timerWarning && !isPaused ? 'animate-pulse' : ''}"
+  >
+    {timeRemaining}
   </div>
 </div>
+
+<!-- Card -->
+<div class="relative flex w-full flex-1 items-center justify-center">
+  <!-- Swipe indicators -->
+  <div
+    class="pointer-events-none absolute right-0 z-10 flex h-14 w-14 items-center justify-center rounded-full text-2xl text-white transition-opacity duration-150"
+    style:background-color={teamColor.toRgb()}
+    style:opacity={Math.min(1, Math.max(0, dragX / SWIPE_THRESHOLD))}
+  >
+    <i class="fa-solid fa-check"></i>
+  </div>
+  <div
+    class="pointer-events-none absolute left-0 z-10 flex h-14 w-14 items-center justify-center rounded-full bg-white/30 text-2xl text-white transition-opacity duration-150"
+    style:opacity={Math.min(1, Math.max(0, -dragX / SWIPE_THRESHOLD))}
+  >
+    <i class="fa-solid fa-forward"></i>
+  </div>
+
+  <!-- Swipeable card -->
+  {#key card.word}
+    <div
+      class="absolute touch-none select-none"
+      class:cursor-grab={!isDragging && !isPaused}
+      class:cursor-grabbing={isDragging}
+      style:transform="translateX({dragX}px) translateY({dragY * 0.3}px) rotate({rotation}deg)"
+      style:opacity
+      style:transition={isDragging ? "none" : "transform 0.2s ease, opacity 0.2s ease"}
+      in:fly={{ y: -50, duration: 200, opacity: 0 }}
+      onpointerdown={handlePointerDown}
+      onpointermove={handlePointerMove}
+      onpointerup={handlePointerUp}
+      onpointercancel={handlePointerUp}
+      role="button"
+      tabindex="0"
+    >
+      <TabooCard {card} {teamColor} />
+    </div>
+  {/key}
+</div>
+
+<PageActions
+  equalButtons={true}
+  backIcon="fa-solid fa-forward"
+  primaryIcon="fa-solid fa-check"
+  primaryColor={teamColor.toRgb()}
+  onBack={handleSkipClick}
+  onPrimary={handleCorrectClick}
+  primaryLabel="Correct!"
+  backLabel="Skip"
+/>
+
+<GameMenu
+  isOpen={isPaused}
+  {teamColor}
+  showResume={true}
+  showResetTurn={true}
+  onClose={handleResume}
+  onResume={handleResume}
+  {onResetTurn}
+  {onSkipTeam}
+  onEndGame={onResetGame}
+/>

@@ -1,16 +1,16 @@
 <script lang="ts">
   import { fade } from "svelte/transition"
 
-  import PageBackground from "$lib/components/layout/PageBackground.svelte"
+  import FinalResultsScreen from "$lib/components/taboo/FinalResultsScreen.svelte"
+  import GameContainer from "$lib/components/taboo/GameContainer.svelte"
   import GetReadyScreen from "$lib/components/taboo/GetReadyScreen.svelte"
   import PlayScreen from "$lib/components/taboo/PlayScreen.svelte"
   import ResultsScreen from "$lib/components/taboo/ResultsScreen.svelte"
   import SplashScreen from "$lib/components/taboo/SplashScreen.svelte"
-  import { BLUE, RED } from "$lib/constants/colors"
   import { type Team, TEAM_BLUE, TEAM_RED } from "$lib/constants/teams"
   import { type TabooCard, tabooCards } from "$lib/data/tabooCards"
 
-  type GamePhase = "splash" | "getReady" | "play" | "results"
+  type GamePhase = "splash" | "getReady" | "play" | "results" | "finalResults"
 
   const ROUND_TIME = 60
 
@@ -26,6 +26,10 @@
   let correctCards = $state<TabooCard[]>([])
   let skippedCards = $state<TabooCard[]>([])
 
+  // Team scores
+  let redTeamScore = $state(0)
+  let blueTeamScore = $state(0)
+
   // Card deck (shuffled)
   let deck = $state<TabooCard[]>([])
   let usedCardIndices = $state<Set<number>>(new Set())
@@ -33,10 +37,24 @@
   // Current card
   let currentCard = $derived(deck[currentCardIndex])
 
-  // Background colors based on phase and current team
-  let backgroundColors = $derived({
-    top: phase === "splash" ? RED : currentTeam.color,
-    bottom: phase === "splash" ? BLUE : currentTeam.color,
+  // Background colors based on phase
+  let backgroundTop = $derived.by(() => {
+    if (phase === "splash") return TEAM_RED.color
+    if (phase === "finalResults") {
+      if (redTeamScore > blueTeamScore) return TEAM_RED.color
+      if (blueTeamScore > redTeamScore) return TEAM_BLUE.color
+      return TEAM_RED.color // tie
+    }
+    return currentTeam.color
+  })
+  let backgroundBottom = $derived.by(() => {
+    if (phase === "splash") return TEAM_BLUE.color
+    if (phase === "finalResults") {
+      if (redTeamScore > blueTeamScore) return TEAM_RED.color
+      if (blueTeamScore > redTeamScore) return TEAM_BLUE.color
+      return TEAM_BLUE.color // tie
+    }
+    return currentTeam.color
   })
 
   function shuffleDeck() {
@@ -82,6 +100,8 @@
     currentTeam = TEAM_RED
     correctCards = []
     skippedCards = []
+    redTeamScore = 0
+    blueTeamScore = 0
     shuffleDeck()
     phase = "getReady"
   }
@@ -125,12 +145,49 @@
   }
 
   function nextTeamRound() {
+    // Add score to current team for correct cards
+    // Add score to opposing team for skipped cards
+    if (currentTeam.name === TEAM_RED.name) {
+      redTeamScore += correctCards.length
+      blueTeamScore += skippedCards.length
+    } else {
+      blueTeamScore += correctCards.length
+      redTeamScore += skippedCards.length
+    }
+
     // Switch teams
-    currentTeam = currentTeam === TEAM_RED ? TEAM_BLUE : TEAM_RED
+    const nextTeam = currentTeam.name === TEAM_RED.name ? TEAM_BLUE : TEAM_RED
+    currentTeam = nextTeam
     correctCards = []
     skippedCards = []
     shuffleDeck()
     phase = "getReady"
+  }
+
+  function resetTurn() {
+    stopTimer()
+    isPaused = false
+    correctCards = []
+    skippedCards = []
+    shuffleDeck()
+    phase = "getReady"
+  }
+
+  function skipTeam() {
+    stopTimer()
+    isPaused = false
+    const nextTeam = currentTeam.name === TEAM_RED.name ? TEAM_BLUE : TEAM_RED
+    currentTeam = nextTeam
+    correctCards = []
+    skippedCards = []
+    shuffleDeck()
+    phase = "getReady"
+  }
+
+  function endGame() {
+    stopTimer()
+    isPaused = false
+    phase = "finalResults"
   }
 </script>
 
@@ -140,8 +197,6 @@
 </svelte:head>
 
 <div class="relative flex h-full flex-col overflow-hidden bg-[#111] font-sans text-white">
-  <PageBackground top={backgroundColors.top} bottom={backgroundColors.bottom} />
-
   <!-- Splash screen -->
   {#key phase === "splash"}
     {#if phase === "splash"}
@@ -150,7 +205,9 @@
         in:fade={{ duration: 300, delay: 150 }}
         out:fade={{ duration: 150 }}
       >
-        <SplashScreen onStart={startGame} />
+        <GameContainer {backgroundTop} {backgroundBottom}>
+          <SplashScreen onStart={startGame} />
+        </GameContainer>
       </div>
     {/if}
   {/key}
@@ -159,36 +216,46 @@
   {#if phase !== "splash"}
     <main class="relative flex h-full flex-1" in:fade={{ duration: 300, delay: 150 }}>
       {#key phase}
-        <div
-          class="absolute inset-0 flex justify-center overflow-auto"
-          in:fade={{ duration: 300, delay: 150 }}
-          out:fade={{ duration: 150 }}
-        >
-          {#if phase === "getReady"}
-            <GetReadyScreen
-              teamName={currentTeam.name}
-              teamColor={currentTeam.color}
-              onStart={startRound}
-            />
-          {:else if phase === "play" && currentCard}
-            <PlayScreen
-              card={currentCard}
-              teamColor={currentTeam.color}
-              {timeRemaining}
-              {isPaused}
-              onCorrect={handleCorrect}
-              onSkip={handleSkip}
-              onTogglePause={togglePause}
-            />
-          {:else if phase === "results"}
-            <ResultsScreen
-              teamName={currentTeam.name}
-              teamColor={currentTeam.color}
-              {correctCards}
-              {skippedCards}
-              onNextRound={nextTeamRound}
-            />
-          {/if}
+        <div class="absolute inset-0 flex justify-center overflow-auto">
+          <GameContainer {backgroundTop} {backgroundBottom}>
+            {#if phase === "getReady"}
+              <GetReadyScreen
+                teamName={currentTeam.name}
+                teamColor={currentTeam.color}
+                onStart={startRound}
+                onSkipTeam={skipTeam}
+                onResetGame={endGame}
+              />
+            {:else if phase === "play" && currentCard}
+              <PlayScreen
+                card={currentCard}
+                teamColor={currentTeam.color}
+                {timeRemaining}
+                {isPaused}
+                onCorrect={handleCorrect}
+                onSkip={handleSkip}
+                onTogglePause={togglePause}
+                onResetTurn={resetTurn}
+                onSkipTeam={skipTeam}
+                onResetGame={endGame}
+              />
+            {:else if phase === "results"}
+              <ResultsScreen
+                teamName={currentTeam.name}
+                teamColor={currentTeam.color}
+                {correctCards}
+                {skippedCards}
+                onNextRound={nextTeamRound}
+                onEndGame={endGame}
+              />
+            {:else if phase === "finalResults"}
+              <FinalResultsScreen
+                redScore={redTeamScore}
+                blueScore={blueTeamScore}
+                onPlayAgain={startGame}
+              />
+            {/if}
+          </GameContainer>
         </div>
       {/key}
     </main>

@@ -1,7 +1,7 @@
 <script lang="ts">
   import { fade } from "svelte/transition"
 
-  import { GOLD, GREEN, ORANGE, PURPLE, RED } from "$lib/constants/colors"
+  import { BLUE, GOLD, ORANGE, PURPLE, RED } from "$lib/constants/colors"
   import { Color } from "$lib/utils/colors"
 
   const games = [
@@ -15,7 +15,7 @@
       name: "Taboo",
       description: "Guess the word without forbidden clues",
       url: "/taboo",
-      gradient: Color.toGradient(RED, GREEN),
+      gradient: Color.toGradient(RED, BLUE),
     },
   ]
 </script>

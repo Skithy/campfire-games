@@ -16,7 +16,7 @@
   }
 </script>
 
-<div class="flex h-full flex-col items-center justify-center gap-12 px-4 py-6">
+<div class="flex flex-1 flex-col items-center justify-center gap-12">
   <!-- Shh gesture illustration -->
   <div class="relative flex flex-col items-center gap-6">
     <!-- Shh image -->
@@ -99,8 +99,8 @@
               style:color={TEAM_RED.color.toHsl()}>1</span
             >
             <p>
-              <strong style:color={TEAM_RED.color.toHsl()}>The Card:</strong> One player draws a card with a
-              word and forbidden clues.
+              <strong style:color={TEAM_RED.color.toHsl()}>The Card:</strong> One player draws a card
+              with a word and forbidden clues.
             </p>
           </div>
           <div class="flex gap-3">
@@ -110,8 +110,8 @@
               style:color={TEAM_RED.color.toHsl()}>2</span
             >
             <p>
-              <strong style:color={TEAM_RED.color.toHsl()}>The Clues:</strong> Give hints to help others guess
-              the word without saying any forbidden words.
+              <strong style:color={TEAM_RED.color.toHsl()}>The Clues:</strong> Give hints to help others
+              guess the word without saying any forbidden words.
             </p>
           </div>
           <div class="flex gap-3">
@@ -121,8 +121,8 @@
               style:color={TEAM_BLUE.color.toHsl()}>3</span
             >
             <p>
-              <strong style:color={TEAM_BLUE.color.toHsl()}>The Guess:</strong> Your team tries to guess the
-              word before time runs out.
+              <strong style:color={TEAM_BLUE.color.toHsl()}>The Guess:</strong> Your team tries to guess
+              the word before time runs out.
             </p>
           </div>
           <div class="flex gap-3">
@@ -131,8 +131,8 @@
               >4</span
             >
             <p>
-              <strong class="text-white">The Score:</strong> Get a point for each correct guess.
-              Say a forbidden word and lose your turn!
+              <strong class="text-white">The Score:</strong> Your team gets a point for each correct
+              guess. The other team gets a point for each card you skip!
             </p>
           </div>
         </div>
