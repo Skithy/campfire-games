@@ -76,15 +76,8 @@
   // Vibrate on visible tick change when dragging
   $effect(() => {
     if (interactive && isDragging && settings.isVibrationEnabled) {
-      // Check if we've crossed a visible tick mark (every 2 units, from -10 to 10)
-      const prevTick = Math.floor(previousValue / 2) * 2
-      const currentTick = Math.floor(value / 2) * 2
-
-      if (currentTick !== prevTick && currentTick >= -10 && currentTick <= 10) {
-        // Vibrate for 10ms on each visible tick
-        if (navigator.vibrate) {
-          navigator.vibrate(10)
-        }
+      if (value % 2 === 0 && previousValue !== value) {
+        navigator.vibrate?.(10)
       }
       previousValue = value
     }
