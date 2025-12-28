@@ -2,6 +2,7 @@
   import { fade, scale } from "svelte/transition"
 
   import { getGameContainerContext } from "$lib/components/layout/gameContainerContext.svelte"
+  import Modal from "$lib/components/layout/Modal.svelte"
   import PageActions from "$lib/components/layout/PageActions.svelte"
   import TabooCardComponent from "$lib/components/taboo/TabooCard.svelte"
   import type { TabooCard } from "$lib/data/tabooCards"
@@ -27,6 +28,7 @@
 
   let selectedCard = $state<TabooCard | null>(null)
   let selectedCardSource = $state<"correct" | "skipped" | "timedOut" | null>(null)
+  let isModalOpen = $state(false)
 
   const ctx = getGameContainerContext()
   $effect(() => {
@@ -36,11 +38,13 @@
   function openCardModal(card: TabooCard, source: "correct" | "skipped" | "timedOut") {
     selectedCard = card
     selectedCardSource = source
+    isModalOpen = true
   }
 
   function closeModal() {
     selectedCard = null
     selectedCardSource = null
+    isModalOpen = false
   }
 
   function moveToCorrect() {
@@ -164,29 +168,9 @@
 </div>
 
 <!-- Card Detail Modal -->
-{#if selectedCard}
-  <div
-    class={[
-      "fixed inset-0 z-50",
-      "flex items-center justify-center",
-      "p-4",
-      "bg-black/80",
-      "backdrop-blur-sm",
-    ]}
-    transition:fade={{ duration: 150 }}
-    onclick={closeModal}
-    onkeydown={(e) => e.key === "Escape" && closeModal()}
-    role="button"
-    tabindex="0"
-  >
-    <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
-    <div
-      class="flex flex-col items-center gap-4"
-      in:scale={{ duration: 200 }}
-      onclick={(e) => e.stopPropagation()}
-      onkeydown={(e) => e.stopPropagation()}
-      role="document"
-    >
+<Modal bind:isOpen={isModalOpen} onClose={closeModal} title="Card Details">
+  <div class="flex flex-col items-center gap-4 p-6">
+    {#if selectedCard}
       <TabooCardComponent card={selectedCard} {teamColor} />
 
       <!-- Action buttons -->
@@ -238,6 +222,6 @@
           <i class="fa-solid fa-xmark text-lg"></i>
         </button>
       </div>
-    </div>
+    {/if}
   </div>
-{/if}
+</Modal>

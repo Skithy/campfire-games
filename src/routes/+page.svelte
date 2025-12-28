@@ -31,7 +31,7 @@
 
 <div class={["flex flex-col items-center justify-center gap-12", "h-full", "px-4 py-6"]} in:fade>
   <div class="space-y-3 text-center">
-    <h1 class={["pb-1", "text-5xl font-black tracking-tight sm:text-6xl"]}>
+    <h1 class={["pb-1", "text-5xl font-black tracking-tight"]}>
       <span
         style:background={Color.toGradient(ORANGE, GOLD)}
         style:-webkit-background-clip="text"

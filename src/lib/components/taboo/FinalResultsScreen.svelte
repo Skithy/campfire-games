@@ -30,11 +30,11 @@
   <div class="space-y-2 text-center">
     <p class="text-lg font-medium tracking-widest text-white/60 uppercase">Game Over</p>
     {#if winner}
-      <h1 class="text-4xl font-black text-white sm:text-5xl" style:color={winner.color.toRgb()}>
+      <h1 class="text-4xl font-black text-white" style:color={winner.color.toRgb()}>
         {winner.name} Wins!
       </h1>
     {:else}
-      <h1 class="text-4xl font-black text-white sm:text-5xl">It's a Tie!</h1>
+      <h1 class="text-4xl font-black text-white">It's a Tie!</h1>
     {/if}
   </div>
 

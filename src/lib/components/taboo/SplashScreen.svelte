@@ -1,7 +1,6 @@
 <script lang="ts">
-  import { fade, scale } from "svelte/transition"
-
   import { getGameContainerContext } from "$lib/components/layout/gameContainerContext.svelte"
+  import Modal from "$lib/components/layout/Modal.svelte"
   import { TEAM_BLUE, TEAM_RED } from "$lib/constants/teams"
   import sshImage from "$lib/images/ssh.png"
   import { Color } from "$lib/utils/colors"
@@ -37,7 +36,7 @@
 
     <div class="space-y-3 text-center">
       <h1
-        class="pb-1 text-5xl font-black tracking-tight sm:text-6xl"
+        class="pb-1 text-5xl font-black tracking-tight"
         style:background={gradient}
         style:-webkit-background-clip="text"
         style:background-clip="text"
@@ -104,120 +103,83 @@
     </a>
   </div>
 
-  {#if showInstructions}
-    <div
-      class={[
-        "fixed inset-0 z-50",
-        "flex items-center justify-center",
-        "p-4",
-        "bg-black/80",
-        "backdrop-blur-sm",
-      ]}
-      transition:fade
-      onclick={toggleInstructions}
-      role="button"
-      tabindex="0"
-      onkeydown={(e) => e.key === "Escape" && toggleInstructions()}
-    >
-      <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
-      <div
-        class={[
-          "w-full max-w-lg",
-          "p-8",
-          "text-left",
-          "bg-[#1a1a1a]",
-          "rounded-2xl border border-white/10",
-          "shadow-2xl",
-          "space-y-6",
-        ]}
-        in:scale
-        onclick={(e) => e.stopPropagation()}
-        onkeydown={(e) => e.stopPropagation()}
-        role="document"
-      >
-        <h3 class="text-2xl font-bold text-white">How to Play</h3>
-
-        <div class="space-y-4 text-white/70">
-          <div class="flex gap-3">
-            <span
-              class={[
-                "flex shrink-0 items-center justify-center",
-                "h-7 w-7",
-                "text-sm font-bold",
-                "rounded-full",
-              ]}
-              style:background-color={TEAM_RED.color.toRgba(0.2)}
-              style:color={TEAM_RED.color.toHsl()}>1</span
-            >
-            <p>
-              <strong style:color={TEAM_RED.color.toHsl()}>The Card:</strong> One player draws a card
-              with a word and forbidden clues.
-            </p>
-          </div>
-          <div class="flex gap-3">
-            <span
-              class={[
-                "flex shrink-0 items-center justify-center",
-                "h-7 w-7",
-                "text-sm font-bold",
-                "rounded-full",
-              ]}
-              style:background-color={TEAM_RED.color.toRgba(0.2)}
-              style:color={TEAM_RED.color.toHsl()}>2</span
-            >
-            <p>
-              <strong style:color={TEAM_RED.color.toHsl()}>The Clues:</strong> Give hints to help others
-              guess the word without saying any forbidden words.
-            </p>
-          </div>
-          <div class="flex gap-3">
-            <span
-              class={[
-                "flex shrink-0 items-center justify-center",
-                "h-7 w-7",
-                "text-sm font-bold",
-                "rounded-full",
-              ]}
-              style:background-color={TEAM_BLUE.color.toRgba(0.2)}
-              style:color={TEAM_BLUE.color.toHsl()}>3</span
-            >
-            <p>
-              <strong style:color={TEAM_BLUE.color.toHsl()}>The Guess:</strong> Your team tries to guess
-              the word before time runs out.
-            </p>
-          </div>
-          <div class="flex gap-3">
-            <span
-              class={[
-                "flex shrink-0 items-center justify-center",
-                "h-7 w-7",
-                "text-sm font-bold text-white",
-                "bg-white/10",
-                "rounded-full",
-              ]}>4</span
-            >
-            <p>
-              <strong class="text-white">The Score:</strong> Your team gets a point for each correct
-              guess. The other team gets a point for each card you skip!
-            </p>
-          </div>
-        </div>
-
-        <div class="flex justify-end pt-2">
-          <button
+  <Modal bind:isOpen={showInstructions} title="How to Play">
+    <div class="space-y-6 p-6 text-left">
+      <div class="space-y-4 text-white/70">
+        <div class="flex gap-3">
+          <span
             class={[
-              "px-6 py-3",
-              "font-semibold text-white",
-              "bg-white/10",
-              "rounded-xl",
-              "cursor-pointer transition-colors hover:bg-white/20",
+              "flex h-7 w-7 shrink-0 items-center justify-center",
+              "rounded-full",
+              "text-sm font-bold",
             ]}
-            onclick={toggleInstructions}
+            style:background-color={TEAM_RED.color.toRgba(0.2)}
+            style:color={TEAM_RED.color.toHsl()}>1</span
           >
-            Got it!
-          </button>
+          <p>
+            <strong style:color={TEAM_RED.color.toHsl()}>The Card:</strong> One player draws a card with
+            a word and forbidden clues.
+          </p>
+        </div>
+        <div class="flex gap-3">
+          <span
+            class={[
+              "flex h-7 w-7 shrink-0 items-center justify-center",
+              "rounded-full",
+              "text-sm font-bold",
+            ]}
+            style:background-color={TEAM_RED.color.toRgba(0.2)}
+            style:color={TEAM_RED.color.toHsl()}>2</span
+          >
+          <p>
+            <strong style:color={TEAM_RED.color.toHsl()}>The Clues:</strong> Give hints to help others
+            guess the word without saying any forbidden words.
+          </p>
+        </div>
+        <div class="flex gap-3">
+          <span
+            class={[
+              "flex h-7 w-7 shrink-0 items-center justify-center",
+              "rounded-full",
+              "text-sm font-bold",
+            ]}
+            style:background-color={TEAM_BLUE.color.toRgba(0.2)}
+            style:color={TEAM_BLUE.color.toHsl()}>3</span
+          >
+          <p>
+            <strong style:color={TEAM_BLUE.color.toHsl()}>The Guess:</strong> Your team tries to guess
+            the word before time runs out.
+          </p>
+        </div>
+        <div class="flex gap-3">
+          <span
+            class={[
+              "flex h-7 w-7 shrink-0 items-center justify-center",
+              "rounded-full bg-white/10",
+              "text-sm font-bold text-white",
+            ]}>4</span
+          >
+          <p>
+            <strong class="text-white">The Score:</strong> Your team gets a point for each correct guess.
+            The other team gets a point for each card you skip!
+          </p>
         </div>
       </div>
+
+      <div class="flex justify-end pt-2">
+        <button
+          class={[
+            "px-6 py-3",
+            "font-semibold text-white",
+            "bg-white/10",
+            "rounded-xl",
+            "cursor-pointer transition-colors hover:bg-white/20",
+          ]}
+          onclick={() => (showInstructions = false)}
+        >
+          Got it!
+        </button>
+      </div>
     </div>
-  {/if}
+  </Modal>
 </div>

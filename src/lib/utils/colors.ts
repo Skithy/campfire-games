@@ -167,6 +167,21 @@ export class Color {
     })
     return `linear-gradient(to right, ${stops.join(", ")})`
   }
+
+  /**
+   * Creates a vertical gradient from top to bottom colors
+   * @param top - Color at the top
+   * @param bottom - Color at the bottom
+   * @returns CSS linear-gradient string
+   */
+  static toVerticalGradient(top: Color, bottom: Color): string {
+    const stops = [-10, -5, 0, 5, 10].map((value) => {
+      const color = Color.interpolate(value, top, bottom)
+      const percent = ((value + 10) / 20) * 100
+      return `${color} ${percent}%`
+    })
+    return `linear-gradient(to bottom, ${stops.join(", ")})`
+  }
 }
 
 /**

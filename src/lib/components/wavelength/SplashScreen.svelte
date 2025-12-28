@@ -1,6 +1,7 @@
 <script lang="ts">
-  import { fade, scale } from "svelte/transition"
+  import { fade } from "svelte/transition"
 
+  import Modal from "$lib/components/layout/Modal.svelte"
   import { GOLD, PURPLE } from "$lib/constants/colors"
   import { Color } from "$lib/utils/colors"
 
@@ -71,7 +72,7 @@
 
     <div class="space-y-3 text-center">
       <h1
-        class="pb-1 text-5xl font-black tracking-tight sm:text-6xl"
+        class="pb-1 text-5xl font-black tracking-tight"
         style:background={gradient}
         style:-webkit-background-clip="text"
         style:background-clip="text"
@@ -138,120 +139,88 @@
     </a>
   </div>
 
-  {#if showInstructions}
-    <div
-      class={[
-        "fixed inset-0 z-50",
-        "flex items-center justify-center",
-        "p-4",
-        "bg-black/80",
-        "backdrop-blur-sm",
-      ]}
-      transition:fade
-      onclick={toggleInstructions}
-      role="button"
-      tabindex="0"
-      onkeydown={(e) => e.key === "Escape" && toggleInstructions()}
-    >
-      <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
-      <div
-        class={[
-          "w-full max-w-lg",
-          "p-8",
-          "text-left",
-          "bg-[#1a1a1a]",
-          "rounded-2xl border border-white/10",
-          "shadow-2xl",
-          "space-y-6",
-        ]}
-        in:scale
-        onclick={(e) => e.stopPropagation()}
-        onkeydown={(e) => e.stopPropagation()}
-        role="document"
-      >
-        <h3 class="text-2xl font-bold text-white">How to Play</h3>
-
-        <div class="space-y-4 text-white/70">
-          <div class="flex gap-3">
-            <span
-              class={[
-                "flex shrink-0 items-center justify-center",
-                "h-7 w-7",
-                "text-sm font-bold",
-                "rounded-full",
-              ]}
-              style:background-color={PURPLE.toRgba(0.2)}
-              style:color={PURPLE.toHsl()}>1</span
-            >
-            <p>
-              <strong style:color={PURPLE.toHsl()}>The Spectrum:</strong> The Psychic chooses a spectrum
-              and sees where the target is located.
-            </p>
-          </div>
-          <div class="flex gap-3">
-            <span
-              class={[
-                "flex shrink-0 items-center justify-center",
-                "h-7 w-7",
-                "text-sm font-bold",
-                "rounded-full",
-              ]}
-              style:background-color={PURPLE.toRgba(0.2)}
-              style:color={PURPLE.toHsl()}>2</span
-            >
-            <p>
-              <strong style:color={PURPLE.toHsl()}>The Clue:</strong> The Psychic gives a clue that hints
-              at where the target sits.
-            </p>
-          </div>
-          <div class="flex gap-3">
-            <span
-              class={[
-                "flex shrink-0 items-center justify-center",
-                "h-7 w-7",
-                "text-sm font-bold",
-                "rounded-full",
-              ]}
-              style:background-color={GOLD.toRgba(0.2)}
-              style:color={GOLD.toHsl()}>3</span
-            >
-            <p>
-              <strong style:color={GOLD.toHsl()}>The Guess:</strong> Everyone else moves the dial to
-              where they think the target is.
-            </p>
-          </div>
-          <div class="flex gap-3">
-            <span
-              class={[
-                "flex shrink-0 items-center justify-center",
-                "h-7 w-7",
-                "text-sm font-bold text-white",
-                "bg-white/10",
-                "rounded-full",
-              ]}>4</span
-            >
-            <p>
-              <strong class="text-white">The Reveal:</strong> See how close you got! Closer guesses score
-              more points.
-            </p>
-          </div>
-        </div>
-
-        <div class="flex justify-end pt-2">
-          <button
+  <Modal bind:isOpen={showInstructions} title="How to Play">
+    <div class="space-y-6 p-6 text-left">
+      <div class="space-y-4 text-white/70">
+        <div class="flex gap-3">
+          <span
             class={[
-              "px-6 py-3",
-              "font-semibold text-white",
-              "bg-white/10",
-              "rounded-xl",
-              "cursor-pointer transition-colors hover:bg-white/20",
+              "flex shrink-0 items-center justify-center",
+              "h-7 w-7",
+              "text-sm font-bold",
+              "rounded-full",
             ]}
-            onclick={toggleInstructions}
+            style:background-color={PURPLE.toRgba(0.2)}
+            style:color={PURPLE.toHsl()}>1</span
           >
-            Got it!
-          </button>
+          <p>
+            <strong style:color={PURPLE.toHsl()}>The Spectrum:</strong> The Psychic chooses a spectrum
+            and sees where the target is located.
+          </p>
+        </div>
+        <div class="flex gap-3">
+          <span
+            class={[
+              "flex shrink-0 items-center justify-center",
+              "h-7 w-7",
+              "text-sm font-bold",
+              "rounded-full",
+            ]}
+            style:background-color={PURPLE.toRgba(0.2)}
+            style:color={PURPLE.toHsl()}>2</span
+          >
+          <p>
+            <strong style:color={PURPLE.toHsl()}>The Clue:</strong> The Psychic gives a clue that hints
+            at where the target sits.
+          </p>
+        </div>
+        <div class="flex gap-3">
+          <span
+            class={[
+              "flex shrink-0 items-center justify-center",
+              "h-7 w-7",
+              "text-sm font-bold",
+              "rounded-full",
+            ]}
+            style:background-color={GOLD.toRgba(0.2)}
+            style:color={GOLD.toHsl()}>3</span
+          >
+          <p>
+            <strong style:color={GOLD.toHsl()}>The Guess:</strong> Everyone else moves the dial to where
+            they think the target is.
+          </p>
+        </div>
+        <div class="flex gap-3">
+          <span
+            class={[
+              "flex shrink-0 items-center justify-center",
+              "h-7 w-7",
+              "text-sm font-bold text-white",
+              "bg-white/10",
+              "rounded-full",
+            ]}>4</span
+          >
+          <p>
+            <strong class="text-white">The Reveal:</strong> See how close you got! Closer guesses score
+            more points.
+          </p>
         </div>
       </div>
+
+      <div class="flex justify-end pt-2">
+        <button
+          class={[
+            "px-6 py-3",
+            "font-semibold text-white",
+            "bg-white/10",
+            "rounded-xl",
+            "cursor-pointer transition-colors hover:bg-white/20",
+          ]}
+          onclick={() => (showInstructions = false)}
+        >
+          Got it!
+        </button>
+      </div>
     </div>
-  {/if}
+  </Modal>
 </div>

@@ -3,37 +3,19 @@
   import { BLUE, GOLD, ORANGE, PURPLE, RED } from "$lib/constants/colors"
   import { Color } from "$lib/utils/colors"
 
+  import Modal from "./Modal.svelte"
+  import { getSettingsContext } from "./settingsContext.svelte"
+
   let isWavelength = $derived($page.url.pathname.includes("wavelength"))
   let isTaboo = $derived($page.url.pathname.includes("taboo"))
 
-  let isMenuOpen = $state(false)
-  let menuRef: HTMLElement | null = $state(null)
+  let isSettingsOpen = $state(false)
 
-  function toggleMenu() {
-    isMenuOpen = !isMenuOpen
+  const settingsContext = getSettingsContext()
+
+  function toggleSettings() {
+    isSettingsOpen = !isSettingsOpen
   }
-
-  function closeMenu() {
-    isMenuOpen = false
-  }
-
-  function handleClickOutside(event: MouseEvent) {
-    if (isMenuOpen && menuRef && !menuRef.contains(event.target as Node)) {
-      closeMenu()
-    }
-  }
-
-  // Add event listener for click outside
-  $effect(() => {
-    if (isMenuOpen) {
-      window.addEventListener("click", handleClickOutside)
-    } else {
-      window.removeEventListener("click", handleClickOutside)
-    }
-    return () => {
-      window.removeEventListener("click", handleClickOutside)
-    }
-  })
 </script>
 
 <nav
@@ -42,13 +24,24 @@
     "flex items-center justify-between",
     "w-full",
     "px-6 py-4",
-    "bg-black/20",
-    "border-b border-white/10",
-    "backdrop-blur-md",
+    "bg-black/30 backdrop-blur-sm",
+    "border-b border-white/5",
+    "rounded-2xl",
   ]}
 >
-  <div class="flex items-center gap-4">
+  <div class="flex items-center gap-2">
     {#if isWavelength}
+      <a
+        href="/"
+        class="text-xl font-bold tracking-tight transition-opacity hover:opacity-80"
+        style:background={Color.toGradient(ORANGE, GOLD)}
+        style:-webkit-background-clip="text"
+        style:background-clip="text"
+        style:color="transparent"
+      >
+        Campfire Games
+      </a>
+      <span class="text-xl text-white/30">/</span>
       <a
         href="/wavelength?reset=true"
         class="text-xl font-bold tracking-tight transition-opacity hover:opacity-80"
@@ -56,11 +49,21 @@
         style:-webkit-background-clip="text"
         style:background-clip="text"
         style:color="transparent"
-        onclick={closeMenu}
       >
         Wavelength
       </a>
     {:else if isTaboo}
+      <a
+        href="/"
+        class="text-xl font-bold tracking-tight transition-opacity hover:opacity-80"
+        style:background={Color.toGradient(ORANGE, GOLD)}
+        style:-webkit-background-clip="text"
+        style:background-clip="text"
+        style:color="transparent"
+      >
+        Campfire Games
+      </a>
+      <span class="text-xl text-white/30">/</span>
       <a
         href="/taboo"
         class="text-xl font-bold tracking-tight transition-opacity hover:opacity-80"
@@ -68,7 +71,6 @@
         style:-webkit-background-clip="text"
         style:background-clip="text"
         style:color="transparent"
-        onclick={closeMenu}
       >
         Taboo
       </a>
@@ -80,66 +82,56 @@
         style:-webkit-background-clip="text"
         style:background-clip="text"
         style:color="transparent"
-        onclick={closeMenu}
       >
         Campfire Games
       </a>
     {/if}
   </div>
 
-  <div class="relative" bind:this={menuRef}>
+  <button
+    onclick={toggleSettings}
+    class={[
+      "cursor-pointer",
+      "transition-all hover:scale-110 active:scale-95",
+      "rounded-lg text-white/70 hover:text-white",
+    ]}
+    aria-expanded={isSettingsOpen}
+    aria-label="Settings"
+  >
+    <i class="fa-solid fa-gear text-2xl"></i>
+  </button>
+</nav>
+
+<Modal bind:isOpen={isSettingsOpen} title="Settings">
+  <div class="grid grid-cols-2 gap-4 p-6">
     <button
-      onclick={toggleMenu}
-      class="text-2xl cursor-pointer transition-transform duration-200 hover:scale-110 active:scale-95"
-      aria-expanded={isMenuOpen}
-      aria-haspopup="true"
-      aria-label="Menu"
+      onclick={settingsContext.toggleMusic}
+      class={[
+        "flex flex-col items-center justify-center gap-3",
+        "aspect-square",
+        "p-6",
+        "rounded-2xl",
+        "transition-all hover:brightness-110 active:scale-95",
+        settingsContext.isMusicEnabled ? "bg-white/20 text-white" : "bg-white/5 text-white/50",
+      ]}
     >
-      🏕️
+      <i class="fa-solid fa-music text-4xl"></i>
+      <span class="text-sm font-medium">Music</span>
     </button>
 
-    {#if isMenuOpen}
-      <div
-        class={[
-          "absolute top-full right-0 overflow-hidden",
-          "w-48",
-          "mt-3",
-          "bg-gray-900/95",
-          "border border-white/10 rounded-2xl",
-          "shadow-2xl",
-          "origin-top-right",
-          "backdrop-blur-xl",
-        ]}
-        role="menu"
-      >
-        <a
-          href="/"
-          class="flex items-center gap-3 px-4 py-3 text-sm text-white/80 transition-colors hover:bg-white/10 hover:text-white"
-          role="menuitem"
-          onclick={closeMenu}
-        >
-          <span class="text-lg">🏠</span>
-          Home
-        </a>
-        <a
-          href="/wavelength"
-          class="flex items-center gap-3 px-4 py-3 text-sm text-white/80 transition-colors hover:bg-white/10 hover:text-white"
-          role="menuitem"
-          onclick={closeMenu}
-        >
-          <span class="text-lg">🎚️</span>
-          Wavelength
-        </a>
-        <a
-          href="/taboo"
-          class="flex items-center gap-3 px-4 py-3 text-sm text-white/80 transition-colors hover:bg-white/10 hover:text-white"
-          role="menuitem"
-          onclick={closeMenu}
-        >
-          <span class="text-lg">🤫</span>
-          Taboo
-        </a>
-      </div>
-    {/if}
+    <button
+      onclick={settingsContext.toggleVibration}
+      class={[
+        "flex flex-col items-center justify-center gap-3",
+        "aspect-square",
+        "p-6",
+        "rounded-2xl",
+        "transition-all hover:brightness-110 active:scale-95",
+        settingsContext.isVibrationEnabled ? "bg-white/20 text-white" : "bg-white/5 text-white/50",
+      ]}
+    >
+      <i class="fa-solid fa-mobile-screen-button text-4xl"></i>
+      <span class="text-sm font-medium">Vibration</span>
+    </button>
   </div>
-</nav>
+</Modal>

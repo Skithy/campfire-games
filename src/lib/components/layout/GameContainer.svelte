@@ -6,6 +6,7 @@
   import { setGameContainerContext } from "./gameContainerContext.svelte"
   import Navbar from "./Navbar.svelte"
   import PageBackground from "./PageBackground.svelte"
+  import { setSettingsContext } from "./settingsContext.svelte"
 
   let {
     children,
@@ -16,9 +17,20 @@
   let backgroundTop = $state<Color | undefined>(undefined)
   let backgroundBottom = $state<Color | undefined>(undefined)
 
+  let isMusicEnabled = $state(false)
+  let isVibrationEnabled = $state(true)
+
   function setBackground(top: Color, bottom: Color) {
     backgroundTop = top
     backgroundBottom = bottom
+  }
+
+  function toggleMusic() {
+    isMusicEnabled = !isMusicEnabled
+  }
+
+  function toggleVibration() {
+    isVibrationEnabled = !isVibrationEnabled
   }
 
   setGameContainerContext({
@@ -29,6 +41,17 @@
       return backgroundBottom
     },
     setBackground,
+  })
+
+  setSettingsContext({
+    get isMusicEnabled() {
+      return isMusicEnabled
+    },
+    get isVibrationEnabled() {
+      return isVibrationEnabled
+    },
+    toggleMusic,
+    toggleVibration,
   })
 </script>
 
