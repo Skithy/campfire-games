@@ -2,7 +2,6 @@
   import { fade } from "svelte/transition"
 
   import FinalResultsScreen from "$lib/components/taboo/FinalResultsScreen.svelte"
-  import GameContainer from "$lib/components/taboo/GameContainer.svelte"
   import GetReadyScreen from "$lib/components/taboo/GetReadyScreen.svelte"
   import PlayScreen from "$lib/components/taboo/PlayScreen.svelte"
   import ResultsScreen from "$lib/components/taboo/ResultsScreen.svelte"
@@ -176,68 +175,46 @@
   <meta name="description" content="Guess the word without forbidden clues" />
 </svelte:head>
 
-<div class="relative flex h-full flex-col overflow-hidden bg-[#111] font-sans text-white">
-  <!-- Splash screen -->
-  {#key phase === "splash"}
+{#key phase}
+  <div in:fade={{ duration: 300, delay: 150 }} out:fade={{ duration: 150 }}>
     {#if phase === "splash"}
-      <div
-        class="absolute inset-0 z-20 flex justify-center overflow-auto"
-        in:fade={{ duration: 300, delay: 150 }}
-        out:fade={{ duration: 150 }}
-      >
-        <GameContainer>
-          <SplashScreen onStart={startGame} />
-        </GameContainer>
-      </div>
+      <SplashScreen onStart={startGame} />
+    {:else if phase === "getReady"}
+      <GetReadyScreen
+        teamName={currentTeam.name}
+        teamColor={currentTeam.color}
+        onStart={startRound}
+        onSkipTeam={skipTeam}
+        onResetGame={endGame}
+      />
+    {:else if phase === "play" && currentCard}
+      <PlayScreen
+        card={currentCard}
+        teamColor={currentTeam.color}
+        {timeRemaining}
+        {isPaused}
+        onCorrect={handleCorrect}
+        onSkip={handleSkip}
+        onTogglePause={togglePause}
+        onResetTurn={resetTurn}
+        onSkipTeam={skipTeam}
+        onResetGame={endGame}
+      />
+    {:else if phase === "results"}
+      <ResultsScreen
+        teamName={currentTeam.name}
+        teamColor={currentTeam.color}
+        {correctCards}
+        {skippedCards}
+        onNextRound={nextTeamRound}
+        onEndGame={endGame}
+      />
+    {:else if phase === "finalResults"}
+      <FinalResultsScreen
+        redScore={redTeamScore}
+        blueScore={blueTeamScore}
+        onPlayAgain={startGame}
+      />
     {/if}
-  {/key}
-
-  <!-- Game screens -->
-  {#if phase !== "splash"}
-    <main class="relative flex h-full flex-1" in:fade={{ duration: 300, delay: 150 }}>
-      {#key phase}
-        <div class="absolute inset-0 flex justify-center overflow-auto">
-          <GameContainer>
-            {#if phase === "getReady"}
-              <GetReadyScreen
-                teamName={currentTeam.name}
-                teamColor={currentTeam.color}
-                onStart={startRound}
-                onSkipTeam={skipTeam}
-                onResetGame={endGame}
-              />
-            {:else if phase === "play" && currentCard}
-              <PlayScreen
-                card={currentCard}
-                teamColor={currentTeam.color}
-                {timeRemaining}
-                {isPaused}
-                onCorrect={handleCorrect}
-                onSkip={handleSkip}
-                onTogglePause={togglePause}
-                onResetTurn={resetTurn}
-                onSkipTeam={skipTeam}
-                onResetGame={endGame}
-              />
-            {:else if phase === "results"}
-              <ResultsScreen
-                teamName={currentTeam.name}
-                teamColor={currentTeam.color}
-                {correctCards}
-                {skippedCards}
-                onNextRound={nextTeamRound}
-                onEndGame={endGame}
-              />
-            {:else if phase === "finalResults"}
-              <FinalResultsScreen
-                redScore={redTeamScore}
-                blueScore={blueTeamScore}
-                onPlayAgain={startGame}
-              />
-            {/if}
-          </GameContainer>
-        </div>
-      {/key}
-    </main>
-  {/if}
-</div>
+  </div>
+{/key}

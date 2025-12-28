@@ -1,7 +1,7 @@
 <script lang="ts">
   import { TEAM_BLUE, TEAM_RED } from "$lib/constants/teams"
 
-  import { getGameContainerContext } from "./gameContainerContext.svelte"
+  import { getGameContainerContext } from "$lib/components/layout/gameContainerContext.svelte"
 
   let {
     redScore,

@@ -3,7 +3,7 @@
   import type { TabooCard } from "$lib/data/tabooCards"
   import type { Color } from "$lib/utils/colors"
 
-  import { getGameContainerContext } from "./gameContainerContext.svelte"
+  import { getGameContainerContext } from "$lib/components/layout/gameContainerContext.svelte"
 
   let {
     teamName,

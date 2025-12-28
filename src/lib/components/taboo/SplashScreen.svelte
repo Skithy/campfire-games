@@ -1,11 +1,10 @@
 <script lang="ts">
   import { fade, scale } from "svelte/transition"
 
+  import { getGameContainerContext } from "$lib/components/layout/gameContainerContext.svelte"
   import { TEAM_BLUE, TEAM_RED } from "$lib/constants/teams"
   import sshImage from "$lib/images/ssh.png"
   import { Color } from "$lib/utils/colors"
-
-  import { getGameContainerContext } from "./gameContainerContext.svelte"
 
   let { onStart }: { onStart: () => void } = $props()
 
@@ -14,7 +13,9 @@
   const gradient = Color.toGradient(TEAM_RED.color, TEAM_BLUE.color)
 
   const ctx = getGameContainerContext()
-  ctx.setBackground(TEAM_RED.color, TEAM_BLUE.color)
+  $effect(() => {
+    ctx.setBackground(TEAM_RED.color, TEAM_BLUE.color)
+  })
 
   function toggleInstructions() {
     showInstructions = !showInstructions
