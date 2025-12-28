@@ -145,11 +145,11 @@
   let diffAngle = $derived(diffEnd - diffStart)
 </script>
 
-<div class="w-full px-8">
+<div class={["w-full", "px-8"]}>
   {#if interactive}
     <div
       bind:this={dialEl}
-      class="relative aspect-2/1 w-full max-w-xs touch-none select-none"
+      class={["relative", "aspect-2/1 w-full max-w-xs", "touch-none select-none"]}
       class:cursor-grab={!isDragging}
       class:cursor-grabbing={isDragging}
       role="slider"
@@ -169,7 +169,7 @@
       {@render dialContent()}
     </div>
   {:else}
-    <div bind:this={dialEl} class="relative aspect-2/1 w-full max-w-xs">
+    <div bind:this={dialEl} class={["relative", "aspect-2/1 w-full max-w-xs"]}>
       {@render dialContent()}
     </div>
   {/if}
@@ -178,11 +178,11 @@
 {#snippet dialContent()}
   <!-- Semicircle background with gradient - solid like mini dial -->
   <div
-    class="absolute inset-0 rounded-t-full"
+    class={["absolute inset-0", "rounded-t-full"]}
     style:background={Color.toGradient(leftColor, rightColor)}
   ></div>
   <!-- Border overlay -->
-  <div class="absolute inset-0 rounded-t-full border-2 border-b-0 border-white/30"></div>
+  <div class={["absolute inset-0", "border-2 border-b-0 border-white/30", "rounded-t-full"]}></div>
 
   <!-- Notches on the arc -->
   {#each tickAngles as tick (tick.value)}
@@ -192,7 +192,7 @@
     {@const outerY = 100 - Math.sin(rad) * 100}
     {@const innerX = 50 + Math.cos(rad) * 42}
     {@const innerY = 100 - Math.sin(rad) * 84}
-    <svg class="pointer-events-none absolute inset-0 h-full w-full overflow-visible">
+    <svg class={["absolute inset-0", "pointer-events-none", "h-full w-full", "overflow-visible"]}>
       <line
         x1="{outerX}%"
         y1="{outerY}%"
@@ -219,7 +219,7 @@
     {@const largeArc = diffAngle > 90 ? 1 : 0}
     {@const sweepFlag = angle1 > angle2 ? 1 : 0}
     <svg
-      class="pointer-events-none absolute inset-0 h-full w-full overflow-hidden"
+      class={["absolute inset-0", "pointer-events-none", "h-full w-full", "overflow-hidden"]}
       viewBox="0 0 100 50"
       preserveAspectRatio="xMidYMax meet"
     >
@@ -251,7 +251,7 @@
     {@const perpAngle1 = rad + Math.PI / 2}
     {@const perpAngle2 = rad - Math.PI / 2}
     <svg
-      class="pointer-events-none absolute inset-0 h-full w-full"
+      class={["absolute inset-0", "pointer-events-none", "h-full w-full"]}
       style:overflow="visible"
       viewBox="0 0 100 50"
       preserveAspectRatio="xMidYMax meet"
@@ -284,38 +284,38 @@
   {/each}
 
   <!-- Center pivot - black like mini dial -->
-  <div class="pointer-events-none absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2">
-    <div class="relative h-10 w-10 rounded-full bg-black">
-      <div class="absolute inset-2.5 rounded-full bg-gray-600"></div>
+  <div class={["absolute bottom-0 left-1/2", "pointer-events-none", "-translate-x-1/2 translate-y-1/2"]}>
+    <div class={["relative", "h-10 w-10", "bg-black", "rounded-full"]}>
+      <div class={["absolute inset-2.5", "bg-gray-600", "rounded-full"]}></div>
     </div>
   </div>
   <!-- Percentage display below pivot -->
   {#if arrows.length === 1 && arrows[0].displayValue !== undefined}
     <div
-      class="pointer-events-none absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-[calc(100%+1.5rem)]"
+      class={["absolute bottom-0 left-1/2", "pointer-events-none", "-translate-x-1/2 translate-y-[calc(100%+1.5rem)]"]}
     >
-      <div class="text-2xl font-bold" style:color={arrows[0].color}>
+      <div class={["text-2xl font-bold"]} style:color={arrows[0].color}>
         {arrows[0].displayValue}%
       </div>
     </div>
   {/if}
 
   <!-- Prompt labels integrated at dial ends -->
-  <div class="absolute bottom-0 -left-4 max-w-24 translate-y-full pt-2 text-center">
-    <span class="text-base font-bold" style:color={leftColor.toHsl()}>{prompt[0]}</span>
+  <div class={["absolute bottom-0 -left-4", "max-w-24", "pt-2", "text-center", "translate-y-full"]}>
+    <span class={["text-base font-bold"]} style:color={leftColor.toHsl()}>{prompt[0]}</span>
   </div>
-  <div class="absolute -right-4 bottom-0 max-w-24 translate-y-full pt-2 text-center">
-    <span class="text-base font-bold" style:color={rightColor.toHsl()}>{prompt[1]}</span>
+  <div class={["absolute -right-4 bottom-0", "max-w-24", "pt-2", "text-center", "translate-y-full"]}>
+    <span class={["text-base font-bold"]} style:color={rightColor.toHsl()}>{prompt[1]}</span>
   </div>
 
   <!-- Legend for multiple arrows -->
   {#if arrows.length > 1 && arrows.some((a) => a.label)}
-    <div class="absolute bottom-0 left-1/2 flex -translate-x-1/2 translate-y-full gap-8 pt-12">
+    <div class={["absolute bottom-0 left-1/2", "flex gap-8", "pt-12", "-translate-x-1/2 translate-y-full"]}>
       {#each arrows as arrow, i (i)}
         {#if arrow.label}
-          <div class="flex flex-col items-center gap-1">
-            <span class="text-xs tracking-wide text-gray-400 uppercase">{arrow.label}</span>
-            <span class="text-2xl font-bold" style:color={arrow.color}
+          <div class={["flex flex-col items-center gap-1"]}>
+            <span class={["text-xs tracking-wide text-gray-400 uppercase"]}>{arrow.label}</span>
+            <span class={["text-2xl font-bold"]} style:color={arrow.color}
               >{#if arrow.displayValue !== undefined}{arrow.displayValue}%{/if}</span
             >
           </div>

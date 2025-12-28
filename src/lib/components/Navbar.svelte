@@ -37,7 +37,15 @@
 </script>
 
 <nav
-  class="sticky top-0 z-50 flex w-full items-center justify-between border-b border-white/10 bg-black/20 px-6 py-4 backdrop-blur-md"
+  class={[
+    "sticky top-0 z-50",
+    "flex items-center justify-between",
+    "w-full",
+    "px-6 py-4",
+    "bg-black/20",
+    "border-b border-white/10",
+    "backdrop-blur-md",
+  ]}
 >
   <div class="flex items-center gap-4">
     {#if isWavelength}
@@ -82,7 +90,7 @@
   <div class="relative" bind:this={menuRef}>
     <button
       onclick={toggleMenu}
-      class="cursor-pointer text-2xl transition-transform duration-200 hover:scale-110 active:scale-95"
+      class="text-2xl cursor-pointer transition-transform duration-200 hover:scale-110 active:scale-95"
       aria-expanded={isMenuOpen}
       aria-haspopup="true"
       aria-label="Menu"
@@ -92,7 +100,16 @@
 
     {#if isMenuOpen}
       <div
-        class="absolute top-full right-0 mt-3 w-48 origin-top-right overflow-hidden rounded-2xl border border-white/10 bg-gray-900/95 shadow-2xl backdrop-blur-xl"
+        class={[
+          "absolute top-full right-0 overflow-hidden",
+          "w-48",
+          "mt-3",
+          "bg-gray-900/95",
+          "border border-white/10 rounded-2xl",
+          "shadow-2xl",
+          "origin-top-right",
+          "backdrop-blur-xl",
+        ]}
         role="menu"
       >
         <a

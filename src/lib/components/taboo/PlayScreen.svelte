@@ -110,36 +110,66 @@
 
 <!-- Pause/Menu button -->
 <button
-  class="absolute top-4 right-4 flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-white/10 text-white transition-all hover:bg-white/20 active:scale-95"
+  class={[
+    "absolute top-4 right-4",
+    "flex items-center justify-center",
+    "h-10 w-10",
+    "text-white",
+    "bg-white/10",
+    "rounded-full",
+    "cursor-pointer transition-all hover:bg-white/20 active:scale-95",
+  ]}
   onclick={onTogglePause}
   aria-label="Pause game"
 >
-  <i class="fa-solid fa-pause text-lg"></i>
+  <i class="text-lg fa-solid fa-pause"></i>
 </button>
 
 <!-- Timer -->
 <div class="flex items-center justify-center gap-4">
   <div
-    class="flex min-w-25 items-center justify-center rounded-xl px-6 py-3 text-4xl font-black text-white tabular-nums transition-colors {timerWarning
-      ? 'bg-red-500'
-      : 'bg-white/10'} {timerWarning && !isPaused ? 'animate-pulse' : ''}"
+    class={[
+      "flex items-center justify-center",
+      "min-w-25",
+      "px-6 py-3",
+      "text-4xl font-black text-white tabular-nums",
+      timerWarning ? "bg-red-500" : "bg-white/10",
+      "rounded-xl",
+      "transition-colors",
+      timerWarning && !isPaused ? "animate-pulse" : "",
+    ]}
   >
     {timeRemaining}
   </div>
 </div>
 
 <!-- Card -->
-<div class="relative flex w-full flex-1 items-center justify-center">
+<div class="relative flex flex-1 items-center justify-center w-full">
   <!-- Swipe indicators -->
   <div
-    class="pointer-events-none absolute right-0 z-10 flex h-14 w-14 items-center justify-center rounded-full text-2xl text-white transition-opacity duration-150"
+    class={[
+      "absolute right-0 z-10",
+      "pointer-events-none flex items-center justify-center",
+      "h-14 w-14",
+      "text-2xl text-white",
+      "rounded-full",
+      "transition-opacity duration-150",
+    ]}
     style:background-color={teamColor.toRgb()}
     style:opacity={Math.min(1, Math.max(0, dragX / SWIPE_THRESHOLD))}
   >
     <i class="fa-solid fa-check"></i>
   </div>
   <div
-    class="pointer-events-none absolute left-0 z-10 flex h-14 w-14 items-center justify-center rounded-full bg-white/30 text-2xl text-white transition-opacity duration-150"
+    class={[
+      "absolute left-0 z-10",
+      "pointer-events-none flex items-center justify-center",
+      "h-14 w-14",
+      "text-2xl text-white",
+      "bg-white/30",
+      "rounded-full",
+      "transition-opacity duration-150",
+    ]}
     style:opacity={Math.min(1, Math.max(0, -dragX / SWIPE_THRESHOLD))}
   >
     <i class="fa-solid fa-forward"></i>

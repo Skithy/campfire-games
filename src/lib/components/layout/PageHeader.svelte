@@ -15,7 +15,7 @@
 </script>
 
 <div
-  class="flex w-full flex-col items-center gap-2 rounded-xl px-6 py-3 transition-colors duration-300"
+  class={["flex flex-col items-center gap-2", "w-full", "px-6 py-3", "rounded-xl", "transition-colors duration-300"]}
   style:background-color={color.toRgba(0.2)}
 >
   <span class="text-xs font-semibold tracking-widest uppercase" style:color={color.toRgb()}

@@ -32,7 +32,14 @@
 </script>
 
 <div
-  class="relative mx-auto my-auto flex h-full max-h-175 w-full max-w-md flex-col items-center gap-6 overflow-hidden rounded-2xl px-4 py-6 md:border md:border-white/10 md:shadow-2xl"
+  class={[
+    "relative overflow-hidden",
+    "flex flex-col items-center gap-6",
+    "h-full max-h-175 w-full max-w-md",
+    "mx-auto my-auto px-4 py-6",
+    "rounded-2xl md:border md:border-white/10",
+    "md:shadow-2xl",
+  ]}
 >
   {#if backgroundTop && backgroundBottom}
     <PageBackground top={backgroundTop} bottom={backgroundBottom} />

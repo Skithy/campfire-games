@@ -11,7 +11,7 @@
   } = $props()
 </script>
 
-<div class="flex w-60 flex-col overflow-hidden rounded-2xl bg-white shadow-2xl">
+<div class={["flex flex-col", "w-60", "overflow-hidden", "bg-white", "rounded-2xl", "shadow-2xl"]}>
   <!-- Main word header -->
   <div
     class="flex items-center justify-center px-6 py-5"
@@ -21,10 +21,10 @@
   </div>
 
   <!-- Forbidden words -->
-  <div class="flex flex-col divide-y divide-gray-200 bg-white">
+  <div class="flex flex-col bg-white divide-y divide-gray-200">
     {#each card.forbidden as word (word)}
       <div class="flex items-center gap-3 px-6 py-3">
-        <i class="fa-solid fa-ban text-lg" style:color={teamColor.toRgba(0.6)}></i>
+        <i class="text-lg fa-solid fa-ban" style:color={teamColor.toRgba(0.6)}></i>
         <span class="text-lg font-semibold text-gray-800">{word}</span>
       </div>
     {/each}

@@ -3,7 +3,7 @@
 
   import { goto } from "$app/navigation"
   import { page } from "$app/stores"
-  import PageBackground from "$lib/components/layout/PageBackground.svelte"
+  import { getGameContainerContext } from "$lib/components/layout/gameContainerContext.svelte"
   import PageHeader from "$lib/components/layout/PageHeader.svelte"
   import GuessScreen from "$lib/components/wavelength/GuessScreen.svelte"
   import PromptScreen from "$lib/components/wavelength/PromptScreen.svelte"
@@ -218,6 +218,11 @@
     startNewRound()
   }
 
+  const ctx = getGameContainerContext()
+  $effect(() => {
+    ctx.setBackground(backgroundColors.top, backgroundColors.bottom)
+  })
+
   $effect(() => {
     if ($page.url.searchParams.has("reset")) {
       phase = "splash"
@@ -226,28 +231,11 @@
   })
 </script>
 
-<div class="relative flex h-full flex-col overflow-hidden bg-[#111] font-sans text-white">
-  <PageBackground top={backgroundColors.top} bottom={backgroundColors.bottom} />
-
-  <!-- Splash screen (absolutely positioned, full screen) -->
-  {#key phase === "splash"}
+{#key phase}
+  <div in:fade={{ duration: 300, delay: 150 }} out:fade={{ duration: 150 }}>
     {#if phase === "splash"}
-      <div
-        class="absolute inset-0 z-20 flex justify-center overflow-auto"
-        in:fade={{ duration: 300, delay: 150 }}
-        out:fade={{ duration: 150 }}
-      >
-        <SplashScreen onStart={handleStartGame} />
-      </div>
-    {/if}
-  {/key}
-
-  <!-- Game UI (header + content, only shown for non-splash phases) -->
-  {#if phase !== "splash"}
-    <div
-      class="relative z-10 mx-auto w-full max-w-md px-6 pt-6"
-      in:fade={{ duration: 300, delay: 150 }}
-    >
+      <SplashScreen onStart={handleStartGame} />
+    {:else if phase === "prompt"}
       {#if headerConfig}
         <PageHeader
           label={headerConfig.label}
@@ -256,56 +244,62 @@
           color={headerConfig.color}
         />
       {/if}
-    </div>
-    <main class="relative flex min-h-0 flex-1" in:fade={{ duration: 300, delay: 150 }}>
-      {#key phase}
-        <div
-          class="absolute inset-0 flex justify-center overflow-auto pt-4"
-          in:fade={{ duration: 300, delay: 150 }}
-          out:fade={{ duration: 150 }}
-        >
-          {#if phase === "prompt"}
-            <PromptScreen
-              prompts={currentPrompts}
-              promptColors={promptListColors}
-              onSelectPrompt={handleSelectPrompt}
-              onReroll={handleReroll}
-            />
-          {:else if phase === "psychic"}
-            {#if selectedPrompt}
-              <PsychicScreen
-                {selectedPrompt}
-                {target}
-                leftColor={promptColors[0]}
-                rightColor={promptColors[1]}
-                onReadyToGuess={handleReadyToGuess}
-                onBack={handleBackToPrompts}
-              />
-            {/if}
-          {:else if phase === "guess"}
-            {#if selectedPrompt}
-              <GuessScreen
-                prompt={selectedPrompt}
-                leftColor={promptColors[0]}
-                rightColor={promptColors[1]}
-                onLockIn={handleLockIn}
-                onBack={handleBackToPsychic}
-              />
-            {/if}
-          {:else if phase === "reveal"}
-            {#if selectedPrompt}
-              <RevealScreen
-                prompt={selectedPrompt}
-                {target}
-                {guess}
-                leftColor={promptColors[0]}
-                rightColor={promptColors[1]}
-                onNextRound={handleNextRound}
-              />
-            {/if}
-          {/if}
-        </div>
-      {/key}
-    </main>
-  {/if}
-</div>
+      <PromptScreen
+        prompts={currentPrompts}
+        promptColors={promptListColors}
+        onSelectPrompt={handleSelectPrompt}
+        onReroll={handleReroll}
+      />
+    {:else if phase === "psychic" && selectedPrompt}
+      {#if headerConfig}
+        <PageHeader
+          label={headerConfig.label}
+          title={headerConfig.title}
+          description={headerConfig.description}
+          color={headerConfig.color}
+        />
+      {/if}
+      <PsychicScreen
+        {selectedPrompt}
+        {target}
+        leftColor={promptColors[0]}
+        rightColor={promptColors[1]}
+        onReadyToGuess={handleReadyToGuess}
+        onBack={handleBackToPrompts}
+      />
+    {:else if phase === "guess" && selectedPrompt}
+      {#if headerConfig}
+        <PageHeader
+          label={headerConfig.label}
+          title={headerConfig.title}
+          description={headerConfig.description}
+          color={headerConfig.color}
+        />
+      {/if}
+      <GuessScreen
+        prompt={selectedPrompt}
+        leftColor={promptColors[0]}
+        rightColor={promptColors[1]}
+        onLockIn={handleLockIn}
+        onBack={handleBackToPsychic}
+      />
+    {:else if phase === "reveal" && selectedPrompt}
+      {#if headerConfig}
+        <PageHeader
+          label={headerConfig.label}
+          title={headerConfig.title}
+          description={headerConfig.description}
+          color={headerConfig.color}
+        />
+      {/if}
+      <RevealScreen
+        prompt={selectedPrompt}
+        {target}
+        {guess}
+        leftColor={promptColors[0]}
+        rightColor={promptColors[1]}
+        onNextRound={handleNextRound}
+      />
+    {/if}
+  </div>
+{/key}

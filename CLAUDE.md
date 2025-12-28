@@ -33,3 +33,38 @@ When writing or modifying code, ALWAYS prioritize reusing existing code:
 3. **Utilities**: Search for existing utility functions before writing new ones. If an existing function partially meets your needs, update it to handle the new use case rather than creating a duplicate.
 
 4. **General Principle**: Use existing functions and update them if required. Only write new functions when no suitable existing code can be adapted.
+
+## Tailwind CSS Guidelines
+
+Use an array of strings for the `class` attribute, with each string representing a category group. This improves readability and maintainability.
+
+**Important:** If there is only one category, use a plain string instead of an array.
+
+**Category order:**
+1. **Layout** - display, position, overflow, z-index
+2. **Flexbox/Grid** - flex/grid properties
+3. **Sizing** - width, height, min/max
+4. **Spacing** - margin, padding
+5. **Typography** - font, text
+6. **Background** - background colors/images
+7. **Border** - border, rounded
+8. **Effects** - shadow, opacity, blur
+9. **Transitions/Animations** - transition, animate
+
+**Examples:**
+```svelte
+<!-- Multiple categories: use array -->
+<div
+  class={[
+    "relative overflow-hidden",
+    "flex flex-col items-center gap-6",
+    "h-full max-h-175 w-full max-w-md",
+    "mx-auto my-auto px-4 py-6",
+    "rounded-2xl md:border md:border-white/10",
+    "md:shadow-2xl",
+  ]}
+>
+
+<!-- Single category: use string -->
+<div class="flex items-center gap-4">
+```

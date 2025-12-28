@@ -21,16 +21,23 @@
   } = $props()
 </script>
 
-<div class="mx-auto flex h-full w-full max-w-md flex-col items-center gap-4 px-6 pb-6">
-  <div class="flex w-full flex-1 flex-col items-center justify-between gap-4">
+<div class="flex flex-col items-center gap-4 h-full w-full max-w-md mx-auto px-6 pb-6">
+  <div class="flex flex-1 flex-col items-center justify-between gap-4 w-full">
     <!-- Dial Container -->
-    <div class="flex w-full flex-1 flex-col items-center justify-center">
+    <div class="flex flex-1 flex-col items-center justify-center w-full">
       <WavelengthDial {prompt} {leftColor} {rightColor} value={guess} targetValue={target} />
     </div>
 
     <!-- Next round button -->
     <button
-      class="w-full max-w-sm cursor-pointer rounded-xl bg-white/15 px-6 py-4 text-lg font-semibold text-white transition-all hover:bg-white/25 active:scale-[0.98]"
+      class={[
+        "w-full max-w-sm",
+        "px-6 py-4",
+        "text-lg font-semibold text-white",
+        "bg-white/15",
+        "rounded-xl",
+        "cursor-pointer transition-all hover:bg-white/25 active:scale-[0.98]",
+      ]}
       onclick={onNextRound}
       type="button"
     >

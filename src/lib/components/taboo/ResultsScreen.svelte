@@ -36,31 +36,31 @@
 </div>
 
 <!-- Score summary -->
-<div class="flex w-full max-w-sm gap-4">
+<div class="flex gap-4 w-full max-w-sm">
   <div
-    class="flex flex-1 flex-col items-center gap-1 rounded-xl py-4"
+    class="flex flex-1 flex-col items-center gap-1 py-4 rounded-xl"
     style:background-color={teamColor.toRgba(0.2)}
   >
     <span class="text-4xl font-black" style:color={teamColor.toRgb()}>{correctCards.length}</span>
     <span class="text-sm font-medium text-white/60">Correct</span>
   </div>
-  <div class="flex flex-1 flex-col items-center gap-1 rounded-xl bg-white/10 py-4">
+  <div class="flex flex-1 flex-col items-center gap-1 py-4 bg-white/10 rounded-xl">
     <span class="text-4xl font-black text-white/80">{skippedCards.length}</span>
     <span class="text-sm font-medium text-white/60">Skipped</span>
   </div>
 </div>
 
 <!-- Card lists -->
-<div class="flex w-full max-w-sm flex-1 flex-col gap-4 overflow-auto">
+<div class="flex flex-1 flex-col gap-4 w-full max-w-sm overflow-auto">
   {#if correctCards.length > 0}
     <div class="space-y-2">
       <h3 class="text-sm font-semibold tracking-wider uppercase" style:color={teamColor.toRgb()}>
-        <i class="fa-solid fa-check mr-2"></i>Correct
+        <i class="mr-2 fa-solid fa-check"></i>Correct
       </h3>
       <div class="flex flex-wrap gap-2">
         {#each correctCards as card (card.word)}
           <span
-            class="rounded-lg px-3 py-1.5 text-sm font-medium text-white"
+            class="px-3 py-1.5 text-sm font-medium text-white rounded-lg"
             style:background-color={teamColor.toRgba(0.3)}
           >
             {card.word}
@@ -73,11 +73,11 @@
   {#if skippedCards.length > 0}
     <div class="space-y-2">
       <h3 class="text-sm font-semibold tracking-wider text-white/60 uppercase">
-        <i class="fa-solid fa-forward mr-2"></i>Skipped
+        <i class="mr-2 fa-solid fa-forward"></i>Skipped
       </h3>
       <div class="flex flex-wrap gap-2">
         {#each skippedCards as card (card.word)}
-          <span class="rounded-lg bg-white/10 px-3 py-1.5 text-sm font-medium text-white/60">
+          <span class="px-3 py-1.5 text-sm font-medium text-white/60 bg-white/10 rounded-lg">
             {card.word}
           </span>
         {/each}

@@ -34,13 +34,13 @@
   }
 </script>
 
-<div class="flex h-full flex-col items-center justify-center gap-12 px-4 py-6" in:fade>
+<div class="flex flex-col items-center justify-center gap-12 h-full px-4 py-6" in:fade>
   <!-- Dial decoration -->
   <div class="relative flex flex-col items-center gap-6">
     <!-- Mini dial illustration -->
     <div class="relative h-24 w-48">
       <div class="absolute inset-0 rounded-t-full" style:background={gradient}></div>
-      <div class="absolute inset-0 rounded-t-full border-2 border-b-0 border-white/30"></div>
+      <div class="absolute inset-0 border-2 border-b-0 border-white/30 rounded-t-full"></div>
       <!-- Dial hand with circular pivot and triangular pointer -->
       <div class="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2">
         <!-- Pointer using SVG with arrow tip -->
@@ -63,8 +63,8 @@
           <polygon points="10,0 2,16 18,16" fill="black" />
         </svg>
         <!-- Pivot circle -->
-        <div class="relative h-10 w-10 rounded-full bg-black">
-          <div class="absolute inset-2.5 rounded-full bg-gray-600"></div>
+        <div class="relative h-10 w-10 bg-black rounded-full">
+          <div class="absolute inset-2.5 bg-gray-600 rounded-full"></div>
         </div>
       </div>
     </div>
@@ -83,21 +83,40 @@
     </div>
   </div>
 
-  <div class="flex w-full max-w-xs flex-col gap-3">
+  <div class="flex flex-col gap-3 w-full max-w-xs">
     <button
-      class="group relative cursor-pointer overflow-hidden rounded-2xl p-0.5 transition-all hover:scale-[1.02] active:scale-[0.98]"
+      class={[
+        "group relative overflow-hidden",
+        "p-0.5",
+        "rounded-2xl",
+        "cursor-pointer transition-all hover:scale-[1.02] active:scale-[0.98]",
+      ]}
       style:background={gradient}
       onclick={onStart}
     >
       <span
-        class="flex items-center justify-center gap-2 rounded-[14px] bg-[#1a1a1a] px-8 py-4 text-xl font-bold text-white transition-colors group-hover:bg-transparent group-hover:text-black"
+        class={[
+          "flex items-center justify-center gap-2",
+          "px-8 py-4",
+          "text-xl font-bold text-white",
+          "bg-[#1a1a1a]",
+          "rounded-[14px]",
+          "transition-colors group-hover:bg-transparent group-hover:text-black",
+        ]}
       >
         <i class="fa-solid fa-play text-base"></i>
         Start Game
       </span>
     </button>
     <button
-      class="flex cursor-pointer items-center justify-center gap-2 rounded-2xl border border-white/20 bg-white/10 px-8 py-4 text-lg font-semibold text-white/80 transition-all hover:bg-white/15 hover:text-white active:scale-[0.98]"
+      class={[
+        "flex items-center justify-center gap-2",
+        "px-8 py-4",
+        "text-lg font-semibold text-white/80",
+        "bg-white/10",
+        "border border-white/20 rounded-2xl",
+        "cursor-pointer transition-all hover:bg-white/15 hover:text-white active:scale-[0.98]",
+      ]}
       onclick={toggleInstructions}
     >
       <i class="fa-solid fa-circle-question text-base"></i>
@@ -106,7 +125,14 @@
 
     <a
       href="/"
-      class="rounded-2xl bg-white/5 px-8 py-4 text-center text-lg font-semibold text-white/70 backdrop-blur-sm transition-all hover:bg-white/10 hover:text-white active:scale-95"
+      class={[
+        "px-8 py-4",
+        "text-center text-lg font-semibold text-white/70",
+        "bg-white/5",
+        "rounded-2xl",
+        "backdrop-blur-sm",
+        "transition-all hover:bg-white/10 hover:text-white active:scale-95",
+      ]}
     >
       Back to Games
     </a>
@@ -114,7 +140,13 @@
 
   {#if showInstructions}
     <div
-      class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm"
+      class={[
+        "fixed inset-0 z-50",
+        "flex items-center justify-center",
+        "p-4",
+        "bg-black/80",
+        "backdrop-blur-sm",
+      ]}
       transition:fade
       onclick={toggleInstructions}
       role="button"
@@ -123,7 +155,15 @@
     >
       <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
       <div
-        class="w-full max-w-lg space-y-6 rounded-2xl border border-white/10 bg-[#1a1a1a] p-8 text-left shadow-2xl"
+        class={[
+          "w-full max-w-lg",
+          "p-8",
+          "text-left",
+          "bg-[#1a1a1a]",
+          "border border-white/10 rounded-2xl",
+          "shadow-2xl",
+          "space-y-6",
+        ]}
         in:scale
         onclick={(e) => e.stopPropagation()}
         onkeydown={(e) => e.stopPropagation()}
@@ -134,7 +174,12 @@
         <div class="space-y-4 text-white/70">
           <div class="flex gap-3">
             <span
-              class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-sm font-bold"
+              class={[
+                "flex shrink-0 items-center justify-center",
+                "h-7 w-7",
+                "text-sm font-bold",
+                "rounded-full",
+              ]}
               style:background-color={PURPLE.toRgba(0.2)}
               style:color={PURPLE.toHsl()}>1</span
             >
@@ -145,7 +190,12 @@
           </div>
           <div class="flex gap-3">
             <span
-              class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-sm font-bold"
+              class={[
+                "flex shrink-0 items-center justify-center",
+                "h-7 w-7",
+                "text-sm font-bold",
+                "rounded-full",
+              ]}
               style:background-color={PURPLE.toRgba(0.2)}
               style:color={PURPLE.toHsl()}>2</span
             >
@@ -156,7 +206,12 @@
           </div>
           <div class="flex gap-3">
             <span
-              class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-sm font-bold"
+              class={[
+                "flex shrink-0 items-center justify-center",
+                "h-7 w-7",
+                "text-sm font-bold",
+                "rounded-full",
+              ]}
               style:background-color={GOLD.toRgba(0.2)}
               style:color={GOLD.toHsl()}>3</span
             >
@@ -167,7 +222,13 @@
           </div>
           <div class="flex gap-3">
             <span
-              class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-white/10 text-sm font-bold text-white"
+              class={[
+                "flex shrink-0 items-center justify-center",
+                "h-7 w-7",
+                "text-sm font-bold text-white",
+                "bg-white/10",
+                "rounded-full",
+              ]}
               >4</span
             >
             <p>
@@ -179,7 +240,13 @@
 
         <div class="flex justify-end pt-2">
           <button
-            class="cursor-pointer rounded-xl bg-white/10 px-6 py-3 font-semibold text-white transition-colors hover:bg-white/20"
+            class={[
+              "px-6 py-3",
+              "font-semibold text-white",
+              "bg-white/10",
+              "rounded-xl",
+              "cursor-pointer transition-colors hover:bg-white/20",
+            ]}
             onclick={toggleInstructions}
           >
             Got it!

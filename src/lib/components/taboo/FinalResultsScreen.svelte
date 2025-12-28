@@ -40,9 +40,9 @@
   </div>
 
   <!-- Final scores -->
-  <div class="flex w-full max-w-sm gap-4">
+  <div class="flex gap-4 w-full max-w-sm">
     <div
-      class="flex flex-1 flex-col items-center gap-2 rounded-xl border py-6"
+      class="flex flex-1 flex-col items-center gap-2 py-6 border rounded-xl"
       style:border-color={TEAM_RED.color.toRgba(0.3)}
       style:background-color={TEAM_RED.color.toRgba(winner === TEAM_RED ? 0.2 : 0.1)}
     >
@@ -50,7 +50,7 @@
       <span class="text-sm font-medium text-white/60">{TEAM_RED.name}</span>
     </div>
     <div
-      class="flex flex-1 flex-col items-center gap-2 rounded-xl border py-6"
+      class="flex flex-1 flex-col items-center gap-2 py-6 border rounded-xl"
       style:border-color={TEAM_BLUE.color.toRgba(0.3)}
       style:background-color={TEAM_BLUE.color.toRgba(winner === TEAM_BLUE ? 0.2 : 0.1)}
     >
@@ -60,21 +60,33 @@
   </div>
 
   <!-- Action buttons -->
-  <div class="flex w-full max-w-sm flex-col gap-3">
+  <div class="flex flex-col gap-3 w-full max-w-sm">
     <button
-      class="cursor-pointer rounded-xl px-8 py-4 text-lg font-semibold text-white transition-all hover:opacity-90 active:scale-[0.98]"
+      class={[
+        "px-8 py-4",
+        "text-lg font-semibold text-white",
+        "rounded-xl",
+        "cursor-pointer transition-all hover:opacity-90 active:scale-[0.98]",
+      ]}
       style:background-color={winner ? winner.color.toRgb() : TEAM_RED.color.toRgb()}
       onclick={onPlayAgain}
     >
-      <i class="fa-solid fa-rotate-right mr-2 text-base"></i>
+      <i class="mr-2 text-base fa-solid fa-rotate-right"></i>
       Play Again
     </button>
 
     <a
       href="/"
-      class="rounded-2xl bg-white/10 px-8 py-4 text-center text-lg font-semibold text-white/70 backdrop-blur-sm transition-all hover:bg-white/20 hover:text-white active:scale-95"
+      class={[
+        "px-8 py-4",
+        "text-center text-lg font-semibold text-white/70",
+        "bg-white/10",
+        "rounded-2xl",
+        "backdrop-blur-sm",
+        "transition-all hover:bg-white/20 hover:text-white active:scale-95",
+      ]}
     >
-      <i class="fa-solid fa-arrow-left mr-2 text-base"></i>
+      <i class="mr-2 text-base fa-solid fa-arrow-left"></i>
       Back to Games
     </a>
   </div>
