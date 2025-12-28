@@ -2,6 +2,7 @@
   import { SvelteSet } from "svelte/reactivity"
   import { fade } from "svelte/transition"
 
+  import { getSettingsContext } from "$lib/components/layout/settingsContext.svelte"
   import FinalResultsScreen from "$lib/components/taboo/FinalResultsScreen.svelte"
   import GetReadyScreen from "$lib/components/taboo/GetReadyScreen.svelte"
   import PlayScreen from "$lib/components/taboo/PlayScreen.svelte"
@@ -9,6 +10,8 @@
   import SplashScreen from "$lib/components/taboo/SplashScreen.svelte"
   import { type Team, TEAM_BLUE, TEAM_RED } from "$lib/constants/teams"
   import { type TabooCard, tabooCards } from "$lib/data/tabooCards"
+
+  const settings = getSettingsContext()
 
   type GamePhase = "splash" | "getReady" | "play" | "results" | "finalResults"
 
@@ -60,6 +63,18 @@
     timerInterval = setInterval(() => {
       if (!isPaused) {
         timeRemaining--
+
+        // Vibration feedback during countdown
+        if (settings.isVibrationEnabled && navigator.vibrate) {
+          if (timeRemaining === 3 || timeRemaining === 2 || timeRemaining === 1) {
+            // Short vibration for last 3 seconds
+            navigator.vibrate(100)
+          } else if (timeRemaining === 10) {
+            // Double vibration at 10 seconds
+            navigator.vibrate([100, 100, 100])
+          }
+        }
+
         if (timeRemaining <= 0) {
           endRound()
         }
