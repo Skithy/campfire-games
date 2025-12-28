@@ -4,15 +4,31 @@
   import PageBackground from "$lib/components/layout/PageBackground.svelte"
   import type { Color } from "$lib/utils/colors"
 
+  import { setGameContainerContext } from "./gameContainerContext.svelte"
+
   let {
     children,
-    backgroundTop,
-    backgroundBottom,
   }: {
     children: Snippet
-    backgroundTop?: Color
-    backgroundBottom?: Color
   } = $props()
+
+  let backgroundTop = $state<Color | undefined>(undefined)
+  let backgroundBottom = $state<Color | undefined>(undefined)
+
+  function setBackground(top: Color, bottom: Color) {
+    backgroundTop = top
+    backgroundBottom = bottom
+  }
+
+  setGameContainerContext({
+    get backgroundTop() {
+      return backgroundTop
+    },
+    get backgroundBottom() {
+      return backgroundBottom
+    },
+    setBackground,
+  })
 </script>
 
 <div

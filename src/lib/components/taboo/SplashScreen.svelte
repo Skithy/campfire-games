@@ -5,11 +5,16 @@
   import sshImage from "$lib/images/ssh.png"
   import { Color } from "$lib/utils/colors"
 
+  import { getGameContainerContext } from "./gameContainerContext.svelte"
+
   let { onStart }: { onStart: () => void } = $props()
 
   let showInstructions = $state(false)
 
   const gradient = Color.toGradient(TEAM_RED.color, TEAM_BLUE.color)
+
+  const ctx = getGameContainerContext()
+  ctx.setBackground(TEAM_RED.color, TEAM_BLUE.color)
 
   function toggleInstructions() {
     showInstructions = !showInstructions

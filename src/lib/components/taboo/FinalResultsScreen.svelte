@@ -1,6 +1,8 @@
 <script lang="ts">
   import { TEAM_BLUE, TEAM_RED } from "$lib/constants/teams"
 
+  import { getGameContainerContext } from "./gameContainerContext.svelte"
+
   let {
     redScore,
     blueScore,
@@ -12,6 +14,16 @@
   } = $props()
 
   let winner = $derived(redScore > blueScore ? TEAM_RED : blueScore > redScore ? TEAM_BLUE : null)
+
+  const ctx = getGameContainerContext()
+  $effect(() => {
+    if (winner) {
+      ctx.setBackground(winner.color, winner.color)
+    } else {
+      // Tie - use red/blue split
+      ctx.setBackground(TEAM_RED.color, TEAM_BLUE.color)
+    }
+  })
 </script>
 
 <div class="flex flex-1 flex-col items-center justify-center gap-8">

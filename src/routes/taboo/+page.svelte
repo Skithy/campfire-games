@@ -37,26 +37,6 @@
   // Current card
   let currentCard = $derived(deck[currentCardIndex])
 
-  // Background colors based on phase
-  let backgroundTop = $derived.by(() => {
-    if (phase === "splash") return TEAM_RED.color
-    if (phase === "finalResults") {
-      if (redTeamScore > blueTeamScore) return TEAM_RED.color
-      if (blueTeamScore > redTeamScore) return TEAM_BLUE.color
-      return TEAM_RED.color // tie
-    }
-    return currentTeam.color
-  })
-  let backgroundBottom = $derived.by(() => {
-    if (phase === "splash") return TEAM_BLUE.color
-    if (phase === "finalResults") {
-      if (redTeamScore > blueTeamScore) return TEAM_RED.color
-      if (blueTeamScore > redTeamScore) return TEAM_BLUE.color
-      return TEAM_BLUE.color // tie
-    }
-    return currentTeam.color
-  })
-
   function shuffleDeck() {
     // Get indices of unused cards
     const availableIndices = tabooCards.map((_, i) => i).filter((i) => !usedCardIndices.has(i))
@@ -205,7 +185,7 @@
         in:fade={{ duration: 300, delay: 150 }}
         out:fade={{ duration: 150 }}
       >
-        <GameContainer {backgroundTop} {backgroundBottom}>
+        <GameContainer>
           <SplashScreen onStart={startGame} />
         </GameContainer>
       </div>
@@ -217,7 +197,7 @@
     <main class="relative flex h-full flex-1" in:fade={{ duration: 300, delay: 150 }}>
       {#key phase}
         <div class="absolute inset-0 flex justify-center overflow-auto">
-          <GameContainer {backgroundTop} {backgroundBottom}>
+          <GameContainer>
             {#if phase === "getReady"}
               <GetReadyScreen
                 teamName={currentTeam.name}

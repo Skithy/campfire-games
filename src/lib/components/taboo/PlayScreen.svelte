@@ -7,6 +7,8 @@
   import type { TabooCard as TabooCardType } from "$lib/data/tabooCards"
   import type { Color } from "$lib/utils/colors"
 
+  import { getGameContainerContext } from "./gameContainerContext.svelte"
+
   let {
     card,
     teamColor,
@@ -32,6 +34,11 @@
   } = $props()
 
   let timerWarning = $derived(timeRemaining <= 10)
+
+  const ctx = getGameContainerContext()
+  $effect(() => {
+    ctx.setBackground(teamColor, teamColor)
+  })
 
   function handleResume() {
     onTogglePause()

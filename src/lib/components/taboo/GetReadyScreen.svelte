@@ -3,6 +3,8 @@
   import GameMenu from "$lib/components/taboo/GameMenu.svelte"
   import type { Color } from "$lib/utils/colors"
 
+  import { getGameContainerContext } from "./gameContainerContext.svelte"
+
   let {
     teamName,
     teamColor,
@@ -18,6 +20,11 @@
   } = $props()
 
   let showMenu = $state(false)
+
+  const ctx = getGameContainerContext()
+  $effect(() => {
+    ctx.setBackground(teamColor, teamColor)
+  })
 </script>
 
 <!-- Menu button -->

@@ -21,3 +21,15 @@ You MUST use this tool whenever writing Svelte code before sending it to the use
 
 Generates a Svelte Playground link with the provided code.
 After completing the code, ask the user if they want a playground link. Only call this tool after user confirmation and NEVER if code was written to files in their project.
+
+## Code Reuse Guidelines
+
+When writing or modifying code, ALWAYS prioritize reusing existing code:
+
+1. **Components**: Check for existing components in the codebase before creating new ones. Reuse and extend existing components whenever possible.
+
+2. **Constants**: Look for existing constants and configuration values. Use existing constants rather than hardcoding values or creating duplicates.
+
+3. **Utilities**: Search for existing utility functions before writing new ones. If an existing function partially meets your needs, update it to handle the new use case rather than creating a duplicate.
+
+4. **General Principle**: Use existing functions and update them if required. Only write new functions when no suitable existing code can be adapted.

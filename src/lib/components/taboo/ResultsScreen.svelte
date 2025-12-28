@@ -3,6 +3,8 @@
   import type { TabooCard } from "$lib/data/tabooCards"
   import type { Color } from "$lib/utils/colors"
 
+  import { getGameContainerContext } from "./gameContainerContext.svelte"
+
   let {
     teamName,
     teamColor,
@@ -18,6 +20,11 @@
     onNextRound: () => void
     onEndGame: () => void
   } = $props()
+
+  const ctx = getGameContainerContext()
+  $effect(() => {
+    ctx.setBackground(teamColor, teamColor)
+  })
 </script>
 
 <!-- Header -->
