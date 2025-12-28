@@ -145,7 +145,7 @@
   let diffAngle = $derived(diffEnd - diffStart)
 </script>
 
-<div class={["w-full", "px-8"]}>
+<div class={["flex flex-col items-center", "w-full", "px-8"]}>
   {#if interactive}
     <div
       bind:this={dialEl}
@@ -284,7 +284,13 @@
   {/each}
 
   <!-- Center pivot - black like mini dial -->
-  <div class={["absolute bottom-0 left-1/2", "pointer-events-none", "-translate-x-1/2 translate-y-1/2"]}>
+  <div
+    class={[
+      "absolute bottom-0 left-1/2",
+      "pointer-events-none",
+      "-translate-x-1/2 translate-y-1/2",
+    ]}
+  >
     <div class={["relative", "h-10 w-10", "bg-black", "rounded-full"]}>
       <div class={["absolute inset-2.5", "bg-gray-600", "rounded-full"]}></div>
     </div>
@@ -292,7 +298,11 @@
   <!-- Percentage display below pivot -->
   {#if arrows.length === 1 && arrows[0].displayValue !== undefined}
     <div
-      class={["absolute bottom-0 left-1/2", "pointer-events-none", "-translate-x-1/2 translate-y-[calc(100%+1.5rem)]"]}
+      class={[
+        "absolute bottom-0 left-1/2",
+        "pointer-events-none",
+        "-translate-x-1/2 translate-y-[calc(100%+1.5rem)]",
+      ]}
     >
       <div class={["text-2xl font-bold"]} style:color={arrows[0].color}>
         {arrows[0].displayValue}%
@@ -304,13 +314,22 @@
   <div class={["absolute bottom-0 -left-4", "max-w-24", "pt-2", "text-center", "translate-y-full"]}>
     <span class={["text-base font-bold"]} style:color={leftColor.toHsl()}>{prompt[0]}</span>
   </div>
-  <div class={["absolute -right-4 bottom-0", "max-w-24", "pt-2", "text-center", "translate-y-full"]}>
+  <div
+    class={["absolute -right-4 bottom-0", "max-w-24", "pt-2", "text-center", "translate-y-full"]}
+  >
     <span class={["text-base font-bold"]} style:color={rightColor.toHsl()}>{prompt[1]}</span>
   </div>
 
   <!-- Legend for multiple arrows -->
   {#if arrows.length > 1 && arrows.some((a) => a.label)}
-    <div class={["absolute bottom-0 left-1/2", "flex gap-8", "pt-12", "-translate-x-1/2 translate-y-full"]}>
+    <div
+      class={[
+        "absolute bottom-0 left-1/2",
+        "flex gap-8",
+        "pt-12",
+        "-translate-x-1/2 translate-y-full",
+      ]}
+    >
       {#each arrows as arrow, i (i)}
         {#if arrow.label}
           <div class={["flex flex-col items-center gap-1"]}>

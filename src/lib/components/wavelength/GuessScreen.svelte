@@ -1,8 +1,8 @@
 <script lang="ts">
+  import PageActions from "$lib/components/layout/PageActions.svelte"
   import type { Prompt } from "$lib/data/wavelengthPrompts"
   import type { Color } from "$lib/utils/colors"
 
-  import PageActions from "$lib/components/layout/PageActions.svelte"
   import WavelengthDial from "./WavelengthDial.svelte"
 
   let {
@@ -27,14 +27,12 @@
   }
 </script>
 
-<div class="flex flex-col items-center gap-4 h-full w-full max-w-md mx-auto px-6 pb-6">
-  <div class="flex flex-1 flex-col items-center justify-between gap-4 w-full">
-    <!-- Dial Container -->
-    <div class="flex flex-1 flex-col items-center justify-center w-full">
-      <WavelengthDial {prompt} {leftColor} {rightColor} interactive={true} bind:value />
-    </div>
-
-    <!-- Action buttons -->
-    <PageActions {onBack} onPrimary={handleLockIn} primaryLabel="Lock In" />
+<div class={["flex flex-col items-center gap-4", "min-h-0 w-full flex-1"]}>
+  <!-- Dial Container -->
+  <div class={["flex flex-col items-center justify-center", "min-h-0 w-full flex-1"]}>
+    <WavelengthDial {prompt} {leftColor} {rightColor} interactive={true} bind:value />
   </div>
+
+  <!-- Action buttons -->
+  <PageActions {onBack} onPrimary={handleLockIn} primaryLabel="Lock In" />
 </div>

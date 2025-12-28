@@ -1,8 +1,12 @@
 <script lang="ts">
   import { fade } from "svelte/transition"
 
+  import { getGameContainerContext } from "$lib/components/layout/gameContainerContext.svelte"
   import { BLUE, GOLD, ORANGE, PURPLE, RED } from "$lib/constants/colors"
   import { Color } from "$lib/utils/colors"
+
+  const { setBackground } = getGameContainerContext()
+  setBackground(ORANGE, GOLD)
 
   const games = [
     {
@@ -43,7 +47,7 @@
   <div class={["w-full max-w-2xl", "space-y-6"]}>
     <h2 class={["text-center text-xl font-semibold text-white/70"]}>Available Games</h2>
     <div class={["flex justify-center"]}>
-      <div class={["grid gap-4 sm:grid-cols-2"]}>
+      <div class="grid gap-4">
         {#each games as game (game.name)}
           <a
             href={game.url}

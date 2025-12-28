@@ -23,7 +23,7 @@
 </script>
 
 {#if singleButton}
-  <div class="w-full max-w-sm">
+  <div class="w-full">
     <button
       class={["w-full", "px-6 py-4", "text-lg font-semibold text-white", "bg-white/15", "rounded-xl", "cursor-pointer transition-all hover:bg-white/25 active:scale-[0.98]"]}
       style:background-color={primaryColor}
@@ -34,7 +34,7 @@
     </button>
   </div>
 {:else if equalButtons}
-  <div class={["flex gap-3", "w-full max-w-sm"]}>
+  <div class="flex gap-3 w-full">
     <button
       class={["flex flex-1 items-center justify-center gap-2", "px-6 py-4", "text-lg font-semibold text-white", "bg-white/10", "rounded-xl", "cursor-pointer transition-all hover:bg-white/20 active:scale-[0.98]"]}
       onclick={onBack}
@@ -59,7 +59,7 @@
     </button>
   </div>
 {:else}
-  <div class={["flex items-center gap-3", "w-full max-w-sm"]}>
+  <div class="flex items-center gap-3 w-full">
     <button
       class={["flex items-center justify-center", "h-14 w-14", "text-white/60", "border border-white/20 rounded-xl", "cursor-pointer transition-all hover:bg-white/10 hover:text-white active:scale-[0.98]"]}
       onclick={onBack}

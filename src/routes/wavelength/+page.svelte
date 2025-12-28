@@ -231,75 +231,66 @@
   })
 </script>
 
-{#key phase}
-  <div in:fade={{ duration: 300, delay: 150 }} out:fade={{ duration: 150 }}>
-    {#if phase === "splash"}
-      <SplashScreen onStart={handleStartGame} />
-    {:else if phase === "prompt"}
-      {#if headerConfig}
-        <PageHeader
-          label={headerConfig.label}
-          title={headerConfig.title}
-          description={headerConfig.description}
-          color={headerConfig.color}
+<div class={["relative", "h-full w-full"]}>
+  <!-- Header layer - absolutely positioned so it doesn't cause layout shift -->
+  {#if headerConfig}
+    <div class={["absolute inset-x-0 top-0 z-10", "pt-6"]} transition:fade={{ duration: 150 }}>
+      <PageHeader
+        label={headerConfig.label}
+        title={headerConfig.title}
+        description={headerConfig.description}
+        color={headerConfig.color}
+      />
+    </div>
+  {/if}
+
+  <!-- Content layer -->
+  {#key phase}
+    <div
+      class={["absolute inset-0", "flex flex-col items-center gap-4", "w-full", "pt-6"]}
+      in:fade={{ duration: 300, delay: 150 }}
+      out:fade={{ duration: 150 }}
+    >
+      {#if phase === "splash"}
+        <SplashScreen onStart={handleStartGame} />
+      {:else if phase === "prompt"}
+        <div class="h-30 shrink-0"></div>
+        <PromptScreen
+          prompts={currentPrompts}
+          promptColors={promptListColors}
+          onSelectPrompt={handleSelectPrompt}
+          onReroll={handleReroll}
+        />
+      {:else if phase === "psychic" && selectedPrompt}
+        <div class="h-30 shrink-0"></div>
+        <PsychicScreen
+          {selectedPrompt}
+          {target}
+          leftColor={promptColors[0]}
+          rightColor={promptColors[1]}
+          onReadyToGuess={handleReadyToGuess}
+          onBack={handleBackToPrompts}
+        />
+      {:else if phase === "guess" && selectedPrompt}
+        <div class="h-30 shrink-0"></div>
+        <GuessScreen
+          prompt={selectedPrompt}
+          leftColor={promptColors[0]}
+          rightColor={promptColors[1]}
+          onLockIn={handleLockIn}
+          onBack={handleBackToPsychic}
+        />
+      {:else if phase === "reveal" && selectedPrompt}
+        <div class="h-30 shrink-0"></div>
+        <RevealScreen
+          prompt={selectedPrompt}
+          {target}
+          {guess}
+          leftColor={promptColors[0]}
+          rightColor={promptColors[1]}
+          onNextRound={handleNextRound}
         />
       {/if}
-      <PromptScreen
-        prompts={currentPrompts}
-        promptColors={promptListColors}
-        onSelectPrompt={handleSelectPrompt}
-        onReroll={handleReroll}
-      />
-    {:else if phase === "psychic" && selectedPrompt}
-      {#if headerConfig}
-        <PageHeader
-          label={headerConfig.label}
-          title={headerConfig.title}
-          description={headerConfig.description}
-          color={headerConfig.color}
-        />
-      {/if}
-      <PsychicScreen
-        {selectedPrompt}
-        {target}
-        leftColor={promptColors[0]}
-        rightColor={promptColors[1]}
-        onReadyToGuess={handleReadyToGuess}
-        onBack={handleBackToPrompts}
-      />
-    {:else if phase === "guess" && selectedPrompt}
-      {#if headerConfig}
-        <PageHeader
-          label={headerConfig.label}
-          title={headerConfig.title}
-          description={headerConfig.description}
-          color={headerConfig.color}
-        />
-      {/if}
-      <GuessScreen
-        prompt={selectedPrompt}
-        leftColor={promptColors[0]}
-        rightColor={promptColors[1]}
-        onLockIn={handleLockIn}
-        onBack={handleBackToPsychic}
-      />
-    {:else if phase === "reveal" && selectedPrompt}
-      {#if headerConfig}
-        <PageHeader
-          label={headerConfig.label}
-          title={headerConfig.title}
-          description={headerConfig.description}
-          color={headerConfig.color}
-        />
-      {/if}
-      <RevealScreen
-        prompt={selectedPrompt}
-        {target}
-        {guess}
-        leftColor={promptColors[0]}
-        rightColor={promptColors[1]}
-        onNextRound={handleNextRound}
-      />
-    {/if}
-  </div>
-{/key}
+    </div>
+  {/key}
+</div>

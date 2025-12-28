@@ -34,13 +34,13 @@
   }
 </script>
 
-<div class="flex flex-col items-center justify-center gap-12 h-full px-4 py-6" in:fade>
+<div class="flex h-full flex-col items-center justify-center gap-12 px-4 py-6" in:fade>
   <!-- Dial decoration -->
   <div class="relative flex flex-col items-center gap-6">
     <!-- Mini dial illustration -->
     <div class="relative h-24 w-48">
       <div class="absolute inset-0 rounded-t-full" style:background={gradient}></div>
-      <div class="absolute inset-0 border-2 border-b-0 border-white/30 rounded-t-full"></div>
+      <div class="absolute inset-0 rounded-t-full border-2 border-b-0 border-white/30"></div>
       <!-- Dial hand with circular pivot and triangular pointer -->
       <div class="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2">
         <!-- Pointer using SVG with arrow tip -->
@@ -63,8 +63,8 @@
           <polygon points="10,0 2,16 18,16" fill="black" />
         </svg>
         <!-- Pivot circle -->
-        <div class="relative h-10 w-10 bg-black rounded-full">
-          <div class="absolute inset-2.5 bg-gray-600 rounded-full"></div>
+        <div class="relative h-10 w-10 rounded-full bg-black">
+          <div class="absolute inset-2.5 rounded-full bg-gray-600"></div>
         </div>
       </div>
     </div>
@@ -83,7 +83,7 @@
     </div>
   </div>
 
-  <div class="flex flex-col gap-3 w-full max-w-xs">
+  <div class="flex w-full max-w-xs flex-col gap-3">
     <button
       class={[
         "group relative overflow-hidden",
@@ -114,7 +114,7 @@
         "px-8 py-4",
         "text-lg font-semibold text-white/80",
         "bg-white/10",
-        "border border-white/20 rounded-2xl",
+        "rounded-2xl border border-white/20",
         "cursor-pointer transition-all hover:bg-white/15 hover:text-white active:scale-[0.98]",
       ]}
       onclick={toggleInstructions}
@@ -160,7 +160,7 @@
           "p-8",
           "text-left",
           "bg-[#1a1a1a]",
-          "border border-white/10 rounded-2xl",
+          "rounded-2xl border border-white/10",
           "shadow-2xl",
           "space-y-6",
         ]}
@@ -228,8 +228,7 @@
                 "text-sm font-bold text-white",
                 "bg-white/10",
                 "rounded-full",
-              ]}
-              >4</span
+              ]}>4</span
             >
             <p>
               <strong class="text-white">The Reveal:</strong> See how close you got! Closer guesses score

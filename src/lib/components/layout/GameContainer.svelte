@@ -1,10 +1,11 @@
 <script lang="ts">
   import type { Snippet } from "svelte"
 
-  import PageBackground from "$lib/components/layout/PageBackground.svelte"
   import type { Color } from "$lib/utils/colors"
 
   import { setGameContainerContext } from "./gameContainerContext.svelte"
+  import Navbar from "./Navbar.svelte"
+  import PageBackground from "./PageBackground.svelte"
 
   let {
     children,
@@ -34,8 +35,8 @@
 <div
   class={[
     "relative overflow-hidden",
-    "flex flex-col items-center gap-6",
-    "h-full max-h-175 w-full max-w-md",
+    "flex flex-col items-center",
+    "h-full w-full max-w-md md:max-h-175",
     "mx-auto my-auto px-4 py-6",
     "rounded-2xl md:border md:border-white/10",
     "md:shadow-2xl",
@@ -44,5 +45,8 @@
   {#if backgroundTop && backgroundBottom}
     <PageBackground top={backgroundTop} bottom={backgroundBottom} />
   {/if}
-  {@render children()}
+  <Navbar />
+  <div class={["relative", "min-h-0 w-full flex-1"]}>
+    {@render children()}
+  </div>
 </div>
