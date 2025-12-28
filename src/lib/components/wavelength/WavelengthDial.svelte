@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { getSettingsContext } from "$lib/components/layout/settingsContext.svelte"
   import type { Prompt } from "$lib/data/wavelengthPrompts"
   import { Color, sliderToDisplayValue } from "$lib/utils/colors"
 
@@ -29,6 +30,8 @@
     ondragstart?: () => void
     ondragend?: () => void
   } = $props()
+
+  const settings = getSettingsContext()
 
   // Show difference wedge automatically when both value and targetValue exist
   let showDifferenceWedge = $derived(targetValue !== undefined)
@@ -66,6 +69,26 @@
 
   let isDragging = $state(false)
   let dialEl: HTMLDivElement | null = $state(null)
+
+  // Track previous value to detect tick changes (only vibrate on visible ticks: -8, -6, -4, -2, 0, 2, 4, 6, 8)
+  let previousValue = $state(value)
+
+  // Vibrate on visible tick change when dragging
+  $effect(() => {
+    if (interactive && isDragging && settings.isVibrationEnabled) {
+      // Check if we've crossed a visible tick mark (every 2 units, from -10 to 10)
+      const prevTick = Math.floor(previousValue / 2) * 2
+      const currentTick = Math.floor(value / 2) * 2
+
+      if (currentTick !== prevTick && currentTick >= -10 && currentTick <= 10) {
+        // Vibrate for 10ms on each visible tick
+        if (navigator.vibrate) {
+          navigator.vibrate(10)
+        }
+      }
+      previousValue = value
+    }
+  })
 
   // Convert slider value (-10 to 10) to dial angle
   // -10 = 180° (left), 0 = 90° (center/up), 10 = 0° (right)
