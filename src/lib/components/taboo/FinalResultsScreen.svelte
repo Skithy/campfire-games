@@ -1,7 +1,6 @@
 <script lang="ts">
-  import { TEAM_BLUE, TEAM_RED } from "$lib/constants/teams"
-
   import { getGameContainerContext } from "$lib/components/layout/gameContainerContext.svelte"
+  import { TEAM_BLUE, TEAM_RED } from "$lib/constants/teams"
 
   let {
     redScore,
@@ -40,9 +39,9 @@
   </div>
 
   <!-- Final scores -->
-  <div class="flex gap-4 w-full max-w-sm">
+  <div class="flex w-full max-w-sm gap-4">
     <div
-      class="flex flex-1 flex-col items-center gap-2 py-6 border rounded-xl"
+      class="flex flex-1 flex-col items-center gap-2 rounded-xl border py-6"
       style:border-color={TEAM_RED.color.toRgba(0.3)}
       style:background-color={TEAM_RED.color.toRgba(winner === TEAM_RED ? 0.2 : 0.1)}
     >
@@ -50,7 +49,7 @@
       <span class="text-sm font-medium text-white/60">{TEAM_RED.name}</span>
     </div>
     <div
-      class="flex flex-1 flex-col items-center gap-2 py-6 border rounded-xl"
+      class="flex flex-1 flex-col items-center gap-2 rounded-xl border py-6"
       style:border-color={TEAM_BLUE.color.toRgba(0.3)}
       style:background-color={TEAM_BLUE.color.toRgba(winner === TEAM_BLUE ? 0.2 : 0.1)}
     >
@@ -60,7 +59,7 @@
   </div>
 
   <!-- Action buttons -->
-  <div class="flex flex-col gap-3 w-full max-w-sm">
+  <div class="flex w-full max-w-sm flex-col gap-3">
     <button
       class={[
         "px-8 py-4",
@@ -71,7 +70,7 @@
       style:background-color={winner ? winner.color.toRgb() : TEAM_RED.color.toRgb()}
       onclick={onPlayAgain}
     >
-      <i class="mr-2 text-base fa-solid fa-rotate-right"></i>
+      <i class="fa-solid fa-rotate-right mr-2 text-base"></i>
       Play Again
     </button>
 
@@ -86,7 +85,7 @@
         "transition-all hover:bg-white/20 hover:text-white active:scale-95",
       ]}
     >
-      <i class="mr-2 text-base fa-solid fa-arrow-left"></i>
+      <i class="fa-solid fa-arrow-left mr-2 text-base"></i>
       Back to Games
     </a>
   </div>

@@ -21,10 +21,10 @@
   </div>
 
   <!-- Forbidden words -->
-  <div class="flex flex-col bg-white divide-y divide-gray-200">
+  <div class="flex flex-col divide-y divide-gray-200 bg-white">
     {#each card.forbidden as word (word)}
       <div class="flex items-center gap-3 px-6 py-3">
-        <i class="text-lg fa-solid fa-ban" style:color={teamColor.toRgba(0.6)}></i>
+        <i class="fa-solid fa-ban text-lg" style:color={teamColor.toRgba(0.6)}></i>
         <span class="text-lg font-semibold text-gray-800">{word}</span>
       </div>
     {/each}

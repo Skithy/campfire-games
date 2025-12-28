@@ -49,7 +49,7 @@
     </div>
   </div>
 
-  <div class="flex flex-col gap-3 w-full max-w-xs">
+  <div class="flex w-full max-w-xs flex-col gap-3">
     <button
       class={[
         "group relative overflow-hidden",
@@ -70,7 +70,7 @@
           "transition-colors group-hover:bg-transparent group-hover:text-black",
         ]}
       >
-        <i class="text-base fa-solid fa-play"></i>
+        <i class="fa-solid fa-play text-base"></i>
         Start Game
       </span>
     </button>
@@ -80,12 +80,12 @@
         "px-8 py-4",
         "text-lg font-semibold text-white/80",
         "bg-white/10",
-        "border border-white/20 rounded-2xl",
+        "rounded-2xl border border-white/20",
         "cursor-pointer transition-all hover:bg-white/15 hover:text-white active:scale-[0.98]",
       ]}
       onclick={toggleInstructions}
     >
-      <i class="text-base fa-solid fa-circle-question"></i>
+      <i class="fa-solid fa-circle-question text-base"></i>
       How to Play
     </button>
 
@@ -126,7 +126,7 @@
           "p-8",
           "text-left",
           "bg-[#1a1a1a]",
-          "border border-white/10 rounded-2xl",
+          "rounded-2xl border border-white/10",
           "shadow-2xl",
           "space-y-6",
         ]}
@@ -194,8 +194,7 @@
                 "text-sm font-bold text-white",
                 "bg-white/10",
                 "rounded-full",
-              ]}
-              >4</span
+              ]}>4</span
             >
             <p>
               <strong class="text-white">The Score:</strong> Your team gets a point for each correct

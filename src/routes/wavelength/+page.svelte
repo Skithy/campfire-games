@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { SvelteSet } from "svelte/reactivity"
   import { fade } from "svelte/transition"
 
   import { goto } from "$app/navigation"
@@ -19,7 +20,7 @@
   let phase = $state<GamePhase>("splash")
   let currentPrompts = $state<Prompt[]>([])
   let promptListColors = $state<Array<[Color, Color]>>([])
-  let viewedPrompts = $state<Set<string>>(new Set())
+  let viewedPrompts = new SvelteSet<string>()
   let selectedPrompt = $state<Prompt | null>(null)
   // Target and guess are now -10 to 10 internal values (10% increments)
   // -10 = 100% left, 0 = 0% center, 10 = 100% right

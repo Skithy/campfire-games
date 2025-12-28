@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { SvelteSet } from "svelte/reactivity"
   import { fade } from "svelte/transition"
 
   import FinalResultsScreen from "$lib/components/taboo/FinalResultsScreen.svelte"
@@ -11,7 +12,7 @@
 
   type GamePhase = "splash" | "getReady" | "play" | "results" | "finalResults"
 
-  const ROUND_TIME = 60
+  const ROUND_TIME = 10
 
   // Game state
   let phase = $state<GamePhase>("splash")
@@ -24,6 +25,7 @@
   // Round tracking
   let correctCards = $state<TabooCard[]>([])
   let skippedCards = $state<TabooCard[]>([])
+  let timedOutCard = $state<TabooCard | null>(null)
 
   // Team scores
   let redTeamScore = $state(0)
@@ -31,7 +33,7 @@
 
   // Card deck (shuffled)
   let deck = $state<TabooCard[]>([])
-  let usedCardIndices = $state<Set<number>>(new Set())
+  let usedCardIndices = new SvelteSet<number>()
 
   // Current card
   let currentCard = $derived(deck[currentCardIndex])
@@ -40,10 +42,11 @@
     // Get indices of unused cards
     const availableIndices = tabooCards.map((_, i) => i).filter((i) => !usedCardIndices.has(i))
 
-    // If we've used all cards, reset
-    if (availableIndices.length < 10) {
+    // If we've used all cards, reset (shouldn't happen in normal gameplay)
+    if (availableIndices.length === 0) {
       usedCardIndices.clear()
-      deck = [...tabooCards].sort(() => Math.random() - 0.5)
+      const shuffledIndices = tabooCards.map((_, i) => i).sort(() => Math.random() - 0.5)
+      deck = shuffledIndices.map((i) => tabooCards[i])
     } else {
       // Shuffle available cards
       const shuffledIndices = availableIndices.sort(() => Math.random() - 0.5)
@@ -81,6 +84,7 @@
     skippedCards = []
     redTeamScore = 0
     blueTeamScore = 0
+    usedCardIndices.clear()
     shuffleDeck()
     phase = "getReady"
   }
@@ -120,10 +124,20 @@
 
   function endRound() {
     stopTimer()
+    // Save the current card as timed out (doesn't count as skipped)
+    timedOutCard = currentCard
+
+    // Mark the timed-out card as used so it doesn't appear again
+    const cardIndex = tabooCards.findIndex((c) => c.word === currentCard.word)
+    if (cardIndex !== -1) {
+      usedCardIndices.add(cardIndex)
+    }
+
     phase = "results"
 
     // Add score to current team for correct cards
     // Add score to opposing team for skipped cards
+    // Note: timedOutCard does NOT count towards skipped score
     if (currentTeam.name === TEAM_RED.name) {
       redTeamScore += correctCards.length
       blueTeamScore += skippedCards.length
@@ -139,6 +153,7 @@
     currentTeam = nextTeam
     correctCards = []
     skippedCards = []
+    timedOutCard = null
     shuffleDeck()
     phase = "getReady"
   }
@@ -175,46 +190,53 @@
   <meta name="description" content="Guess the word without forbidden clues" />
 </svelte:head>
 
-{#key phase}
-  <div in:fade={{ duration: 300, delay: 150 }} out:fade={{ duration: 150 }}>
-    {#if phase === "splash"}
-      <SplashScreen onStart={startGame} />
-    {:else if phase === "getReady"}
-      <GetReadyScreen
-        teamName={currentTeam.name}
-        teamColor={currentTeam.color}
-        onStart={startRound}
-        onSkipTeam={skipTeam}
-        onResetGame={endGame}
-      />
-    {:else if phase === "play" && currentCard}
-      <PlayScreen
-        card={currentCard}
-        teamColor={currentTeam.color}
-        {timeRemaining}
-        {isPaused}
-        onCorrect={handleCorrect}
-        onSkip={handleSkip}
-        onTogglePause={togglePause}
-        onResetTurn={resetTurn}
-        onSkipTeam={skipTeam}
-        onResetGame={endGame}
-      />
-    {:else if phase === "results"}
-      <ResultsScreen
-        teamName={currentTeam.name}
-        teamColor={currentTeam.color}
-        {correctCards}
-        {skippedCards}
-        onNextRound={nextTeamRound}
-        onEndGame={endGame}
-      />
-    {:else if phase === "finalResults"}
-      <FinalResultsScreen
-        redScore={redTeamScore}
-        blueScore={blueTeamScore}
-        onPlayAgain={startGame}
-      />
-    {/if}
-  </div>
-{/key}
+<div class={["relative", "h-full w-full"]}>
+  {#key phase}
+    <div
+      class={["absolute inset-0", "flex flex-col", "w-full", "pt-6"]}
+      in:fade={{ duration: 300, delay: 150 }}
+      out:fade={{ duration: 150 }}
+    >
+      {#if phase === "splash"}
+        <SplashScreen onStart={startGame} />
+      {:else if phase === "getReady"}
+        <GetReadyScreen
+          teamName={currentTeam.name}
+          teamColor={currentTeam.color}
+          onStart={startRound}
+          onSkipTeam={skipTeam}
+          onResetGame={endGame}
+        />
+      {:else if phase === "play" && currentCard}
+        <PlayScreen
+          card={currentCard}
+          teamColor={currentTeam.color}
+          {timeRemaining}
+          {isPaused}
+          onCorrect={handleCorrect}
+          onSkip={handleSkip}
+          onTogglePause={togglePause}
+          onResetTurn={resetTurn}
+          onSkipTeam={skipTeam}
+          onResetGame={endGame}
+        />
+      {:else if phase === "results"}
+        <ResultsScreen
+          teamName={currentTeam.name}
+          teamColor={currentTeam.color}
+          bind:correctCards
+          bind:skippedCards
+          bind:timedOutCard
+          onNextRound={nextTeamRound}
+          onEndGame={endGame}
+        />
+      {:else if phase === "finalResults"}
+        <FinalResultsScreen
+          redScore={redTeamScore}
+          blueScore={blueTeamScore}
+          onPlayAgain={startGame}
+        />
+      {/if}
+    </div>
+  {/key}
+</div>
