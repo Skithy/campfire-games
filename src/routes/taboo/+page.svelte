@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { onDestroy } from "svelte"
   import { SvelteSet } from "svelte/reactivity"
   import { fade } from "svelte/transition"
 
@@ -13,9 +14,14 @@
 
   const settings = getSettingsContext()
 
+  // Clean up timer when leaving the page
+  onDestroy(() => {
+    stopTimer()
+  })
+
   type GamePhase = "splash" | "getReady" | "play" | "results" | "finalResults"
 
-  const ROUND_TIME = 10
+  const ROUND_TIME = 60
 
   // Game state
   let phase = $state<GamePhase>("splash")
