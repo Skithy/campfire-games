@@ -1,6 +1,4 @@
 <script lang="ts">
-  import { fade, scale } from "svelte/transition"
-
   import { getGameContainerContext } from "$lib/components/layout/gameContainerContext.svelte"
   import Modal from "$lib/components/layout/Modal.svelte"
   import PageActions from "$lib/components/layout/PageActions.svelte"
@@ -66,9 +64,9 @@
   }
 </script>
 
-<div class={["flex flex-1 flex-col items-center gap-6", "w-full"]}>
+<div class={["flex flex-1 flex-col items-center gap-6", "w-full", "min-h-0"]}>
   <!-- Header -->
-  <div class="space-y-2 text-center">
+  <div class="flex-shrink-0 space-y-2 text-center">
     <p class="text-sm font-medium tracking-widest text-white/60 uppercase">Time's Up!</p>
     <h1 class="text-4xl font-black text-white" style:color={teamColor.toRgb()}>
       {teamName}
@@ -76,7 +74,7 @@
   </div>
 
   <!-- Score summary -->
-  <div class="flex w-full max-w-sm gap-4">
+  <div class="flex w-full max-w-sm flex-shrink-0 gap-4">
     <div
       class="flex flex-1 flex-col items-center gap-1 rounded-xl py-4"
       style:background-color={teamColor.toRgba(0.2)}

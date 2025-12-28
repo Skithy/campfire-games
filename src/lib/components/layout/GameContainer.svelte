@@ -61,7 +61,7 @@
     "flex flex-col items-center",
     "h-full w-full max-w-md md:max-h-175",
     "mx-auto my-auto px-4 py-6",
-    "rounded-2xl md:border md:border-white/10",
+    "md:rounded-2xl md:border md:border-white/10",
     "md:shadow-2xl",
   ]}
 >
