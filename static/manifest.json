@@ -1,0 +1,21 @@
+{
+  "name": "Campfire Games",
+  "short_name": "Campfire Games",
+  "description": "Party games for your next gathering",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#1f2937",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["games", "entertainment"],
+  "prefer_related_applications": false
+}
