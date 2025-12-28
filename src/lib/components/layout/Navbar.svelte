@@ -33,7 +33,7 @@
     {#if isWavelength}
       <a
         href="/"
-        class="text-xl font-bold tracking-tight transition-opacity hover:opacity-80"
+        class="text-base font-bold tracking-tight transition-opacity hover:opacity-80 sm:text-lg"
         style:background={Color.toGradient(ORANGE, GOLD)}
         style:-webkit-background-clip="text"
         style:background-clip="text"
@@ -41,10 +41,10 @@
       >
         Campfire Games
       </a>
-      <span class="text-xl text-white/30">/</span>
+      <span class="text-base text-white/30 sm:text-lg">/</span>
       <a
         href="/wavelength?reset=true"
-        class="text-xl font-bold tracking-tight transition-opacity hover:opacity-80"
+        class="text-base font-bold tracking-tight transition-opacity hover:opacity-80 sm:text-lg"
         style:background={Color.toGradient(PURPLE, GOLD)}
         style:-webkit-background-clip="text"
         style:background-clip="text"
@@ -55,7 +55,7 @@
     {:else if isTaboo}
       <a
         href="/"
-        class="text-xl font-bold tracking-tight transition-opacity hover:opacity-80"
+        class="text-base font-bold tracking-tight transition-opacity hover:opacity-80 sm:text-lg"
         style:background={Color.toGradient(ORANGE, GOLD)}
         style:-webkit-background-clip="text"
         style:background-clip="text"
@@ -63,10 +63,10 @@
       >
         Campfire Games
       </a>
-      <span class="text-xl text-white/30">/</span>
+      <span class="text-base text-white/30 sm:text-lg">/</span>
       <a
         href="/taboo"
-        class="text-xl font-bold tracking-tight transition-opacity hover:opacity-80"
+        class="text-base font-bold tracking-tight transition-opacity hover:opacity-80 sm:text-lg"
         style:background={Color.toGradient(RED, BLUE)}
         style:-webkit-background-clip="text"
         style:background-clip="text"
@@ -77,7 +77,7 @@
     {:else}
       <a
         href="/"
-        class="text-xl font-bold tracking-tight transition-opacity hover:opacity-80"
+        class="text-base font-bold tracking-tight transition-opacity hover:opacity-80 sm:text-lg"
         style:background={Color.toGradient(ORANGE, GOLD)}
         style:-webkit-background-clip="text"
         style:background-clip="text"
