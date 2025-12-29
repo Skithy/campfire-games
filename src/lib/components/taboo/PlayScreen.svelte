@@ -3,9 +3,11 @@
 
   import { getGameContainerContext } from "$lib/components/layout/gameContainerContext.svelte"
   import PageActions from "$lib/components/layout/PageActions.svelte"
+  import { getSettingsContext } from "$lib/components/layout/settingsContext.svelte"
   import GameMenu from "$lib/components/taboo/GameMenu.svelte"
   import TabooCard from "$lib/components/taboo/TabooCard.svelte"
   import type { TabooCard as TabooCardType } from "$lib/data/tabooCards"
+  import countdownSound from "$lib/sounds/game-countdown-3.mp3"
   import type { Color } from "$lib/utils/colors"
 
   let {
@@ -35,8 +37,18 @@
   let timerWarning = $derived(timeRemaining <= 10)
 
   const ctx = getGameContainerContext()
+  const settings = getSettingsContext()
+
   $effect(() => {
     ctx.setBackground(teamColor, teamColor)
+  })
+
+  // Play countdown sound at 3 seconds (sound has 3 beeps for 3, 2, 1)
+  $effect(() => {
+    if (timeRemaining === 3 && !isPaused && settings.isMusicEnabled) {
+      const audio = new Audio(countdownSound)
+      audio.play()
+    }
   })
 
   function handleResume() {

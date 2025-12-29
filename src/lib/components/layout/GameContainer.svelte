@@ -1,12 +1,28 @@
 <script lang="ts">
   import type { Snippet } from "svelte"
 
+  import { browser } from "$app/environment"
   import type { Color } from "$lib/utils/colors"
 
   import { setGameContainerContext } from "./gameContainerContext.svelte"
   import Navbar from "./Navbar.svelte"
   import PageBackground from "./PageBackground.svelte"
   import { setSettingsContext } from "./settingsContext.svelte"
+
+  const MUSIC_STORAGE_KEY = "settings:musicEnabled"
+  const VIBRATION_STORAGE_KEY = "settings:vibrationEnabled"
+
+  function loadSetting(key: string, defaultValue: boolean): boolean {
+    if (!browser) return defaultValue
+    const stored = localStorage.getItem(key)
+    return stored !== null ? stored === "true" : defaultValue
+  }
+
+  function saveSetting(key: string, value: boolean) {
+    if (browser) {
+      localStorage.setItem(key, String(value))
+    }
+  }
 
   let {
     children,
@@ -17,8 +33,8 @@
   let backgroundTop = $state<Color | undefined>(undefined)
   let backgroundBottom = $state<Color | undefined>(undefined)
 
-  let isMusicEnabled = $state(false)
-  let isVibrationEnabled = $state(true)
+  let isMusicEnabled = $state(loadSetting(MUSIC_STORAGE_KEY, true))
+  let isVibrationEnabled = $state(loadSetting(VIBRATION_STORAGE_KEY, true))
 
   function setBackground(top: Color, bottom: Color) {
     backgroundTop = top
@@ -27,10 +43,12 @@
 
   function toggleMusic() {
     isMusicEnabled = !isMusicEnabled
+    saveSetting(MUSIC_STORAGE_KEY, isMusicEnabled)
   }
 
   function toggleVibration() {
     isVibrationEnabled = !isVibrationEnabled
+    saveSetting(VIBRATION_STORAGE_KEY, isVibrationEnabled)
   }
 
   setGameContainerContext({
