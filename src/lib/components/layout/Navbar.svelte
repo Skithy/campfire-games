@@ -1,6 +1,6 @@
 <script lang="ts">
   import { page } from "$app/stores"
-  import { BLUE, GOLD, ORANGE, PURPLE, RED } from "$lib/constants/colors"
+  import { BLUE, GOLD, GREEN, ORANGE, PURPLE, RED } from "$lib/constants/colors"
   import { Color } from "$lib/utils/colors"
 
   import Modal from "./Modal.svelte"
@@ -8,6 +8,7 @@
 
   let isWavelength = $derived($page.url.pathname.includes("wavelength"))
   let isTaboo = $derived($page.url.pathname.includes("taboo"))
+  let isHeadsup = $derived($page.url.pathname.includes("headsup"))
 
   let isSettingsOpen = $state(false)
 
@@ -73,6 +74,28 @@
         style:color="transparent"
       >
         Taboo
+      </a>
+    {:else if isHeadsup}
+      <a
+        href="/"
+        class="text-base font-bold tracking-tight transition-opacity hover:opacity-80 sm:text-lg"
+        style:background={Color.toGradient(ORANGE, GOLD)}
+        style:-webkit-background-clip="text"
+        style:background-clip="text"
+        style:color="transparent"
+      >
+        Campfire Games
+      </a>
+      <span class="text-base text-white/30 sm:text-lg">/</span>
+      <a
+        href="/headsup"
+        class="text-base font-bold tracking-tight transition-opacity hover:opacity-80 sm:text-lg"
+        style:background={Color.toGradient(GREEN, PURPLE)}
+        style:-webkit-background-clip="text"
+        style:background-clip="text"
+        style:color="transparent"
+      >
+        Heads Up
       </a>
     {:else}
       <a

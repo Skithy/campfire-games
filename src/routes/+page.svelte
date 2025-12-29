@@ -2,7 +2,7 @@
   import { fade } from "svelte/transition"
 
   import { getGameContainerContext } from "$lib/components/layout/gameContainerContext.svelte"
-  import { BLUE, GOLD, ORANGE, PURPLE, RED } from "$lib/constants/colors"
+  import { BLUE, GOLD, GREEN, ORANGE, PURPLE, RED } from "$lib/constants/colors"
   import { Color } from "$lib/utils/colors"
 
   const { setBackground } = getGameContainerContext()
@@ -20,6 +20,12 @@
       description: "Guess the word without forbidden clues",
       url: "/taboo",
       gradient: Color.toGradient(RED, BLUE),
+    },
+    {
+      name: "Heads Up",
+      description: "Guess the word on your forehead",
+      url: "/headsup",
+      gradient: Color.toGradient(GREEN, PURPLE),
     },
   ]
 </script>

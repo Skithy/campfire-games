@@ -4,7 +4,7 @@
   import { browser } from "$app/environment"
   import type { Color } from "$lib/utils/colors"
 
-  import { setGameContainerContext } from "./gameContainerContext.svelte"
+  import { type Orientation, setGameContainerContext } from "./gameContainerContext.svelte"
   import Navbar from "./Navbar.svelte"
   import PageBackground from "./PageBackground.svelte"
   import { setSettingsContext } from "./settingsContext.svelte"
@@ -32,6 +32,7 @@
 
   let backgroundTop = $state<Color | undefined>(undefined)
   let backgroundBottom = $state<Color | undefined>(undefined)
+  let orientation = $state<Orientation>("portrait")
 
   let isMusicEnabled = $state(loadSetting(MUSIC_STORAGE_KEY, true))
   let isVibrationEnabled = $state(loadSetting(VIBRATION_STORAGE_KEY, true))
@@ -39,6 +40,10 @@
   function setBackground(top: Color, bottom: Color) {
     backgroundTop = top
     backgroundBottom = bottom
+  }
+
+  function setOrientation(newOrientation: Orientation) {
+    orientation = newOrientation
   }
 
   function toggleMusic() {
@@ -58,7 +63,11 @@
     get backgroundBottom() {
       return backgroundBottom
     },
+    get orientation() {
+      return orientation
+    },
     setBackground,
+    setOrientation,
   })
 
   setSettingsContext({
@@ -77,7 +86,9 @@
   class={[
     "relative overflow-hidden",
     "flex flex-col items-center",
-    "h-full w-full max-w-md md:max-h-175",
+    orientation === "landscape"
+      ? "h-full w-full max-h-112 max-w-200"
+      : "h-full w-full max-w-md md:max-h-175",
     "mx-auto my-auto px-4 py-6",
     "md:rounded-2xl md:border md:border-white/10",
     "md:shadow-2xl",
@@ -86,7 +97,9 @@
   {#if backgroundTop && backgroundBottom}
     <PageBackground top={backgroundTop} bottom={backgroundBottom} />
   {/if}
-  <Navbar />
+  {#if orientation !== "landscape"}
+    <Navbar />
+  {/if}
   <div class={["relative", "min-h-0 w-full flex-1"]}>
     {@render children()}
   </div>
