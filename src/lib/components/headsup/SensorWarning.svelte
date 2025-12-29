@@ -32,6 +32,7 @@
   <button
     class={[
       "fixed top-4 left-1/2 -translate-x-1/2",
+      "z-50",
       "flex items-center gap-2",
       "px-3 py-2",
       "text-xs font-medium text-white",
