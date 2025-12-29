@@ -2,9 +2,21 @@
   import "../app.css"
   import "../lib/css/all.css"
 
+  import { onNavigate } from "$app/navigation"
   import GameContainer from "$lib/components/layout/GameContainer.svelte"
 
   let { children } = $props()
+
+  onNavigate((navigation) => {
+    if (!document.startViewTransition) return
+
+    return new Promise((resolve) => {
+      document.startViewTransition(async () => {
+        resolve()
+        await navigation.complete
+      })
+    })
+  })
 </script>
 
 <div class={["flex flex-col", "h-dvh", "overflow-hidden", "bg-gray-900 text-white"]}>
