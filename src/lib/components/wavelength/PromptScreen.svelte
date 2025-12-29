@@ -44,7 +44,12 @@
 
   <!-- Action buttons -->
   <PageActions
-    left={{ label: "Reroll prompts", onclick: onReroll, icon: "fa-solid fa-rotate", iconOnly: true }}
+    left={{
+      label: "Reroll prompts",
+      onclick: onReroll,
+      icon: "fa-solid fa-rotate",
+      iconOnly: true,
+    }}
     right={{ label: "Continue", onclick: handleSubmit, disabled: selectedIndex === null }}
   />
 </div>

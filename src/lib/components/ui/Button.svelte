@@ -49,7 +49,8 @@
 
   const variantClasses: Record<Variant, string> = {
     primary: "group relative overflow-hidden p-0.5 rounded-2xl cursor-pointer transition-all",
-    standard: "flex items-center justify-center gap-2 font-semibold text-white/80 bg-white/10 rounded-2xl",
+    standard:
+      "flex items-center justify-center gap-2 font-semibold text-white/80 bg-white/10 rounded-2xl",
     outline:
       "flex items-center justify-center gap-2 font-semibold text-white/70 bg-transparent rounded-2xl border border-white/20",
   }

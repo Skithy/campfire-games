@@ -73,6 +73,9 @@
     get orientation() {
       return orientation
     },
+    get isRotated() {
+      return needsRotation
+    },
     setBackground,
     setOrientation,
   })

@@ -41,6 +41,7 @@ Use an array of strings for the `class` attribute, with each string representing
 **Important:** If there is only one category, use a plain string instead of an array. If there are multiple categories, ALWAYS use an array - never a single string with all classes combined.
 
 **Category order:**
+
 1. **Layout** - display, position, overflow, z-index
 2. **Flexbox/Grid** - flex/grid properties
 3. **Sizing** - width, height, min/max
@@ -52,6 +53,7 @@ Use an array of strings for the `class` attribute, with each string representing
 9. **Transitions/Animations** - transition, animate
 
 **Examples:**
+
 ```svelte
 <!-- Multiple categories: use array -->
 <div

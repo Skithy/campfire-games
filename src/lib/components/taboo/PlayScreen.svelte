@@ -67,6 +67,7 @@
 
   const SWIPE_THRESHOLD = 100
   const ROTATION_FACTOR = 0.1
+  const SWIPE_COOLDOWN = 500
 
   let rotation = $derived(dragX * ROTATION_FACTOR)
   let opacity = $derived(Math.max(0, 1 - Math.abs(dragX) / 300))
@@ -119,10 +120,9 @@
       dragY = 0
     }, 200)
 
-    // Re-enable buttons after cooldown (total 1000ms from start)
     setTimeout(() => {
       isExiting = false
-    }, 1000)
+    }, SWIPE_COOLDOWN)
   }
 
   function handleCorrectClick() {

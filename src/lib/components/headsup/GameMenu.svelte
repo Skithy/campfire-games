@@ -39,7 +39,13 @@
       {/if}
 
       {#if showResetTurn && onResetTurn}
-        <Button variant="standard" size="lg" icon="fa-solid fa-rotate-left" fullWidth onclick={onResetTurn}>
+        <Button
+          variant="standard"
+          size="lg"
+          icon="fa-solid fa-rotate-left"
+          fullWidth
+          onclick={onResetTurn}
+        >
           Reset Turn
         </Button>
       {/if}

@@ -90,16 +90,16 @@
                   class="flex h-12 w-12 items-center justify-center rounded-full"
                   style:background-color={GREEN.toRgba(0.2)}
                 >
-                  <i class="fa-solid fa-hand-pointer text-lg" style:color={GREEN.toRgb()}></i>
+                  <i class="fa-solid fa-arrow-down text-lg" style:color={GREEN.toRgb()}></i>
                 </div>
-                <span class="text-xs text-white/70">Tap Bottom</span>
+                <span class="text-xs text-white/70">Swipe Down</span>
                 <span class="text-[10px] text-white/50">Correct</span>
               </div>
               <div class="flex flex-col items-center gap-1">
                 <div class="flex h-12 w-12 items-center justify-center rounded-full bg-white/10">
-                  <i class="fa-solid fa-hand-pointer text-lg text-white/60"></i>
+                  <i class="fa-solid fa-arrow-up text-lg text-white/60"></i>
                 </div>
-                <span class="text-xs text-white/70">Tap Top</span>
+                <span class="text-xs text-white/70">Swipe Up</span>
                 <span class="text-[10px] text-white/50">Skip</span>
               </div>
             </div>

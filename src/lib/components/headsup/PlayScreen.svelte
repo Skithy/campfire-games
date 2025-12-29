@@ -9,7 +9,6 @@
   import { getSettingsContext } from "$lib/components/layout/settingsContext.svelte"
   import { GREEN, PURPLE } from "$lib/constants/colors"
   import countdownSound from "$lib/sounds/game-countdown-3.mp3"
-  import { checkSensorPermissions, SensorPermissionStatus } from "$lib/utils/sensors"
 
   import GameMenu from "./GameMenu.svelte"
 
@@ -57,11 +56,87 @@
 
   // Tilt detection
   let isExiting = $state(false)
-  let exitDirection = $state<"correct" | "skip" | null>(null)
-  let currentBeta = $state<number | null>(null)
-  let orientationSupported = $state<boolean | null>(null)
-  let eventCount = $state(0)
-  let permissionStatus = $state<SensorPermissionStatus | null>(null)
+
+  // Drag handling (similar to Taboo)
+  let dragX = $state(0)
+  let dragY = $state(0)
+  let isDragging = $state(false)
+  let hasVibratedThreshold = $state(false)
+  let startX = 0
+  let startY = 0
+
+  const SWIPE_THRESHOLD = 80
+  const ROTATION_FACTOR = 0.05
+  const SWIPE_COOLDOWN = 500
+
+  let rotation = $derived(dragY * ROTATION_FACTOR)
+  let opacity = $derived(Math.max(0, 1 - Math.abs(dragY) / 250))
+
+  function handlePointerDown(e: PointerEvent) {
+    if (isPaused || isExiting) return
+    isDragging = true
+    hasVibratedThreshold = false
+    startX = e.clientX
+    startY = e.clientY
+    ;(e.target as HTMLElement).setPointerCapture(e.pointerId)
+  }
+
+  function handlePointerMove(e: PointerEvent) {
+    if (!isDragging) return
+
+    // When screen is rotated 90deg, swap X/Y for correct direction
+    if (ctx.isRotated) {
+      dragX = e.clientY - startY
+      dragY = -(e.clientX - startX)
+    } else {
+      dragX = e.clientX - startX
+      dragY = e.clientY - startY
+    }
+
+    // Vibrate when crossing the swipe threshold
+    if (!hasVibratedThreshold && Math.abs(dragY) >= SWIPE_THRESHOLD) {
+      hasVibratedThreshold = true
+      if (settings.isVibrationEnabled && navigator.vibrate) {
+        navigator.vibrate(50)
+      }
+    }
+  }
+
+  function handlePointerUp() {
+    if (!isDragging) return
+    isDragging = false
+
+    if (dragY > SWIPE_THRESHOLD) {
+      // Swipe down = correct
+      swipeOut(1, onCorrect)
+    } else if (dragY < -SWIPE_THRESHOLD) {
+      // Swipe up = skip
+      swipeOut(-1, onSkip)
+    } else {
+      dragX = 0
+      dragY = 0
+    }
+  }
+
+  function swipeOut(direction: number, callback: () => void) {
+    isExiting = true
+    dragY = direction * 300
+
+    if (settings.isVibrationEnabled && navigator.vibrate) {
+      navigator.vibrate(100)
+    }
+
+    // Wait for exit animation to complete before showing new word
+    setTimeout(() => {
+      callback()
+      dragX = 0
+      dragY = 0
+    }, 200)
+
+    setTimeout(() => {
+      isExiting = false
+    }, SWIPE_COOLDOWN)
+  }
 
   // Landscape tilt thresholds (using gamma for landscape orientation)
   // gamma: ±90° = phone vertical (perpendicular to ground)
@@ -73,23 +148,16 @@
   let tiltReady = $state(true) // Must return to neutral before next tilt
 
   function handleOrientation(e: DeviceOrientationEvent) {
-    eventCount++
-
-    if (e.gamma === null) {
-      orientationSupported = false
-      return
-    }
-
-    orientationSupported = true
-    currentBeta = e.gamma // Reusing currentBeta state for gamma value
-
-    if (isPaused || isExiting) return
+    if (e.gamma === null || isPaused || isExiting) return
 
     const gamma = e.gamma
 
     // Check if returned to near-vertical (neutral) zone
     if (!tiltReady && (gamma > 70 || gamma < -70)) {
       tiltReady = true
+      if (settings.isVibrationEnabled && navigator.vibrate) {
+        navigator.vibrate(30)
+      }
     }
 
     if (!tiltReady) return
@@ -97,48 +165,13 @@
     // Check for correct action (0° to 45°)
     if (gamma >= 0 && gamma <= 45) {
       tiltReady = false
-      triggerAction("correct")
+      swipeOut(1, onCorrect)
     }
     // Check for skip action (-45° to 0°)
     else if (gamma >= -45 && gamma < 0) {
       tiltReady = false
-      triggerAction("skip")
+      swipeOut(-1, onSkip)
     }
-  }
-
-  function triggerAction(action: "correct" | "skip") {
-    if (isExiting) return
-    isExiting = true
-    exitDirection = action
-
-    if (settings.isVibrationEnabled && navigator.vibrate) {
-      navigator.vibrate(action === "correct" ? [100, 50, 100] : 100)
-    }
-
-    // Show new word immediately
-    if (action === "correct") {
-      onCorrect()
-    } else {
-      onSkip()
-    }
-
-    // Reset exit direction after animation completes
-    setTimeout(() => {
-      exitDirection = null
-    }, 300)
-
-    // Re-enable buttons after cooldown
-    setTimeout(() => {
-      isExiting = false
-    }, 1000)
-  }
-
-  function handleCorrectClick() {
-    triggerAction("correct")
-  }
-
-  function handleSkipClick() {
-    triggerAction("skip")
   }
 
   function handleKeydown(e: KeyboardEvent) {
@@ -146,10 +179,10 @@
 
     if (e.key === "ArrowUp") {
       e.preventDefault()
-      triggerAction("skip")
+      swipeOut(-1, onSkip)
     } else if (e.key === "ArrowDown") {
       e.preventDefault()
-      triggerAction("correct")
+      swipeOut(1, onCorrect)
     }
   }
 
@@ -157,10 +190,6 @@
     window.addEventListener("keydown", handleKeydown)
     // Permission is requested in GetReadyScreen before navigating here
     window.addEventListener("deviceorientation", handleOrientation)
-
-    checkSensorPermissions().then((status) => {
-      permissionStatus = status
-    })
 
     return () => {
       window.removeEventListener("keydown", handleKeydown)
@@ -170,63 +199,78 @@
 </script>
 
 <div class="flex h-full w-full flex-row gap-6">
-  <!-- Left side: Skip, Word, Correct -->
-  <div class="flex flex-1 flex-col gap-6">
-    <!-- Skip zone (top) -->
-    <button
+  <!-- Left side: Swipe area with word -->
+  <div class="relative flex flex-1 flex-col">
+    <!-- Skip indicator (top) -->
+    <div
       class={[
-        "flex flex-1 flex-col items-center justify-center gap-2",
-        "cursor-pointer",
-        "bg-white/5",
-        "rounded-2xl",
-        "transition-all active:bg-white/15",
-        isExiting && exitDirection === "skip" ? "bg-white/20" : "",
+        "pointer-events-none absolute top-0 right-0 left-0 z-10",
+        "flex flex-col items-center justify-center gap-2",
+        "py-4",
+        "bg-white/30",
+        "rounded-t-2xl",
+        "transition-opacity duration-150",
       ]}
-      onclick={handleSkipClick}
+      style:opacity={Math.min(1, Math.max(0, -dragY / SWIPE_THRESHOLD))}
     >
-      <i class="fa-solid fa-forward text-4xl text-white/40"></i>
-      <span class="text-lg font-medium text-white/40">Skip</span>
-    </button>
-
-    <!-- Center area with word -->
-    <div class="relative flex items-center justify-center px-4 py-4">
-      <!-- Word display -->
-      <div class="relative h-full w-full px-8">
-        {#key word}
-          <div
-            class="absolute inset-0 flex items-center justify-center"
-            in:fly={{ x: -50, duration: 200, opacity: 0 }}
-            out:fly={{
-              y: exitDirection === "correct" ? 50 : exitDirection === "skip" ? -50 : 0,
-              duration: 200,
-              opacity: 0,
-            }}
-          >
-            <h1
-              class="text-center text-5xl font-black tracking-tight text-white uppercase drop-shadow-lg"
-              style:text-shadow="0 4px 20px rgba(0,0,0,0.3)"
-            >
-              {word}
-            </h1>
-          </div>
-        {/key}
-      </div>
+      <i class="fa-solid fa-forward text-2xl text-white"></i>
+      <span class="text-sm font-medium text-white">Skip</span>
     </div>
 
-    <!-- Correct zone (bottom) -->
-    <button
+    <!-- Correct indicator (bottom) -->
+    <div
       class={[
-        "flex flex-1 flex-col items-center justify-center gap-2",
-        "cursor-pointer",
-        "rounded-2xl",
-        "transition-all",
+        "pointer-events-none absolute right-0 bottom-0 left-0 z-10",
+        "flex flex-col items-center justify-center gap-2",
+        "py-4",
+        "rounded-b-2xl",
+        "transition-opacity duration-150",
       ]}
-      style:background-color={GREEN.toRgba(isExiting && exitDirection === "correct" ? 0.35 : 0.15)}
-      onclick={handleCorrectClick}
+      style:background-color={GREEN.toRgb()}
+      style:opacity={Math.min(1, Math.max(0, dragY / SWIPE_THRESHOLD))}
     >
-      <i class="fa-solid fa-check text-4xl" style:color={GREEN.toRgba(0.6)}></i>
-      <span class="text-lg font-medium" style:color={GREEN.toRgba(0.6)}>Correct</span>
-    </button>
+      <span class="text-sm font-medium text-white">Correct!</span>
+      <i class="fa-solid fa-check text-2xl text-white"></i>
+    </div>
+
+    <!-- Draggable card area -->
+    <div class="relative flex flex-1 items-center justify-center">
+      {#key word}
+        <div
+          class={[
+            "absolute touch-none select-none",
+            "flex items-center justify-center",
+            "h-44 w-80",
+            "px-6 py-4",
+            "bg-white/10",
+            "rounded-2xl",
+            "backdrop-blur-sm",
+          ]}
+          class:cursor-grab={!isDragging && !isPaused}
+          class:cursor-grabbing={isDragging}
+          style:transform="translateY({dragY}px) translateX({dragX * 0.3}px) rotate({rotation}deg)"
+          style:opacity
+          style:transition={isDragging ? "none" : "transform 0.2s ease, opacity 0.2s ease"}
+          in:fly={{ x: -50, duration: 200, opacity: 0 }}
+          onpointerdown={handlePointerDown}
+          onpointermove={handlePointerMove}
+          onpointerup={handlePointerUp}
+          onpointercancel={handlePointerUp}
+          role="button"
+          tabindex="0"
+        >
+          <h1
+            class={[
+              "text-center font-black tracking-tight text-white uppercase drop-shadow-lg",
+              word.length > 12 ? "text-3xl" : "text-4xl",
+            ]}
+            style:text-shadow="0 4px 20px rgba(0,0,0,0.3)"
+          >
+            {word}
+          </h1>
+        </div>
+      {/key}
+    </div>
   </div>
 
   <!-- Right side: Pause button and Timer -->

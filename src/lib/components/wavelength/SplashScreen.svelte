@@ -89,7 +89,12 @@
     <Button variant="primary" size="xl" icon="fa-solid fa-play" {gradient} onclick={onStart}>
       Start Game
     </Button>
-    <Button variant="standard" size="lg" icon="fa-solid fa-circle-question" onclick={toggleInstructions}>
+    <Button
+      variant="standard"
+      size="lg"
+      icon="fa-solid fa-circle-question"
+      onclick={toggleInstructions}
+    >
       How to Play
     </Button>
     <Button variant="outline" size="lg" href="/">Back to Games</Button>

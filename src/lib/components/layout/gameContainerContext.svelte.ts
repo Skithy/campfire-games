@@ -11,6 +11,7 @@ export interface GameContainerContext {
   backgroundTop: Color | undefined
   backgroundBottom: Color | undefined
   orientation: Orientation
+  isRotated: boolean
   setBackground: (top: Color, bottom: Color) => void
   setOrientation: (orientation: Orientation) => void
 }

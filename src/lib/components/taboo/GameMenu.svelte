@@ -32,19 +32,39 @@
   <div class="space-y-4 p-6">
     <div class="flex flex-col gap-2">
       {#if showContinue}
-        <Button variant="standard" size="lg" icon="fa-solid fa-arrow-left" color={teamColor.toRgb()} fullWidth onclick={onClose}>
+        <Button
+          variant="standard"
+          size="lg"
+          icon="fa-solid fa-arrow-left"
+          color={teamColor.toRgb()}
+          fullWidth
+          onclick={onClose}
+        >
           Continue
         </Button>
       {/if}
 
       {#if showResume && onResume}
-        <Button variant="standard" size="lg" icon="fa-solid fa-play" color={teamColor.toRgb()} fullWidth onclick={onResume}>
+        <Button
+          variant="standard"
+          size="lg"
+          icon="fa-solid fa-play"
+          color={teamColor.toRgb()}
+          fullWidth
+          onclick={onResume}
+        >
           Resume
         </Button>
       {/if}
 
       {#if showResetTurn && onResetTurn}
-        <Button variant="standard" size="lg" icon="fa-solid fa-rotate-left" fullWidth onclick={onResetTurn}>
+        <Button
+          variant="standard"
+          size="lg"
+          icon="fa-solid fa-rotate-left"
+          fullWidth
+          onclick={onResetTurn}
+        >
           Reset Turn
         </Button>
       {/if}
