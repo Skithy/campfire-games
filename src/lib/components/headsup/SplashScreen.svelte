@@ -7,6 +7,7 @@
   import { Button } from "$lib/components/ui"
   import { GREEN, PURPLE } from "$lib/constants/colors"
   import { Color } from "$lib/utils/colors"
+  import { requestGyroscopePermission } from "$lib/utils/sensors"
 
   let { onStart }: { onStart: () => void } = $props()
 
@@ -19,6 +20,11 @@
     ctx.setBackground(GREEN, PURPLE)
     ctx.setOrientation(Orientation.Portrait)
   })
+
+  async function handleStart() {
+    await requestGyroscopePermission()
+    onStart()
+  }
 
   function toggleInstructions() {
     showInstructions = !showInstructions
@@ -47,7 +53,7 @@
   </div>
 
   <div class="flex w-full max-w-xs flex-col gap-3">
-    <Button variant="primary" size="xl" icon="fa-solid fa-play" {gradient} onclick={onStart}>
+    <Button variant="primary" size="xl" icon="fa-solid fa-play" {gradient} onclick={handleStart}>
       Start Game
     </Button>
     <Button

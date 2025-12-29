@@ -7,11 +7,7 @@
   } from "$lib/components/layout/gameContainerContext.svelte"
   import LandscapeNavbar from "$lib/components/layout/LandscapeNavbar.svelte"
   import { GREEN, PURPLE } from "$lib/constants/colors"
-  import {
-    checkSensorPermissions,
-    requestGyroscopePermission,
-    SensorPermissionStatus,
-  } from "$lib/utils/sensors"
+  import { checkSensorPermissions, SensorPermissionStatus } from "$lib/utils/sensors"
 
   let {
     onStart,
@@ -35,7 +31,6 @@
   })
 
   async function handleStart() {
-    await requestGyroscopePermission()
     onStart()
   }
 </script>
@@ -46,12 +41,12 @@
   <!-- Center: Instructions -->
   <div class="flex flex-1 flex-col items-center justify-center gap-4">
     {#if instructionsReady}
-      <div class="space-y-1 text-center">
-        <p class="text-xs font-medium tracking-widest text-white/60 uppercase">Get Ready</p>
-        <h1 class="text-2xl font-black" style:color={GREEN.toRgb()}>
+      <div class="space-y-2 text-center">
+        <p class="text-sm font-medium tracking-widest text-white/60 uppercase">Get Ready</p>
+        <h1 class="text-4xl font-black" style:color={GREEN.toRgb()}>
           {hasTiltControls ? "Hold Phone to Forehead" : "Face Screen Outwards"}
         </h1>
-        <p class="text-xs text-white/70">
+        <p class="text-sm text-white/70">
           {hasTiltControls
             ? "Screen faces outward so others can see"
             : "Others need to see the word on screen"}
