@@ -50,13 +50,13 @@
     <p class={["text-lg text-white/50"]}>Party games for your next gathering</p>
   </div>
 
-  <div class={["min-h-0 w-full max-w-md flex-1", "overflow-y-auto", "pt-4"]}>
+  <div class={["min-h-0 w-full max-w-md flex-1", "overflow-x-hidden overflow-y-auto", "pt-4"]}>
     <div class="grid gap-3">
       {#each games as game (game.name)}
         <a
           href={game.url}
           class={[
-            "group relative overflow-hidden",
+            "group relative",
             "p-0.5",
             "rounded-xl",
             "transition-all hover:scale-[1.02] active:scale-[0.98]",

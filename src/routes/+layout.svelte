@@ -19,8 +19,8 @@
   })
 </script>
 
-<div class={["flex flex-col", "h-dvh", "overflow-hidden", "bg-gray-900 text-white"]}>
-  <main class={["relative overflow-hidden", "flex flex-col", "min-h-0 flex-1", "bg-[#111]"]}>
+<div class={["flex flex-col", "h-dvh", "bg-gray-900 text-white"]}>
+  <main class={["relative", "flex flex-col", "min-h-0 flex-1", "bg-[#111]"]}>
     <GameContainer>
       {@render children()}
     </GameContainer>
