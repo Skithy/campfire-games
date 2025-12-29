@@ -87,6 +87,10 @@
   // beta: 0° = flat screen up, 90° = upright, 180° = flat screen down
   const PHONE_DOWN_THRESHOLD = 130 // Phone tilted face down = correct
   const PHONE_UP_THRESHOLD = 50 // Phone tilted face up = skip
+  const NEUTRAL_MIN = 70 // Neutral zone: phone roughly upright
+  const NEUTRAL_MAX = 110
+
+  let tiltReady = $state(true) // Must return to neutral before next tilt
 
   function handleOrientation(e: DeviceOrientationEvent) {
     eventCount++
@@ -101,12 +105,21 @@
 
     if (isPaused || isExiting) return
 
+    // Check if returned to neutral zone
+    if (!tiltReady && e.beta >= NEUTRAL_MIN && e.beta <= NEUTRAL_MAX) {
+      tiltReady = true
+    }
+
+    if (!tiltReady) return
+
     // Phone tilted face down = correct
     if (e.beta >= PHONE_DOWN_THRESHOLD) {
+      tiltReady = false
       triggerAction("correct")
     }
     // Phone tilted face up = skip
     else if (e.beta <= PHONE_UP_THRESHOLD) {
+      tiltReady = false
       triggerAction("skip")
     }
   }
@@ -339,15 +352,25 @@
   >
     Beta: {currentBeta?.toFixed(1) ?? "—"}°
   </div>
-  <div class="border-t border-white/20 pt-1 text-white/60">
+  <div class={["border-t border-white/20 pt-1", tiltReady ? "text-green-400" : "text-white/40"]}>
+    Ready: {tiltReady ? "Yes" : "No (return to neutral)"}
+  </div>
+  <div class="text-white/60">
     <div>↓ Correct: ≥{PHONE_DOWN_THRESHOLD}°</div>
     <div>↑ Skip: ≤{PHONE_UP_THRESHOLD}°</div>
+    <div>⊙ Neutral: {NEUTRAL_MIN}°–{NEUTRAL_MAX}°</div>
   </div>
   <!-- Visual tilt indicator -->
   <div class="pt-1">
     <div class="relative h-4 overflow-hidden rounded bg-white/20">
       <!-- Skip zone (low beta = phone face up) -->
       <div class="absolute left-0 h-full bg-orange-500/30" style:width="28%"></div>
+      <!-- Neutral zone -->
+      <div
+        class="absolute h-full bg-blue-500/30"
+        style:left={`${(NEUTRAL_MIN / 180) * 100}%`}
+        style:width={`${((NEUTRAL_MAX - NEUTRAL_MIN) / 180) * 100}%`}
+      ></div>
       <!-- Correct zone (high beta = phone face down) -->
       <div class="absolute right-0 h-full bg-green-500/30" style:width="28%"></div>
       <!-- Current position indicator -->

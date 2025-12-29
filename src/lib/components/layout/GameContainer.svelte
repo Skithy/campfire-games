@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { Snippet } from "svelte"
+  import { onMount, type Snippet } from "svelte"
 
   import { browser } from "$app/environment"
   import type { Color } from "$lib/utils/colors"
@@ -8,6 +8,8 @@
   import Navbar from "./Navbar.svelte"
   import PageBackground from "./PageBackground.svelte"
   import { setSettingsContext } from "./settingsContext.svelte"
+
+  const MOBILE_BREAKPOINT = 640
 
   const MUSIC_STORAGE_KEY = "settings:musicEnabled"
   const VIBRATION_STORAGE_KEY = "settings:vibrationEnabled"
@@ -33,6 +35,11 @@
   let backgroundTop = $state<Color | undefined>(undefined)
   let backgroundBottom = $state<Color | undefined>(undefined)
   let orientation = $state<Orientation>("portrait")
+
+  let windowWidth = $state(browser ? window.innerWidth : 1024)
+  let windowHeight = $state(browser ? window.innerHeight : 768)
+  let isMobilePortrait = $derived(windowWidth < MOBILE_BREAKPOINT)
+  let needsRotation = $derived(orientation === "landscape" && isMobilePortrait)
 
   let isMusicEnabled = $state(loadSetting(MUSIC_STORAGE_KEY, true))
   let isVibrationEnabled = $state(loadSetting(VIBRATION_STORAGE_KEY, true))
@@ -80,19 +87,35 @@
     toggleMusic,
     toggleVibration,
   })
+
+  function handleResize() {
+    windowWidth = window.innerWidth
+    windowHeight = window.innerHeight
+  }
+
+  onMount(() => {
+    window.addEventListener("resize", handleResize)
+    return () => window.removeEventListener("resize", handleResize)
+  })
 </script>
 
 <div
   class={[
     "relative overflow-hidden",
     "flex flex-col items-center",
-    orientation === "landscape"
-      ? "h-full w-full max-h-112 max-w-200"
-      : "h-full w-full max-w-md md:max-h-175",
-    "mx-auto my-auto px-4 py-6",
-    "md:rounded-2xl md:border md:border-white/10",
-    "md:shadow-2xl",
+    needsRotation
+      ? "px-4 py-6"
+      : orientation === "landscape"
+        ? "h-full w-full max-h-112 max-w-200 mx-auto my-auto px-4 py-6 md:rounded-2xl md:border md:border-white/10 md:shadow-2xl"
+        : "h-full w-full max-w-md md:max-h-175 mx-auto my-auto px-4 py-6 md:rounded-2xl md:border md:border-white/10 md:shadow-2xl",
   ]}
+  style:width={needsRotation ? `${windowHeight}px` : undefined}
+  style:height={needsRotation ? `${windowWidth}px` : undefined}
+  style:transform={needsRotation ? "rotate(90deg)" : undefined}
+  style:transform-origin={needsRotation ? "center center" : undefined}
+  style:position={needsRotation ? "absolute" : undefined}
+  style:top={needsRotation ? `${(windowHeight - windowWidth) / 2}px` : undefined}
+  style:left={needsRotation ? `${(windowWidth - windowHeight) / 2}px` : undefined}
 >
   {#if backgroundTop && backgroundBottom}
     <PageBackground top={backgroundTop} bottom={backgroundBottom} />
