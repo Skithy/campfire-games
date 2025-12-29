@@ -11,13 +11,13 @@
   } = $props()
 </script>
 
-<div class={["flex flex-col", "w-60", "overflow-hidden", "bg-white", "rounded-2xl", "shadow-2xl"]}>
+<div class={["flex flex-col", "w-72", "overflow-hidden", "bg-white", "rounded-2xl", "shadow-2xl"]}>
   <!-- Main word header -->
   <div
     class="flex items-center justify-center px-6 py-5"
     style:background-color={teamColor.toRgb()}
   >
-    <h2 class="text-3xl font-black tracking-wide text-white uppercase">{card.word}</h2>
+    <h2 class="text-2xl font-black tracking-wide text-white uppercase">{card.word}</h2>
   </div>
 
   <!-- Forbidden words -->

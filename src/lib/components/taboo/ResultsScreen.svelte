@@ -3,7 +3,7 @@
   import Modal from "$lib/components/layout/Modal.svelte"
   import PageActions from "$lib/components/layout/PageActions.svelte"
   import TabooCardComponent from "$lib/components/taboo/TabooCard.svelte"
-  import { Button, IconButton } from "$lib/components/ui"
+  import { Button } from "$lib/components/ui"
   import type { TabooCard } from "$lib/data/tabooCards"
   import type { Color } from "$lib/utils/colors"
 
@@ -156,7 +156,12 @@
 
   <PageActions
     left={{ label: "End Game", onclick: onEndGame, icon: "fa-solid fa-house" }}
-    right={{ label: "Next Team", onclick: onNextRound, icon: "fa-solid fa-arrow-right", color: teamColor.toRgb() }}
+    right={{
+      label: "Next Team",
+      onclick: onNextRound,
+      icon: "fa-solid fa-arrow-right",
+      color: teamColor.toRgb(),
+    }}
   />
 </div>
 
@@ -166,25 +171,23 @@
     {#if selectedCard}
       <TabooCardComponent card={selectedCard} {teamColor} />
 
-      <!-- Action buttons -->
-      <div class="flex gap-3">
+      <!-- Action button -->
+      <div class="flex w-full justify-center">
         {#if selectedCardSource === "correct"}
           <Button variant="standard" size="sm" icon="fa-solid fa-forward" onclick={moveToSkipped}>
             Move to Skipped
           </Button>
         {:else}
-          <Button variant="standard" size="sm" icon="fa-solid fa-check" color={teamColor.toRgb()} onclick={moveToCorrect}>
+          <Button
+            variant="standard"
+            size="sm"
+            icon="fa-solid fa-check"
+            color={teamColor.toRgb()}
+            onclick={moveToCorrect}
+          >
             Move to Correct
           </Button>
         {/if}
-
-        <IconButton
-          icon="fa-solid fa-xmark"
-          shape="square"
-          size="lg"
-          label="Close"
-          onclick={closeModal}
-        />
       </div>
     {/if}
   </div>
