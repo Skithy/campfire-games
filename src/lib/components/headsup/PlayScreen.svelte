@@ -85,13 +85,11 @@
   // Landscape tilt thresholds (using gamma for landscape orientation)
   // gamma: ±90° = phone vertical (perpendicular to ground)
   // gamma: 0° = phone horizontal (screen up OR screen down)
-  // We track the tilt path to determine which action to trigger
-  const TILT_THRESHOLD = 60 // Degrees from vertical to trigger action
-  const NEUTRAL_ZONE = 75 // Must return close to vertical before next tilt
+  // Correct: 0° to 45° (tilting down)
+  // Skip: -45° to 0° (tilting up)
+  // Reset: > 80° or < -80°
 
   let tiltReady = $state(true) // Must return to neutral before next tilt
-  let lastGamma = $state<number | null>(null)
-  let tiltDirection = $state<"positive" | "negative" | null>(null)
 
   function handleOrientation(e: DeviceOrientationEvent) {
     eventCount++
@@ -109,36 +107,21 @@
     const gamma = e.gamma
 
     // Check if returned to near-vertical (neutral) zone
-    if (!tiltReady && Math.abs(gamma) >= NEUTRAL_ZONE) {
+    if (!tiltReady && (gamma > 80 || gamma < -80)) {
       tiltReady = true
-      tiltDirection = null
     }
 
     if (!tiltReady) return
 
-    // Track which direction user is tilting from vertical
-    if (tiltDirection === null && lastGamma !== null) {
-      const diff = gamma - lastGamma
-      if (Math.abs(diff) > 5) {
-        // User is moving away from vertical
-        tiltDirection = gamma > 0 ? "positive" : "negative"
-      }
-    }
-
-    lastGamma = gamma
-
-    // Trigger action when tilted far enough from vertical
-    if (Math.abs(gamma) <= TILT_THRESHOLD && tiltDirection !== null) {
+    // Check for correct action (0° to 45°)
+    if (gamma >= 0 && gamma <= 45) {
       tiltReady = false
-      // Positive gamma path (90° → 0°) = correct (face down)
-      // Negative gamma path (-90° → 0°) = skip (face up)
-      if (tiltDirection === "positive") {
-        triggerAction("correct")
-      } else {
-        triggerAction("skip")
-      }
-      tiltDirection = null
-      lastGamma = null
+      triggerAction("correct")
+    }
+    // Check for skip action (-45° to 0°)
+    else if (gamma >= -45 && gamma < 0) {
+      tiltReady = false
+      triggerAction("skip")
     }
   }
 
@@ -376,8 +359,14 @@
   </div>
   <div
     class={[
-      currentBeta !== null && Math.abs(currentBeta) <= TILT_THRESHOLD && tiltDirection === "positive" && "text-green-400",
-      currentBeta !== null && Math.abs(currentBeta) <= TILT_THRESHOLD && tiltDirection === "negative" && "text-orange-400",
+      currentBeta !== null &&
+        Math.abs(currentBeta) <= TILT_THRESHOLD &&
+        tiltDirection === "positive" &&
+        "text-green-400",
+      currentBeta !== null &&
+        Math.abs(currentBeta) <= TILT_THRESHOLD &&
+        tiltDirection === "negative" &&
+        "text-orange-400",
     ]}
   >
     Gamma: {currentBeta?.toFixed(1) ?? "—"}°
@@ -395,9 +384,15 @@
   <div class="pt-1">
     <div class="relative h-4 overflow-hidden rounded bg-white/20">
       <!-- Skip zone (negative gamma path) -->
-      <div class="absolute left-0 h-full bg-orange-500/30" style:width={`${(TILT_THRESHOLD / 90) * 50}%`}></div>
+      <div
+        class="absolute left-0 h-full bg-orange-500/30"
+        style:width={`${(TILT_THRESHOLD / 90) * 50}%`}
+      ></div>
       <!-- Correct zone (positive gamma path) -->
-      <div class="absolute right-0 h-full bg-green-500/30" style:width={`${(TILT_THRESHOLD / 90) * 50}%`}></div>
+      <div
+        class="absolute right-0 h-full bg-green-500/30"
+        style:width={`${(TILT_THRESHOLD / 90) * 50}%`}
+      ></div>
       <!-- Neutral zones (near vertical) -->
       <div
         class="absolute left-0 h-full bg-blue-500/30"
