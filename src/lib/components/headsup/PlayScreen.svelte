@@ -188,95 +188,98 @@
   })
 </script>
 
-<div class="flex h-full w-full flex-col gap-6">
-  <!-- Skip zone (top) -->
-  <button
-    class={[
-      "flex flex-1 flex-col items-center justify-center gap-2",
-      "cursor-pointer",
-      "bg-white/5",
-      "rounded-2xl",
-      "transition-all active:bg-white/15",
-      isExiting && exitDirection === "skip" ? "bg-white/20" : "",
-    ]}
-    onclick={handleSkipClick}
-  >
-    <i class="fa-solid fa-forward text-4xl text-white/40"></i>
-    <span class="text-lg font-medium text-white/40">Skip</span>
-  </button>
+<div class="flex h-full w-full flex-row gap-6">
+  <!-- Left side: Skip, Word, Correct -->
+  <div class="flex flex-1 flex-col gap-6">
+    <!-- Skip zone (top) -->
+    <button
+      class={[
+        "flex flex-1 flex-col items-center justify-center gap-2",
+        "cursor-pointer",
+        "bg-white/5",
+        "rounded-2xl",
+        "transition-all active:bg-white/15",
+        isExiting && exitDirection === "skip" ? "bg-white/20" : "",
+      ]}
+      onclick={handleSkipClick}
+    >
+      <i class="fa-solid fa-forward text-4xl text-white/40"></i>
+      <span class="text-lg font-medium text-white/40">Skip</span>
+    </button>
 
-  <!-- Center area with word -->
-  <div class="relative flex items-center justify-center px-4 py-4">
-    <!-- Pause button and Timer (right side) -->
-    <div class="absolute top-1/2 right-0 flex -translate-y-1/2 items-center gap-2">
-      <button
-        class={[
-          "flex items-center justify-center",
-          "h-12 w-12",
-          "cursor-pointer",
-          "text-xl text-white/60",
-          "bg-white/10",
-          "rounded-full",
-          "transition-colors hover:bg-white/20",
-        ]}
-        onclick={onTogglePause}
-        aria-label="Pause game"
-      >
-        <i class="fa-solid fa-pause"></i>
-      </button>
-
-      <div
-        class={[
-          "flex items-center justify-center",
-          "h-12 w-12",
-          "text-xl font-black text-white tabular-nums",
-          timerWarning ? "bg-red-500" : "bg-white/20",
-          "rounded-full",
-          "transition-colors",
-          timerWarning && !isPaused ? "animate-pulse" : "",
-        ]}
-      >
-        {timeRemaining}
+    <!-- Center area with word -->
+    <div class="relative flex items-center justify-center px-4 py-4">
+      <!-- Word display -->
+      <div class="relative h-full w-full px-8">
+        {#key word}
+          <div
+            class="absolute inset-0 flex items-center justify-center"
+            in:fly={{ x: -50, duration: 200, opacity: 0 }}
+            out:fly={{
+              y: exitDirection === "correct" ? 50 : exitDirection === "skip" ? -50 : 0,
+              duration: 200,
+              opacity: 0,
+            }}
+          >
+            <h1
+              class="text-center text-5xl font-black tracking-tight text-white uppercase drop-shadow-lg"
+              style:text-shadow="0 4px 20px rgba(0,0,0,0.3)"
+            >
+              {word}
+            </h1>
+          </div>
+        {/key}
       </div>
     </div>
 
-    <!-- Word display -->
-    <div class="relative h-full w-full px-8">
-      {#key word}
-        <div
-          class="absolute inset-0 flex items-center justify-center"
-          in:fly={{ x: -50, duration: 200, opacity: 0 }}
-          out:fly={{
-            y: exitDirection === "correct" ? 50 : exitDirection === "skip" ? -50 : 0,
-            duration: 200,
-            opacity: 0,
-          }}
-        >
-          <h1
-            class="text-center text-5xl font-black tracking-tight text-white uppercase drop-shadow-lg"
-            style:text-shadow="0 4px 20px rgba(0,0,0,0.3)"
-          >
-            {word}
-          </h1>
-        </div>
-      {/key}
-    </div>
+    <!-- Correct zone (bottom) -->
+    <button
+      class={[
+        "flex flex-1 flex-col items-center justify-center gap-2",
+        "cursor-pointer",
+        "rounded-2xl",
+        "transition-all",
+      ]}
+      style:background-color={GREEN.toRgba(isExiting && exitDirection === "correct" ? 0.35 : 0.15)}
+      onclick={handleCorrectClick}
+    >
+      <i class="fa-solid fa-check text-4xl" style:color={GREEN.toRgba(0.6)}></i>
+      <span class="text-lg font-medium" style:color={GREEN.toRgba(0.6)}>Correct</span>
+    </button>
   </div>
 
-  <!-- Correct zone (bottom) -->
-  <button
-    class={[
-      "flex flex-1 flex-col items-center justify-center gap-2",
-      "cursor-pointer",
-      "rounded-2xl",
-      "transition-all",
-    ]}
-    style:background-color={GREEN.toRgba(isExiting && exitDirection === "correct" ? 0.35 : 0.15)}
-    onclick={handleCorrectClick}
-  >
-    <i class="fa-solid fa-check text-4xl" style:color={GREEN.toRgba(0.6)}></i>
-    <span class="text-lg font-medium" style:color={GREEN.toRgba(0.6)}>Correct</span>
-  </button>
+  <!-- Right side: Pause button and Timer -->
+  <div class="flex w-24 flex-col items-center justify-center gap-4">
+    <button
+      class={[
+        "flex items-center justify-center",
+        "h-16 w-16",
+        "cursor-pointer",
+        "text-2xl text-white/60",
+        "bg-white/10",
+        "rounded-full",
+        "transition-colors hover:bg-white/20 active:scale-95",
+      ]}
+      onclick={onTogglePause}
+      aria-label="Pause game"
+    >
+      <i class="fa-solid fa-pause"></i>
+    </button>
+
+    <div
+      class={[
+        "flex items-center justify-center",
+        "h-16 w-16",
+        "text-2xl font-black text-white tabular-nums",
+        timerWarning ? "bg-red-500" : "bg-white/20",
+        "rounded-full",
+        "transition-colors",
+        timerWarning && !isPaused ? "animate-pulse" : "",
+      ]}
+    >
+      {timeRemaining}
+    </div>
+  </div>
 </div>
 
 <GameMenu
