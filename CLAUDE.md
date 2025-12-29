@@ -38,7 +38,7 @@ When writing or modifying code, ALWAYS prioritize reusing existing code:
 
 Use an array of strings for the `class` attribute, with each string representing a category group. This improves readability and maintainability.
 
-**Important:** If there is only one category, use a plain string instead of an array.
+**Important:** If there is only one category, use a plain string instead of an array. If there are multiple categories, ALWAYS use an array - never a single string with all classes combined.
 
 **Category order:**
 1. **Layout** - display, position, overflow, z-index
