@@ -3,7 +3,9 @@
   import { fly } from "svelte/transition"
 
   import { getGameContainerContext } from "$lib/components/layout/gameContainerContext.svelte"
+  import Modal from "$lib/components/layout/Modal.svelte"
   import { getSettingsContext } from "$lib/components/layout/settingsContext.svelte"
+  import { Button } from "$lib/components/ui"
   import { GREEN, PURPLE } from "$lib/constants/colors"
   import countdownSound from "$lib/sounds/game-countdown-3.mp3"
 
@@ -61,15 +63,27 @@
   let baseBeta = $state<number | null>(null)
   let calibrationSamples = $state<number[]>([])
   let currentBeta = $state<number | null>(null)
-  let tiltFromBase = $derived(baseBeta !== null && currentBeta !== null ? currentBeta - baseBeta : null)
+  let tiltFromBase = $derived(
+    baseBeta !== null && currentBeta !== null ? currentBeta - baseBeta : null,
+  )
+  let orientationSupported = $state<boolean | null>(null)
+  let eventCount = $state(0)
+  let permissionStatus = $state<string>("checking...")
+  let showSensorHelp = $state(false)
 
   // Thresholds for tilt detection (degrees from calibrated position)
   const TILT_DOWN_THRESHOLD = 45 // Tilt phone down (nod forward) for correct
   const TILT_UP_THRESHOLD = -30 // Tilt phone up (lean back) for skip
 
   function handleOrientation(e: DeviceOrientationEvent) {
-    if (e.beta === null) return
+    eventCount++
 
+    if (e.beta === null) {
+      orientationSupported = false
+      return
+    }
+
+    orientationSupported = true
     currentBeta = e.beta
 
     if (isPaused || isExiting) return
@@ -143,10 +157,30 @@
     }
   }
 
-  onMount(() => {
+  onMount(async () => {
     window.addEventListener("keydown", handleKeydown)
     // Permission is requested in GetReadyScreen before navigating here
     window.addEventListener("deviceorientation", handleOrientation)
+
+    // Check permission status for debugging
+    if ("permissions" in navigator) {
+      try {
+        // @ts-expect-error - gyroscope permission name
+        const gyro = await navigator.permissions.query({ name: "gyroscope" })
+        // @ts-expect-error - accelerometer permission name
+        const accel = await navigator.permissions.query({ name: "accelerometer" })
+        permissionStatus = `gyro:${gyro.state} accel:${accel.state}`
+      } catch {
+        permissionStatus = "query not supported"
+      }
+    } else {
+      permissionStatus = "no permissions API"
+    }
+
+    // Also check if DeviceOrientationEvent exists
+    if (typeof DeviceOrientationEvent === "undefined") {
+      permissionStatus += " | no DOE"
+    }
 
     return () => {
       window.removeEventListener("keydown", handleKeydown)
@@ -254,18 +288,71 @@
   onEndGame={onResetGame}
 />
 
+<!-- Sensor permission denied warning -->
+{#if permissionStatus.includes("denied")}
+  <button
+    class={[
+      "fixed top-4 left-1/2 -translate-x-1/2",
+      "flex items-center gap-2",
+      "px-3 py-2",
+      "text-xs font-medium text-white",
+      "bg-yellow-500/80",
+      "rounded-full",
+      "cursor-pointer",
+    ]}
+    onclick={() => (showSensorHelp = true)}
+  >
+    <i class="fa-solid fa-triangle-exclamation"></i>
+    Tilt controls unavailable
+  </button>
+{/if}
+
+<Modal bind:isOpen={showSensorHelp} title="Enable Tilt Controls">
+  <div class="space-y-4 p-6 text-sm text-white/80">
+    <p>
+      Your browser is blocking access to motion sensors. Tilt controls won't work, but you can still
+      use <strong class="text-white">tap controls</strong>.
+    </p>
+
+    <div class="space-y-3">
+      <p class="font-medium text-white">To enable tilt controls:</p>
+      <ol class="ml-4 list-decimal space-y-2">
+        <li>Check your browser's site settings or privacy controls</li>
+        <li>Allow "Motion sensors" or "Device orientation" access</li>
+        <li>Refresh the page after changing settings</li>
+      </ol>
+    </div>
+
+    <div class="pt-2 text-xs text-white/50">
+      Common locations: Shield icon (Brave), Lock icon (Chrome), or Settings → Site permissions
+    </div>
+
+    <div class="flex justify-end pt-2">
+      <Button variant="standard" onclick={() => (showSensorHelp = false)}>Got it</Button>
+    </div>
+  </div>
+</Modal>
+
 <!-- Debug overlay for tilt controls -->
 <div
   class={[
     "fixed bottom-4 left-4",
     "p-3",
-    "text-xs font-mono text-white",
+    "font-mono text-xs text-white",
     "bg-black/70",
     "rounded-lg",
     "space-y-1",
   ]}
 >
   <div class="font-bold text-yellow-400">Tilt Debug</div>
+  <div class="text-[10px] text-white/60">{permissionStatus}</div>
+  <div>
+    Events: {eventCount} | Supported: {orientationSupported === null
+      ? "?"
+      : orientationSupported
+        ? "Yes"
+        : "No (beta null)"}
+  </div>
   <div>
     Status: {baseBeta === null ? `Calibrating (${calibrationSamples.length}/5)` : "Ready"}
   </div>
@@ -279,23 +366,17 @@
   >
     Tilt: {tiltFromBase?.toFixed(1) ?? "—"}
   </div>
-  <div class="pt-1 border-t border-white/20 text-white/60">
+  <div class="border-t border-white/20 pt-1 text-white/60">
     <div>↓ Correct: ≥{TILT_DOWN_THRESHOLD}°</div>
     <div>↑ Skip: ≤{TILT_UP_THRESHOLD}°</div>
   </div>
   <!-- Visual tilt indicator -->
   <div class="pt-1">
-    <div class="relative h-4 bg-white/20 rounded overflow-hidden">
+    <div class="relative h-4 overflow-hidden rounded bg-white/20">
       <!-- Skip zone -->
-      <div
-        class="absolute left-0 h-full bg-orange-500/30"
-        style:width="30%"
-      ></div>
+      <div class="absolute left-0 h-full bg-orange-500/30" style:width="30%"></div>
       <!-- Correct zone -->
-      <div
-        class="absolute right-0 h-full bg-green-500/30"
-        style:width="30%"
-      ></div>
+      <div class="absolute right-0 h-full bg-green-500/30" style:width="30%"></div>
       <!-- Current position indicator -->
       {#if tiltFromBase !== null}
         <div

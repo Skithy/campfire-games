@@ -15,7 +15,9 @@
   })
 
   async function handleStart() {
-    // Request device orientation permission on iOS (must be from user gesture)
+    // Request device orientation permission
+    // iOS requires DeviceOrientationEvent.requestPermission()
+    // Android/Chrome may require Permissions API for gyroscope
     if (typeof DeviceOrientationEvent !== "undefined") {
       // @ts-expect-error - requestPermission is iOS-specific
       if (typeof DeviceOrientationEvent.requestPermission === "function") {
@@ -27,6 +29,18 @@
         }
       }
     }
+
+    // Try Permissions API for gyroscope (Android/Chrome)
+    if ("permissions" in navigator) {
+      try {
+        // @ts-expect-error - gyroscope permission name
+        const result = await navigator.permissions.query({ name: "gyroscope" })
+        console.log("Gyroscope permission:", result.state)
+      } catch {
+        // Permission query not supported, continue anyway
+      }
+    }
+
     onStart()
   }
 </script>
