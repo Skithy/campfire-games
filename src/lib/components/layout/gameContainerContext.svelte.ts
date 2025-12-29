@@ -2,7 +2,10 @@ import { createContext } from "svelte"
 
 import type { Color } from "$lib/utils/colors"
 
-export type Orientation = "portrait" | "landscape"
+export enum Orientation {
+  Portrait = "portrait",
+  Landscape = "landscape",
+}
 
 export interface GameContainerContext {
   backgroundTop: Color | undefined

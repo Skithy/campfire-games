@@ -1,5 +1,8 @@
 <script lang="ts">
-  import { getGameContainerContext } from "$lib/components/layout/gameContainerContext.svelte"
+  import {
+    getGameContainerContext,
+    Orientation,
+  } from "$lib/components/layout/gameContainerContext.svelte"
   import Modal from "$lib/components/layout/Modal.svelte"
   import { Button } from "$lib/components/ui"
   import { GREEN, PURPLE } from "$lib/constants/colors"
@@ -14,6 +17,7 @@
   const ctx = getGameContainerContext()
   $effect(() => {
     ctx.setBackground(GREEN, PURPLE)
+    ctx.setOrientation(Orientation.Portrait)
   })
 
   function toggleInstructions() {
@@ -46,7 +50,12 @@
     <Button variant="primary" size="xl" icon="fa-solid fa-play" {gradient} onclick={onStart}>
       Start Game
     </Button>
-    <Button variant="standard" size="lg" icon="fa-solid fa-circle-question" onclick={toggleInstructions}>
+    <Button
+      variant="standard"
+      size="lg"
+      icon="fa-solid fa-circle-question"
+      onclick={toggleInstructions}
+    >
       How to Play
     </Button>
     <Button variant="outline" size="lg" href="/">Back to Games</Button>
@@ -63,12 +72,11 @@
               "text-sm font-bold",
             ]}
             style:background-color={GREEN.toRgba(0.2)}
-            style:color={GREEN.toHsl()}
-            >1</span
+            style:color={GREEN.toHsl()}>1</span
           >
           <p>
-            <strong style:color={GREEN.toHsl()}>Hold Up:</strong> Place the phone on your forehead
-            with the screen facing outward.
+            <strong style:color={GREEN.toHsl()}>Hold Up:</strong> Place the phone on your forehead with
+            the screen facing outward.
           </p>
         </div>
         <div class="flex gap-3">
@@ -79,12 +87,11 @@
               "text-sm font-bold",
             ]}
             style:background-color={GREEN.toRgba(0.2)}
-            style:color={GREEN.toHsl()}
-            >2</span
+            style:color={GREEN.toHsl()}>2</span
           >
           <p>
-            <strong style:color={GREEN.toHsl()}>Guess:</strong> Others give clues while you try to
-            guess the word on your forehead.
+            <strong style:color={GREEN.toHsl()}>Guess:</strong> Others give clues while you try to guess
+            the word on your forehead.
           </p>
         </div>
         <div class="flex gap-3">
@@ -95,12 +102,11 @@
               "text-sm font-bold",
             ]}
             style:background-color={PURPLE.toRgba(0.2)}
-            style:color={PURPLE.toHsl()}
-            >3</span
+            style:color={PURPLE.toHsl()}>3</span
           >
           <p>
-            <strong style:color={PURPLE.toHsl()}>Correct:</strong> Tilt the phone forward (or tap
-            Correct) when you guess right.
+            <strong style:color={PURPLE.toHsl()}>Correct:</strong> Tilt the phone forward (or tap Correct)
+            when you guess right.
           </p>
         </div>
         <div class="flex gap-3">
@@ -109,12 +115,11 @@
               "flex h-7 w-7 shrink-0 items-center justify-center",
               "rounded-full bg-white/10",
               "text-sm font-bold text-white",
-            ]}
-            >4</span
+            ]}>4</span
           >
           <p>
-            <strong class="text-white">Skip:</strong> Tilt the phone backward (or tap Skip) to pass
-            on a word.
+            <strong class="text-white">Skip:</strong> Tilt the phone backward (or tap Skip) to pass on
+            a word.
           </p>
         </div>
       </div>

@@ -88,7 +88,7 @@
       </a>
       <span class="text-base text-white/30 sm:text-lg">/</span>
       <a
-        href="/headsup"
+        href="/headsup?reset=true"
         class="text-base font-bold tracking-tight transition-opacity hover:opacity-80 sm:text-lg"
         style:background={Color.toGradient(GREEN, PURPLE)}
         style:-webkit-background-clip="text"

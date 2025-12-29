@@ -1,7 +1,11 @@
 <script lang="ts">
-  import { getGameContainerContext } from "$lib/components/layout/gameContainerContext.svelte"
-  import PageActions from "$lib/components/layout/PageActions.svelte"
+  import {
+    getGameContainerContext,
+    Orientation,
+  } from "$lib/components/layout/gameContainerContext.svelte"
+  import LandscapeNavbar from "$lib/components/layout/LandscapeNavbar.svelte"
   import { GREEN, PURPLE } from "$lib/constants/colors"
+  import { requestGyroscopePermission } from "$lib/utils/sensors"
 
   let {
     onStart,
@@ -12,78 +16,62 @@
   const ctx = getGameContainerContext()
   $effect(() => {
     ctx.setBackground(GREEN, PURPLE)
+    ctx.setOrientation(Orientation.Landscape)
   })
 
   async function handleStart() {
-    // Request device orientation permission
-    // iOS requires DeviceOrientationEvent.requestPermission()
-    // Android/Chrome may require Permissions API for gyroscope
-    if (typeof DeviceOrientationEvent !== "undefined") {
-      // @ts-expect-error - requestPermission is iOS-specific
-      if (typeof DeviceOrientationEvent.requestPermission === "function") {
-        try {
-          // @ts-expect-error - requestPermission is iOS-specific
-          await DeviceOrientationEvent.requestPermission()
-        } catch {
-          // Permission denied or error, continue anyway (tap controls still work)
-        }
-      }
-    }
-
-    // Try Permissions API for gyroscope (Android/Chrome)
-    if ("permissions" in navigator) {
-      try {
-        // @ts-expect-error - gyroscope permission name
-        const result = await navigator.permissions.query({ name: "gyroscope" })
-        console.log("Gyroscope permission:", result.state)
-      } catch {
-        // Permission query not supported, continue anyway
-      }
-    }
-
+    await requestGyroscopePermission()
     onStart()
   }
 </script>
 
-<div class="flex flex-1 flex-col items-center justify-between gap-6">
-  <div class="flex flex-1 flex-col items-center justify-center gap-6">
-    <div class="space-y-2 text-center">
-      <p class="text-sm font-medium tracking-widest text-white/60 uppercase">Get Ready</p>
-      <h1 class="text-3xl font-black" style:color={GREEN.toRgb()}>Hold Phone to Forehead</h1>
-      <p class="text-sm text-white/70">Screen faces outward so others can see</p>
+<div class="relative flex h-full w-full flex-row items-stretch gap-4">
+  <LandscapeNavbar />
+
+  <!-- Center: Instructions -->
+  <div class="flex flex-1 flex-col items-center justify-center gap-4">
+    <div class="space-y-1 text-center">
+      <p class="text-xs font-medium tracking-widest text-white/60 uppercase">Get Ready</p>
+      <h1 class="text-2xl font-black" style:color={GREEN.toRgb()}>Hold Phone to Forehead</h1>
+      <p class="text-xs text-white/70">Screen faces outward so others can see</p>
     </div>
 
-    <div
-      class={[
-        "max-w-md",
-        "p-6",
-        "text-center",
-        "bg-white/5",
-        "rounded-xl",
-        "backdrop-blur-sm",
-        "space-y-3",
-      ]}
-    >
+    <div class={["px-6 py-4", "text-center", "bg-white/5", "rounded-xl", "backdrop-blur-sm"]}>
       <div class="flex justify-center gap-6">
-        <div class="flex flex-col items-center gap-2">
+        <div class="flex flex-col items-center gap-1">
           <div
-            class="flex h-14 w-14 items-center justify-center rounded-full"
+            class="flex h-12 w-12 items-center justify-center rounded-full"
             style:background-color={GREEN.toRgba(0.2)}
           >
-            <i class="fa-solid fa-arrow-down text-xl" style:color={GREEN.toRgb()}></i>
+            <i class="fa-solid fa-arrow-down text-lg" style:color={GREEN.toRgb()}></i>
           </div>
           <span class="text-xs text-white/70">Correct</span>
         </div>
-        <div class="flex flex-col items-center gap-2">
-          <div class="flex h-14 w-14 items-center justify-center rounded-full bg-white/10">
-            <i class="fa-solid fa-arrow-up text-xl text-white/60"></i>
+        <div class="flex flex-col items-center gap-1">
+          <div class="flex h-12 w-12 items-center justify-center rounded-full bg-white/10">
+            <i class="fa-solid fa-arrow-up text-lg text-white/60"></i>
           </div>
           <span class="text-xs text-white/70">Skip</span>
         </div>
       </div>
-      <p class="pt-2 text-xs text-white/50">On desktop: Arrow keys ↑↓</p>
     </div>
   </div>
 
-  <PageActions right={{ label: "Start Round", onclick: handleStart, color: GREEN.toRgb() }} />
+  <!-- Right: Start button -->
+  <div class="flex flex-col items-center justify-center">
+    <button
+      class={[
+        "flex items-center justify-center",
+        "h-16 w-16",
+        "text-2xl text-white",
+        "rounded-full",
+        "cursor-pointer",
+        "transition-transform hover:scale-105 active:scale-95",
+      ]}
+      style:background-color={GREEN.toRgb()}
+      onclick={handleStart}
+    >
+      <i class="fa-solid fa-play"></i>
+    </button>
+  </div>
 </div>

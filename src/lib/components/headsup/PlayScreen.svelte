@@ -2,7 +2,10 @@
   import { onMount } from "svelte"
   import { fly } from "svelte/transition"
 
-  import { getGameContainerContext } from "$lib/components/layout/gameContainerContext.svelte"
+  import {
+    getGameContainerContext,
+    Orientation,
+  } from "$lib/components/layout/gameContainerContext.svelte"
   import Modal from "$lib/components/layout/Modal.svelte"
   import { getSettingsContext } from "$lib/components/layout/settingsContext.svelte"
   import { Button } from "$lib/components/ui"
@@ -39,11 +42,7 @@
 
   $effect(() => {
     ctx.setBackground(GREEN, PURPLE)
-    ctx.setOrientation("landscape")
-
-    return () => {
-      ctx.setOrientation("portrait")
-    }
+    ctx.setOrientation(Orientation.Landscape)
   })
 
   // Play countdown sound at 3 seconds
@@ -83,42 +82,44 @@
     }
   })
 
-  // Absolute beta thresholds (phone orientation)
-  // beta: 0° = flat screen up, 90° = upright, 180° = flat screen down
-  const PHONE_DOWN_THRESHOLD = 130 // Phone tilted face down = correct
-  const PHONE_UP_THRESHOLD = 50 // Phone tilted face up = skip
-  const NEUTRAL_MIN = 70 // Neutral zone: phone roughly upright
-  const NEUTRAL_MAX = 110
+  // Landscape tilt thresholds (using gamma for landscape orientation)
+  // gamma: -90° to 90°, where 0° = phone upright in landscape
+  // Positive gamma = phone tilted right (face down when held to forehead)
+  // Negative gamma = phone tilted left (face up when held to forehead)
+  const PHONE_DOWN_THRESHOLD = 45 // Phone tilted face down = correct
+  const PHONE_UP_THRESHOLD = -45 // Phone tilted face up = skip
+  const NEUTRAL_MIN = -20 // Neutral zone
+  const NEUTRAL_MAX = 20
 
   let tiltReady = $state(true) // Must return to neutral before next tilt
 
   function handleOrientation(e: DeviceOrientationEvent) {
     eventCount++
 
-    if (e.beta === null) {
+    if (e.gamma === null) {
       orientationSupported = false
       return
     }
 
     orientationSupported = true
-    currentBeta = e.beta
+    currentBeta = e.gamma // Reusing currentBeta state for gamma value
 
     if (isPaused || isExiting) return
 
     // Check if returned to neutral zone
-    if (!tiltReady && e.beta >= NEUTRAL_MIN && e.beta <= NEUTRAL_MAX) {
+    if (!tiltReady && e.gamma >= NEUTRAL_MIN && e.gamma <= NEUTRAL_MAX) {
       tiltReady = true
     }
 
     if (!tiltReady) return
 
     // Phone tilted face down = correct
-    if (e.beta >= PHONE_DOWN_THRESHOLD) {
+    if (e.gamma >= PHONE_DOWN_THRESHOLD) {
       tiltReady = false
       triggerAction("correct")
     }
     // Phone tilted face up = skip
-    else if (e.beta <= PHONE_UP_THRESHOLD) {
+    else if (e.gamma <= PHONE_UP_THRESHOLD) {
       tiltReady = false
       triggerAction("skip")
     }
@@ -342,7 +343,7 @@
       ? "?"
       : orientationSupported
         ? "Yes"
-        : "No (beta null)"}
+        : "No (gamma null)"}
   </div>
   <div
     class={[
@@ -350,7 +351,7 @@
       currentBeta !== null && currentBeta <= PHONE_UP_THRESHOLD && "text-orange-400",
     ]}
   >
-    Beta: {currentBeta?.toFixed(1) ?? "—"}°
+    Gamma: {currentBeta?.toFixed(1) ?? "—"}°
   </div>
   <div class={["border-t border-white/20 pt-1", tiltReady ? "text-green-400" : "text-white/40"]}>
     Ready: {tiltReady ? "Yes" : "No (return to neutral)"}
@@ -358,33 +359,33 @@
   <div class="text-white/60">
     <div>↓ Correct: ≥{PHONE_DOWN_THRESHOLD}°</div>
     <div>↑ Skip: ≤{PHONE_UP_THRESHOLD}°</div>
-    <div>⊙ Neutral: {NEUTRAL_MIN}°–{NEUTRAL_MAX}°</div>
+    <div>⊙ Neutral: {NEUTRAL_MIN}° to {NEUTRAL_MAX}°</div>
   </div>
   <!-- Visual tilt indicator -->
   <div class="pt-1">
     <div class="relative h-4 overflow-hidden rounded bg-white/20">
-      <!-- Skip zone (low beta = phone face up) -->
-      <div class="absolute left-0 h-full bg-orange-500/30" style:width="28%"></div>
-      <!-- Neutral zone -->
+      <!-- Skip zone (negative gamma = phone face up) -->
+      <div class="absolute left-0 h-full bg-orange-500/30" style:width="25%"></div>
+      <!-- Neutral zone (center) -->
       <div
         class="absolute h-full bg-blue-500/30"
-        style:left={`${(NEUTRAL_MIN / 180) * 100}%`}
+        style:left={`${((NEUTRAL_MIN + 90) / 180) * 100}%`}
         style:width={`${((NEUTRAL_MAX - NEUTRAL_MIN) / 180) * 100}%`}
       ></div>
-      <!-- Correct zone (high beta = phone face down) -->
-      <div class="absolute right-0 h-full bg-green-500/30" style:width="28%"></div>
+      <!-- Correct zone (positive gamma = phone face down) -->
+      <div class="absolute right-0 h-full bg-green-500/30" style:width="25%"></div>
       <!-- Current position indicator -->
       {#if currentBeta !== null}
         <div
           class="absolute top-0 h-full w-1 bg-white"
-          style:left={`${Math.min(100, Math.max(0, (currentBeta / 180) * 100))}%`}
+          style:left={`${Math.min(100, Math.max(0, ((currentBeta + 90) / 180) * 100))}%`}
         ></div>
       {/if}
     </div>
     <div class="flex justify-between text-[10px] text-white/40">
+      <span>-90°</span>
       <span>0°</span>
       <span>90°</span>
-      <span>180°</span>
     </div>
   </div>
 </div>

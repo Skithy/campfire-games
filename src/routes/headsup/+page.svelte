@@ -3,18 +3,26 @@
   import { SvelteSet } from "svelte/reactivity"
   import { fade } from "svelte/transition"
 
+  import { goto } from "$app/navigation"
+  import { page } from "$app/stores"
   import GetReadyScreen from "$lib/components/headsup/GetReadyScreen.svelte"
   import PlayScreen from "$lib/components/headsup/PlayScreen.svelte"
   import ResultsScreen from "$lib/components/headsup/ResultsScreen.svelte"
   import SplashScreen from "$lib/components/headsup/SplashScreen.svelte"
+  import {
+    getGameContainerContext,
+    Orientation,
+  } from "$lib/components/layout/gameContainerContext.svelte"
   import { getSettingsContext } from "$lib/components/layout/settingsContext.svelte"
   import { tabooCards } from "$lib/data/tabooCards"
 
   const settings = getSettingsContext()
+  const gameContainer = getGameContainerContext()
 
-  // Clean up timer when leaving the page
+  // Clean up timer and reset orientation when leaving the page
   onDestroy(() => {
     stopTimer()
+    gameContainer.setOrientation(Orientation.Portrait)
   })
 
   type GamePhase = "splash" | "getReady" | "play" | "results"
@@ -152,6 +160,13 @@
     isPaused = false
     phase = "splash"
   }
+
+  $effect(() => {
+    if ($page.url.searchParams.has("reset")) {
+      phase = "splash"
+      goto("/headsup", { replaceState: true })
+    }
+  })
 </script>
 
 <svelte:head>
@@ -162,7 +177,12 @@
 <div class={["relative", "h-full w-full"]}>
   {#key phase}
     <div
-      class={["absolute inset-0", "flex flex-col", "w-full", phase !== "play" && "pt-6"]}
+      class={[
+        "absolute inset-0",
+        "flex flex-col",
+        "w-full",
+        gameContainer.orientation !== Orientation.Landscape && "pt-6",
+      ]}
       in:fade={{ duration: 300, delay: 150 }}
       out:fade={{ duration: 150 }}
     >
@@ -182,7 +202,12 @@
           onResetGame={resetGame}
         />
       {:else if phase === "results"}
-        <ResultsScreen bind:correctWords bind:skippedWords bind:timedOutWord onPlayAgain={startGame} />
+        <ResultsScreen
+          bind:correctWords
+          bind:skippedWords
+          bind:timedOutWord
+          onPlayAgain={startGame}
+        />
       {/if}
     </div>
   {/key}

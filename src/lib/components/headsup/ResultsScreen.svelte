@@ -1,5 +1,8 @@
 <script lang="ts">
-  import { getGameContainerContext } from "$lib/components/layout/gameContainerContext.svelte"
+  import {
+    getGameContainerContext,
+    Orientation,
+  } from "$lib/components/layout/gameContainerContext.svelte"
   import { Button } from "$lib/components/ui"
   import { GREEN, PURPLE } from "$lib/constants/colors"
 
@@ -18,6 +21,7 @@
   const ctx = getGameContainerContext()
   $effect(() => {
     ctx.setBackground(GREEN, PURPLE)
+    ctx.setOrientation(Orientation.Portrait)
   })
 
   function moveToCorrect(word: string, source: "skipped" | "timedOut") {

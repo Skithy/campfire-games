@@ -30,3 +30,36 @@ export async function checkSensorPermissions(): Promise<SensorPermissionStatus> 
     return SensorPermissionStatus.Unknown
   }
 }
+
+/**
+ * Requests permission to access device motion/orientation sensors.
+ * Handles both iOS DeviceOrientationEvent.requestPermission() and
+ * Android/Chrome Permissions API for gyroscope.
+ * @returns Promise that resolves when permission is requested (doesn't reject on denial)
+ */
+export async function requestGyroscopePermission(): Promise<void> {
+  // Request device orientation permission
+  // iOS requires DeviceOrientationEvent.requestPermission()
+  if (typeof DeviceOrientationEvent !== "undefined") {
+    // @ts-expect-error - requestPermission is iOS-specific
+    if (typeof DeviceOrientationEvent.requestPermission === "function") {
+      try {
+        // @ts-expect-error - requestPermission is iOS-specific
+        await DeviceOrientationEvent.requestPermission()
+      } catch {
+        // Permission denied or error, continue anyway (tap controls still work)
+      }
+    }
+  }
+
+  // Try Permissions API for gyroscope (Android/Chrome)
+  if ("permissions" in navigator) {
+    try {
+      // @ts-expect-error - gyroscope permission name
+      const result = await navigator.permissions.query({ name: "gyroscope" })
+      console.log("Gyroscope permission:", result.state)
+    } catch {
+      // Permission query not supported, continue anyway
+    }
+  }
+}

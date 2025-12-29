@@ -4,7 +4,7 @@
   import { browser } from "$app/environment"
   import type { Color } from "$lib/utils/colors"
 
-  import { type Orientation, setGameContainerContext } from "./gameContainerContext.svelte"
+  import { Orientation, setGameContainerContext } from "./gameContainerContext.svelte"
   import Navbar from "./Navbar.svelte"
   import PageBackground from "./PageBackground.svelte"
   import { setSettingsContext } from "./settingsContext.svelte"
@@ -34,12 +34,12 @@
 
   let backgroundTop = $state<Color | undefined>(undefined)
   let backgroundBottom = $state<Color | undefined>(undefined)
-  let orientation = $state<Orientation>("portrait")
+  let orientation = $state<Orientation>(Orientation.Portrait)
 
   let windowWidth = $state(browser ? window.innerWidth : 1024)
   let windowHeight = $state(browser ? window.innerHeight : 768)
   let isMobilePortrait = $derived(windowWidth < MOBILE_BREAKPOINT)
-  let needsRotation = $derived(orientation === "landscape" && isMobilePortrait)
+  let needsRotation = $derived(orientation === Orientation.Landscape && isMobilePortrait)
 
   let isMusicEnabled = $state(loadSetting(MUSIC_STORAGE_KEY, true))
   let isVibrationEnabled = $state(loadSetting(VIBRATION_STORAGE_KEY, true))
@@ -105,9 +105,9 @@
     "flex flex-col items-center",
     needsRotation
       ? "px-4 py-6"
-      : orientation === "landscape"
-        ? "h-full w-full max-h-112 max-w-200 mx-auto my-auto px-4 py-6 md:rounded-2xl md:border md:border-white/10 md:shadow-2xl"
-        : "h-full w-full max-w-md md:max-h-175 mx-auto my-auto px-4 py-6 md:rounded-2xl md:border md:border-white/10 md:shadow-2xl",
+      : orientation === Orientation.Landscape
+        ? "mx-auto my-auto h-full max-h-112 w-full max-w-200 px-4 py-6 md:rounded-2xl md:border md:border-white/10 md:shadow-2xl"
+        : "mx-auto my-auto h-full w-full max-w-md px-4 py-6 md:max-h-175 md:rounded-2xl md:border md:border-white/10 md:shadow-2xl",
   ]}
   style:width={needsRotation ? `${windowHeight}px` : undefined}
   style:height={needsRotation ? `${windowWidth}px` : undefined}
@@ -120,7 +120,7 @@
   {#if backgroundTop && backgroundBottom}
     <PageBackground top={backgroundTop} bottom={backgroundBottom} />
   {/if}
-  {#if orientation !== "landscape"}
+  {#if orientation !== Orientation.Landscape}
     <Navbar />
   {/if}
   <div class={["relative", "min-h-0 w-full flex-1"]}>
