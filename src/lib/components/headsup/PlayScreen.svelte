@@ -134,15 +134,22 @@
       navigator.vibrate(action === "correct" ? [100, 50, 100] : 100)
     }
 
+    // Show new word immediately
+    if (action === "correct") {
+      onCorrect()
+    } else {
+      onSkip()
+    }
+
+    // Reset exit direction after animation completes
     setTimeout(() => {
-      if (action === "correct") {
-        onCorrect()
-      } else {
-        onSkip()
-      }
-      isExiting = false
       exitDirection = null
     }, 300)
+
+    // Re-enable buttons after cooldown
+    setTimeout(() => {
+      isExiting = false
+    }, 1000)
   }
 
   function handleCorrectClick() {

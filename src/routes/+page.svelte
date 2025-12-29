@@ -35,8 +35,8 @@
   <meta name="description" content="Party games for your next gathering" />
 </svelte:head>
 
-<div class={["flex flex-col items-center justify-center gap-12", "h-full", "px-4 py-6"]} in:fade>
-  <div class="space-y-3 text-center">
+<div class={["flex flex-col items-center", "h-full min-h-0", "px-4 py-6 pt-12"]} in:fade>
+  <div class="flex-shrink-0 space-y-3 pb-2 text-center">
     <h1 class={["pb-1", "text-5xl font-black tracking-tight"]}>
       <span
         style:background={Color.toGradient(ORANGE, GOLD)}
@@ -50,39 +50,39 @@
     <p class={["text-lg text-white/50"]}>Party games for your next gathering</p>
   </div>
 
-  <div class={["w-full max-w-2xl"]}>
-    <div class={["flex justify-center"]}>
-      <div class="grid gap-4">
-        {#each games as game (game.name)}
-          <a
-            href={game.url}
+  <div class={["min-h-0 w-full max-w-md flex-1", "overflow-y-auto", "pt-4"]}>
+    <div class="grid gap-3">
+      {#each games as game (game.name)}
+        <a
+          href={game.url}
+          class={[
+            "group relative overflow-hidden",
+            "p-0.5",
+            "rounded-xl",
+            "transition-all hover:scale-[1.02] active:scale-[0.98]",
+          ]}
+          style:background={game.gradient}
+        >
+          <div
             class={[
-              "group relative overflow-hidden",
-              "p-0.5",
-              "rounded-2xl",
-              "transition-all hover:scale-[1.02] active:scale-[0.98]",
+              "flex flex-col gap-2",
+              "px-5 py-4",
+              "bg-[#1a1a1a]",
+              "rounded-[10px]",
+              "transition-colors group-hover:bg-transparent",
             ]}
-            style:background={game.gradient}
           >
-            <div
-              class={[
-                "flex flex-col gap-3",
-                "p-6",
-                "bg-[#1a1a1a]",
-                "rounded-[14px]",
-                "transition-colors group-hover:bg-transparent",
-              ]}
+            <h3 class="text-xl font-bold text-white transition-colors group-hover:text-black">
+              {game.name}
+            </h3>
+            <p
+              class={["pb-1 text-sm text-white/70", "transition-colors group-hover:text-black/80"]}
             >
-              <h3 class="text-2xl font-bold text-white transition-colors group-hover:text-black">
-                {game.name}
-              </h3>
-              <p class={["text-sm text-white/70", "transition-colors group-hover:text-black/80"]}>
-                {game.description}
-              </p>
-            </div>
-          </a>
-        {/each}
-      </div>
+              {game.description}
+            </p>
+          </div>
+        </a>
+      {/each}
     </div>
   </div>
 </div>

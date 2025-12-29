@@ -111,12 +111,18 @@
   function swipeOut(direction: number, callback: () => void) {
     isExiting = true
     dragX = direction * 400
+
+    // Wait for exit animation to complete before showing new card
     setTimeout(() => {
       callback()
-      isExiting = false
       dragX = 0
       dragY = 0
     }, 200)
+
+    // Re-enable buttons after cooldown (total 1000ms from start)
+    setTimeout(() => {
+      isExiting = false
+    }, 1000)
   }
 
   function handleCorrectClick() {
