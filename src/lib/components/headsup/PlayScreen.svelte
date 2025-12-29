@@ -313,23 +313,55 @@
 
 <Modal bind:isOpen={showSensorHelp} title="Enable Tilt Controls">
   <div class="space-y-4 p-6 text-sm text-white/80">
-    <p>
-      Your browser is blocking access to motion sensors. Tilt controls won't work, but you can still
-      use <strong class="text-white">tap controls</strong>.
-    </p>
+    {#if permissionStatus === SensorPermissionStatus.Denied}
+      <p>
+        Your browser is blocking access to motion sensors. Tilt controls won't work, but you can
+        still use <strong class="text-white">tap controls</strong>.
+      </p>
 
-    <div class="space-y-3">
-      <p class="font-medium text-white">To enable tilt controls:</p>
-      <ol class="ml-4 list-decimal space-y-2">
-        <li>Check your browser's site settings or privacy controls</li>
-        <li>Allow "Motion sensors" or "Device orientation" access</li>
-        <li>Refresh the page after changing settings</li>
-      </ol>
-    </div>
+      <div class="space-y-3">
+        <p class="font-medium text-white">To enable tilt controls:</p>
+        <ol class="ml-4 list-decimal space-y-2">
+          <li>Check your browser's site settings or privacy controls</li>
+          <li>Allow "Motion sensors" or "Device orientation" access</li>
+          <li>Refresh the page after changing settings</li>
+        </ol>
+      </div>
 
-    <div class="pt-2 text-xs text-white/50">
-      Common locations: Shield icon (Brave), Lock icon (Chrome), or Settings → Site permissions
-    </div>
+      <div class="pt-2 text-xs text-white/50">
+        Common locations: Shield icon (Brave), Lock icon (Chrome), or Settings → Site permissions
+      </div>
+    {:else if permissionStatus === SensorPermissionStatus.Unsupported}
+      <p>
+        Your device or browser doesn't support motion sensors. You can still use
+        <strong class="text-white">tap controls</strong> or
+        <strong class="text-white">keyboard arrows</strong>.
+      </p>
+
+      <p class="text-white/60">
+        Tilt controls work on mobile devices with gyroscope sensors and browsers that support the
+        DeviceOrientation API.
+      </p>
+    {:else if permissionStatus === SensorPermissionStatus.Prompt}
+      <p>
+        Tilt controls require permission to access motion sensors. Click the button below to grant
+        permission.
+      </p>
+
+      <div class="space-y-3">
+        <p class="font-medium text-white">After granting permission:</p>
+        <ol class="ml-4 list-decimal space-y-2">
+          <li>Allow "Motion sensors" or "Device orientation" when prompted</li>
+          <li>The page will automatically use tilt controls</li>
+        </ol>
+      </div>
+    {:else}
+      <p>
+        Tilt controls status is unknown. You can still use
+        <strong class="text-white">tap controls</strong> or
+        <strong class="text-white">keyboard arrows</strong>.
+      </p>
+    {/if}
 
     <div class="flex justify-end pt-2">
       <Button variant="standard" onclick={() => (showSensorHelp = false)}>Got it</Button>
