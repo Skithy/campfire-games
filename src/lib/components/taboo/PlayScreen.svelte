@@ -61,6 +61,7 @@
   let dragY = $state(0)
   let isDragging = $state(false)
   let isExiting = $state(false)
+  let hasVibratedThreshold = $state(false)
   let startX = 0
   let startY = 0
 
@@ -73,6 +74,7 @@
   function handlePointerDown(e: PointerEvent) {
     if (isPaused || isExiting) return
     isDragging = true
+    hasVibratedThreshold = false
     startX = e.clientX
     startY = e.clientY
     ;(e.target as HTMLElement).setPointerCapture(e.pointerId)
@@ -82,6 +84,14 @@
     if (!isDragging) return
     dragX = e.clientX - startX
     dragY = e.clientY - startY
+
+    // Vibrate when crossing the swipe threshold
+    if (!hasVibratedThreshold && Math.abs(dragX) >= SWIPE_THRESHOLD) {
+      hasVibratedThreshold = true
+      if (settings.isVibrationEnabled && navigator.vibrate) {
+        navigator.vibrate(50)
+      }
+    }
   }
 
   function handlePointerUp() {

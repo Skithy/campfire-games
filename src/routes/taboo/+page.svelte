@@ -134,17 +134,11 @@
   }
 
   function handleCorrect() {
-    if (settings.isVibrationEnabled && navigator.vibrate) {
-      navigator.vibrate(50)
-    }
     correctCards = [...correctCards, currentCard]
     nextCard()
   }
 
   function handleSkip() {
-    if (settings.isVibrationEnabled && navigator.vibrate) {
-      navigator.vibrate(50)
-    }
     skippedCards = [...skippedCards, currentCard]
     nextCard()
   }
