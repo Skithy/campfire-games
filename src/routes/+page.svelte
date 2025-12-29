@@ -44,8 +44,7 @@
     <p class={["text-lg text-white/50"]}>Party games for your next gathering</p>
   </div>
 
-  <div class={["w-full max-w-2xl", "space-y-6"]}>
-    <h2 class={["text-center text-xl font-semibold text-white/70"]}>Available Games</h2>
+  <div class={["w-full max-w-2xl"]}>
     <div class={["flex justify-center"]}>
       <div class="grid gap-4">
         {#each games as game (game.name)}
@@ -68,16 +67,8 @@
                 "transition-colors group-hover:bg-transparent",
               ]}
             >
-              <h3 class={["text-2xl font-bold"]}>
-                <span
-                  class={["transition-colors group-hover:text-black!"]}
-                  style:background={game.gradient}
-                  style:-webkit-background-clip="text"
-                  style:background-clip="text"
-                  style:color="transparent"
-                >
-                  {game.name}
-                </span>
+              <h3 class="text-2xl font-bold text-white transition-colors group-hover:text-black">
+                {game.name}
               </h3>
               <p class={["text-sm text-white/70", "transition-colors group-hover:text-black/80"]}>
                 {game.description}
