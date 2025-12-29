@@ -8,6 +8,7 @@
   import { Button } from "$lib/components/ui"
   import { GREEN, PURPLE } from "$lib/constants/colors"
   import countdownSound from "$lib/sounds/game-countdown-3.mp3"
+  import { checkSensorPermissions, SensorPermissionStatus } from "$lib/utils/sensors"
 
   import GameMenu from "./GameMenu.svelte"
 
@@ -60,20 +61,32 @@
   // Tilt detection
   let isExiting = $state(false)
   let exitDirection = $state<"correct" | "skip" | null>(null)
-  let baseBeta = $state<number | null>(null)
-  let calibrationSamples = $state<number[]>([])
   let currentBeta = $state<number | null>(null)
-  let tiltFromBase = $derived(
-    baseBeta !== null && currentBeta !== null ? currentBeta - baseBeta : null,
-  )
   let orientationSupported = $state<boolean | null>(null)
   let eventCount = $state(0)
-  let permissionStatus = $state<string>("checking...")
+  let permissionStatus = $state<SensorPermissionStatus | null>(null)
   let showSensorHelp = $state(false)
 
-  // Thresholds for tilt detection (degrees from calibrated position)
-  const TILT_DOWN_THRESHOLD = 45 // Tilt phone down (nod forward) for correct
-  const TILT_UP_THRESHOLD = -30 // Tilt phone up (lean back) for skip
+  let sensorWarning = $derived.by(() => {
+    switch (permissionStatus) {
+      case SensorPermissionStatus.Granted:
+      case null:
+        return null
+      case SensorPermissionStatus.Denied:
+        return "Tilt controls blocked"
+      case SensorPermissionStatus.Unsupported:
+        return "Tilt not supported"
+      case SensorPermissionStatus.Prompt:
+        return "Tilt permission needed"
+      case SensorPermissionStatus.Unknown:
+        return "Tilt status unknown"
+    }
+  })
+
+  // Absolute beta thresholds (phone orientation)
+  // beta: 0° = flat screen up, 90° = upright, 180° = flat screen down
+  const PHONE_DOWN_THRESHOLD = 130 // Phone tilted face down = correct
+  const PHONE_UP_THRESHOLD = 50 // Phone tilted face up = skip
 
   function handleOrientation(e: DeviceOrientationEvent) {
     eventCount++
@@ -88,32 +101,14 @@
 
     if (isPaused || isExiting) return
 
-    // Calibrate the base position from first few readings
-    if (baseBeta === null) {
-      calibrationSamples = [...calibrationSamples, e.beta]
-      if (calibrationSamples.length >= 5) {
-        // Use median of samples as baseline
-        const sorted = [...calibrationSamples].sort((a, b) => a - b)
-        baseBeta = sorted[Math.floor(sorted.length / 2)]
-      }
-      return
-    }
-
-    const tilt = e.beta - baseBeta
-
-    // Tilt down (positive beta increase) = correct
-    if (tilt >= TILT_DOWN_THRESHOLD) {
+    // Phone tilted face down = correct
+    if (e.beta >= PHONE_DOWN_THRESHOLD) {
       triggerAction("correct")
     }
-    // Tilt up (negative beta decrease) = skip
-    else if (tilt <= TILT_UP_THRESHOLD) {
+    // Phone tilted face up = skip
+    else if (e.beta <= PHONE_UP_THRESHOLD) {
       triggerAction("skip")
     }
-  }
-
-  function resetCalibration() {
-    baseBeta = null
-    calibrationSamples = []
   }
 
   function triggerAction(action: "correct" | "skip") {
@@ -133,7 +128,6 @@
       }
       isExiting = false
       exitDirection = null
-      resetCalibration()
     }, 300)
   }
 
@@ -157,30 +151,14 @@
     }
   }
 
-  onMount(async () => {
+  onMount(() => {
     window.addEventListener("keydown", handleKeydown)
     // Permission is requested in GetReadyScreen before navigating here
     window.addEventListener("deviceorientation", handleOrientation)
 
-    // Check permission status for debugging
-    if ("permissions" in navigator) {
-      try {
-        // @ts-expect-error - gyroscope permission name
-        const gyro = await navigator.permissions.query({ name: "gyroscope" })
-        // @ts-expect-error - accelerometer permission name
-        const accel = await navigator.permissions.query({ name: "accelerometer" })
-        permissionStatus = `gyro:${gyro.state} accel:${accel.state}`
-      } catch {
-        permissionStatus = "query not supported"
-      }
-    } else {
-      permissionStatus = "no permissions API"
-    }
-
-    // Also check if DeviceOrientationEvent exists
-    if (typeof DeviceOrientationEvent === "undefined") {
-      permissionStatus += " | no DOE"
-    }
+    checkSensorPermissions().then((status) => {
+      permissionStatus = status
+    })
 
     return () => {
       window.removeEventListener("keydown", handleKeydown)
@@ -288,8 +266,8 @@
   onEndGame={onResetGame}
 />
 
-<!-- Sensor permission denied warning -->
-{#if permissionStatus.includes("denied")}
+<!-- Sensor warning -->
+{#if sensorWarning}
   <button
     class={[
       "fixed top-4 left-1/2 -translate-x-1/2",
@@ -303,7 +281,7 @@
     onclick={() => (showSensorHelp = true)}
   >
     <i class="fa-solid fa-triangle-exclamation"></i>
-    Tilt controls unavailable
+    {sensorWarning}
   </button>
 {/if}
 
@@ -345,7 +323,7 @@
   ]}
 >
   <div class="font-bold text-yellow-400">Tilt Debug</div>
-  <div class="text-[10px] text-white/60">{permissionStatus}</div>
+  <div class="text-[10px] text-white/60">{permissionStatus ?? "checking..."}</div>
   <div>
     Events: {eventCount} | Supported: {orientationSupported === null
       ? "?"
@@ -353,42 +331,37 @@
         ? "Yes"
         : "No (beta null)"}
   </div>
-  <div>
-    Status: {baseBeta === null ? `Calibrating (${calibrationSamples.length}/5)` : "Ready"}
-  </div>
-  <div>Beta: {currentBeta?.toFixed(1) ?? "—"}</div>
-  <div>Base: {baseBeta?.toFixed(1) ?? "—"}</div>
   <div
     class={[
-      tiltFromBase !== null && tiltFromBase >= TILT_DOWN_THRESHOLD && "text-green-400",
-      tiltFromBase !== null && tiltFromBase <= TILT_UP_THRESHOLD && "text-orange-400",
+      currentBeta !== null && currentBeta >= PHONE_DOWN_THRESHOLD && "text-green-400",
+      currentBeta !== null && currentBeta <= PHONE_UP_THRESHOLD && "text-orange-400",
     ]}
   >
-    Tilt: {tiltFromBase?.toFixed(1) ?? "—"}
+    Beta: {currentBeta?.toFixed(1) ?? "—"}°
   </div>
   <div class="border-t border-white/20 pt-1 text-white/60">
-    <div>↓ Correct: ≥{TILT_DOWN_THRESHOLD}°</div>
-    <div>↑ Skip: ≤{TILT_UP_THRESHOLD}°</div>
+    <div>↓ Correct: ≥{PHONE_DOWN_THRESHOLD}°</div>
+    <div>↑ Skip: ≤{PHONE_UP_THRESHOLD}°</div>
   </div>
   <!-- Visual tilt indicator -->
   <div class="pt-1">
     <div class="relative h-4 overflow-hidden rounded bg-white/20">
-      <!-- Skip zone -->
-      <div class="absolute left-0 h-full bg-orange-500/30" style:width="30%"></div>
-      <!-- Correct zone -->
-      <div class="absolute right-0 h-full bg-green-500/30" style:width="30%"></div>
+      <!-- Skip zone (low beta = phone face up) -->
+      <div class="absolute left-0 h-full bg-orange-500/30" style:width="28%"></div>
+      <!-- Correct zone (high beta = phone face down) -->
+      <div class="absolute right-0 h-full bg-green-500/30" style:width="28%"></div>
       <!-- Current position indicator -->
-      {#if tiltFromBase !== null}
+      {#if currentBeta !== null}
         <div
           class="absolute top-0 h-full w-1 bg-white"
-          style:left={`${Math.min(100, Math.max(0, ((tiltFromBase + 50) / 100) * 100))}%`}
+          style:left={`${Math.min(100, Math.max(0, (currentBeta / 180) * 100))}%`}
         ></div>
       {/if}
     </div>
     <div class="flex justify-between text-[10px] text-white/40">
-      <span>-50°</span>
       <span>0°</span>
-      <span>+50°</span>
+      <span>90°</span>
+      <span>180°</span>
     </div>
   </div>
 </div>
