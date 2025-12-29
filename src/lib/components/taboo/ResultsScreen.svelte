@@ -90,6 +90,7 @@
   </div>
 
   <!-- Card lists -->
+  <p class="text-xs text-white/40">Tap to view card</p>
   <div class="flex min-h-0 w-full max-w-sm flex-1 flex-col gap-6 overflow-auto">
     {#if correctCards.length > 0}
       <div class="space-y-3">

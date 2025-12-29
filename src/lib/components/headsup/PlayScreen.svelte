@@ -56,42 +56,51 @@
   }
 
   // Tilt detection
-  let lastBeta = $state<number | null>(null)
   let isExiting = $state(false)
   let exitDirection = $state<"correct" | "skip" | null>(null)
-  let hasVibratedThreshold = $state(false)
+  let baseBeta = $state<number | null>(null)
+  let calibrationSamples = $state<number[]>([])
 
-  const TILT_THRESHOLD = 30
+  // Thresholds for tilt detection (degrees from calibrated position)
+  const TILT_DOWN_THRESHOLD = 45 // Tilt phone down (nod forward) for correct
+  const TILT_UP_THRESHOLD = -30 // Tilt phone up (lean back) for skip
 
   function handleOrientation(e: DeviceOrientationEvent) {
     if (isPaused || isExiting) return
     if (e.beta === null) return
 
-    if (lastBeta !== null) {
-      const tiltDelta = e.beta - lastBeta
-
-      if (!hasVibratedThreshold && Math.abs(tiltDelta) >= TILT_THRESHOLD) {
-        hasVibratedThreshold = true
-        if (settings.isVibrationEnabled && navigator.vibrate) {
-          navigator.vibrate(50)
-        }
+    // Calibrate the base position from first few readings
+    if (baseBeta === null) {
+      calibrationSamples = [...calibrationSamples, e.beta]
+      if (calibrationSamples.length >= 5) {
+        // Use median of samples as baseline
+        const sorted = [...calibrationSamples].sort((a, b) => a - b)
+        baseBeta = sorted[Math.floor(sorted.length / 2)]
       }
-
-      if (tiltDelta >= TILT_THRESHOLD) {
-        triggerAction("correct")
-      } else if (tiltDelta <= -TILT_THRESHOLD) {
-        triggerAction("skip")
-      }
+      return
     }
 
-    lastBeta = e.beta
+    const tiltFromBase = e.beta - baseBeta
+
+    // Tilt down (positive beta increase) = correct
+    if (tiltFromBase >= TILT_DOWN_THRESHOLD) {
+      triggerAction("correct")
+    }
+    // Tilt up (negative beta decrease) = skip
+    else if (tiltFromBase <= TILT_UP_THRESHOLD) {
+      triggerAction("skip")
+    }
+  }
+
+  function resetCalibration() {
+    baseBeta = null
+    calibrationSamples = []
   }
 
   function triggerAction(action: "correct" | "skip") {
     if (isExiting) return
     isExiting = true
     exitDirection = action
-    hasVibratedThreshold = false
 
     if (settings.isVibrationEnabled && navigator.vibrate) {
       navigator.vibrate(action === "correct" ? [100, 50, 100] : 100)
@@ -105,7 +114,7 @@
       }
       isExiting = false
       exitDirection = null
-      lastBeta = null
+      resetCalibration()
     }, 300)
   }
 
