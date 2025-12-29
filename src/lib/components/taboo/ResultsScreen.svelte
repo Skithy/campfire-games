@@ -3,6 +3,7 @@
   import Modal from "$lib/components/layout/Modal.svelte"
   import PageActions from "$lib/components/layout/PageActions.svelte"
   import TabooCardComponent from "$lib/components/taboo/TabooCard.svelte"
+  import { Button, IconButton } from "$lib/components/ui"
   import type { TabooCard } from "$lib/data/tabooCards"
   import type { Color } from "$lib/utils/colors"
 
@@ -154,14 +155,8 @@
   </div>
 
   <PageActions
-    equalButtons={true}
-    backIcon="fa-solid fa-house"
-    primaryIcon="fa-solid fa-arrow-right"
-    primaryColor={teamColor.toRgb()}
-    onBack={onEndGame}
-    onPrimary={onNextRound}
-    primaryLabel="Next Team"
-    backLabel="End Game"
+    left={{ label: "End Game", onclick: onEndGame, icon: "fa-solid fa-house" }}
+    right={{ label: "Next Team", onclick: onNextRound, icon: "fa-solid fa-arrow-right", color: teamColor.toRgb() }}
   />
 </div>
 
@@ -174,51 +169,22 @@
       <!-- Action buttons -->
       <div class="flex gap-3">
         {#if selectedCardSource === "correct"}
-          <button
-            class={[
-              "flex items-center gap-2",
-              "px-4 py-3",
-              "text-sm font-semibold text-white",
-              "bg-white/20",
-              "rounded-xl",
-              "cursor-pointer transition-all hover:bg-white/30 active:scale-95",
-            ]}
-            onclick={moveToSkipped}
-          >
-            <i class="fa-solid fa-forward"></i>
+          <Button variant="standard" size="sm" icon="fa-solid fa-forward" onclick={moveToSkipped}>
             Move to Skipped
-          </button>
+          </Button>
         {:else}
-          <button
-            class={[
-              "flex items-center gap-2",
-              "px-4 py-3",
-              "text-sm font-semibold text-white",
-              "rounded-xl",
-              "cursor-pointer transition-all hover:brightness-110 active:scale-95",
-            ]}
-            style:background-color={teamColor.toRgb()}
-            onclick={moveToCorrect}
-          >
-            <i class="fa-solid fa-check"></i>
+          <Button variant="standard" size="sm" icon="fa-solid fa-check" color={teamColor.toRgb()} onclick={moveToCorrect}>
             Move to Correct
-          </button>
+          </Button>
         {/if}
 
-        <button
-          class={[
-            "flex items-center justify-center",
-            "h-12 w-12",
-            "text-white/60",
-            "bg-white/10",
-            "rounded-xl",
-            "cursor-pointer transition-all hover:bg-white/20 hover:text-white active:scale-95",
-          ]}
+        <IconButton
+          icon="fa-solid fa-xmark"
+          shape="square"
+          size="lg"
+          label="Close"
           onclick={closeModal}
-          aria-label="Close"
-        >
-          <i class="fa-solid fa-xmark text-lg"></i>
-        </button>
+        />
       </div>
     {/if}
   </div>

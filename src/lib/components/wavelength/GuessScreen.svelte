@@ -34,5 +34,8 @@
   </div>
 
   <!-- Action buttons -->
-  <PageActions {onBack} onPrimary={handleLockIn} primaryLabel="Lock In" />
+  <PageActions
+    left={{ label: "Go back", onclick: onBack, icon: "fa-solid fa-arrow-left", iconOnly: true }}
+    right={{ label: "Lock In", onclick: handleLockIn }}
+  />
 </div>

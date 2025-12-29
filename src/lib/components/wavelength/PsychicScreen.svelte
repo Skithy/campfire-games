@@ -29,5 +29,8 @@
   </div>
 
   <!-- Action buttons -->
-  <PageActions {onBack} onPrimary={onReadyToGuess} primaryLabel="Continue" />
+  <PageActions
+    left={{ label: "Go back", onclick: onBack, icon: "fa-solid fa-arrow-left", iconOnly: true }}
+    right={{ label: "Continue", onclick: onReadyToGuess }}
+  />
 </div>

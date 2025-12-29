@@ -2,6 +2,7 @@
   import { fade } from "svelte/transition"
 
   import Modal from "$lib/components/layout/Modal.svelte"
+  import { Button } from "$lib/components/ui"
   import { GOLD, PURPLE } from "$lib/constants/colors"
   import { Color } from "$lib/utils/colors"
 
@@ -85,58 +86,13 @@
   </div>
 
   <div class="flex w-full max-w-xs flex-col gap-3">
-    <button
-      class={[
-        "group relative overflow-hidden",
-        "p-0.5",
-        "rounded-2xl",
-        "cursor-pointer transition-all hover:scale-[1.02] active:scale-[0.98]",
-      ]}
-      style:background={gradient}
-      onclick={onStart}
-    >
-      <span
-        class={[
-          "flex items-center justify-center gap-2",
-          "px-8 py-4",
-          "text-xl font-bold text-white",
-          "bg-[#1a1a1a]",
-          "rounded-[14px]",
-          "transition-colors group-hover:bg-transparent group-hover:text-black",
-        ]}
-      >
-        <i class="fa-solid fa-play text-base"></i>
-        Start Game
-      </span>
-    </button>
-    <button
-      class={[
-        "flex items-center justify-center gap-2",
-        "px-8 py-4",
-        "text-lg font-semibold text-white/80",
-        "bg-white/10",
-        "rounded-2xl border border-white/20",
-        "cursor-pointer transition-all hover:bg-white/15 hover:text-white active:scale-[0.98]",
-      ]}
-      onclick={toggleInstructions}
-    >
-      <i class="fa-solid fa-circle-question text-base"></i>
+    <Button variant="primary" size="xl" icon="fa-solid fa-play" {gradient} onclick={onStart}>
+      Start Game
+    </Button>
+    <Button variant="standard" size="lg" icon="fa-solid fa-circle-question" onclick={toggleInstructions}>
       How to Play
-    </button>
-
-    <a
-      href="/"
-      class={[
-        "px-8 py-4",
-        "text-center text-lg font-semibold text-white/70",
-        "bg-white/5",
-        "rounded-2xl",
-        "backdrop-blur-sm",
-        "transition-all hover:bg-white/10 hover:text-white active:scale-95",
-      ]}
-    >
-      Back to Games
-    </a>
+    </Button>
+    <Button variant="outline" size="lg" href="/">Back to Games</Button>
   </div>
 
   <Modal bind:isOpen={showInstructions} title="How to Play">
@@ -208,18 +164,7 @@
       </div>
 
       <div class="flex justify-end pt-2">
-        <button
-          class={[
-            "px-6 py-3",
-            "font-semibold text-white",
-            "bg-white/10",
-            "rounded-xl",
-            "cursor-pointer transition-colors hover:bg-white/20",
-          ]}
-          onclick={() => (showInstructions = false)}
-        >
-          Got it!
-        </button>
+        <Button variant="standard" onclick={() => (showInstructions = false)}>Got it!</Button>
       </div>
     </div>
   </Modal>

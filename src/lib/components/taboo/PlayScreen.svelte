@@ -6,6 +6,7 @@
   import { getSettingsContext } from "$lib/components/layout/settingsContext.svelte"
   import GameMenu from "$lib/components/taboo/GameMenu.svelte"
   import TabooCard from "$lib/components/taboo/TabooCard.svelte"
+  import { IconButton } from "$lib/components/ui"
   import type { TabooCard as TabooCardType } from "$lib/data/tabooCards"
   import countdownSound from "$lib/sounds/game-countdown-3.mp3"
   import type { Color } from "$lib/utils/colors"
@@ -121,21 +122,12 @@
 
 <div class="flex flex-1 flex-col gap-4">
   <!-- Pause/Menu button -->
-  <button
-    class={[
-      "absolute top-4 right-4",
-      "flex items-center justify-center",
-      "h-10 w-10",
-      "text-white",
-      "bg-white/10",
-      "rounded-full",
-      "cursor-pointer transition-all hover:bg-white/20 active:scale-95",
-    ]}
+  <IconButton
+    icon="fa-solid fa-pause"
+    label="Pause game"
+    class="absolute top-4 right-4"
     onclick={onTogglePause}
-    aria-label="Pause game"
-  >
-    <i class="fa-solid fa-pause text-lg"></i>
-  </button>
+  />
 
   <!-- Timer -->
   <div class="flex items-center justify-center gap-4">
@@ -210,14 +202,18 @@
   </div>
 
   <PageActions
-    equalButtons={true}
-    backIcon="fa-solid fa-forward"
-    primaryIcon="fa-solid fa-check"
-    primaryColor={teamColor.toRgb()}
-    onBack={handleSkipClick}
-    onPrimary={handleCorrectClick}
-    primaryLabel="Correct!"
-    backLabel="Skip"
+    left={{
+      label: "Skip",
+      onclick: handleSkipClick,
+      icon: "fa-solid fa-forward",
+      variant: "standard",
+    }}
+    right={{
+      label: "Correct!",
+      onclick: handleCorrectClick,
+      icon: "fa-solid fa-check",
+      color: teamColor.toRgb(),
+    }}
   />
 </div>
 

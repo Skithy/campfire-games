@@ -1,5 +1,6 @@
 <script lang="ts">
   import Modal from "$lib/components/layout/Modal.svelte"
+  import { Button } from "$lib/components/ui"
   import type { Color } from "$lib/utils/colors"
 
   let {
@@ -31,93 +32,39 @@
   <div class="space-y-4 p-6">
     <div class="flex flex-col gap-2">
       {#if showContinue}
-        <button
-          class={[
-            "flex items-center justify-center gap-2",
-            "w-full",
-            "px-6 py-4",
-            "text-lg font-semibold text-white",
-            "rounded-xl",
-            "cursor-pointer transition-all hover:opacity-90 active:scale-[0.98]",
-          ]}
-          style:background-color={teamColor.toRgb()}
-          onclick={onClose}
-        >
-          <i class="fa-solid fa-arrow-left text-base"></i>
+        <Button variant="standard" size="lg" icon="fa-solid fa-arrow-left" color={teamColor.toRgb()} fullWidth onclick={onClose}>
           Continue
-        </button>
+        </Button>
       {/if}
 
       {#if showResume && onResume}
-        <button
-          class={[
-            "flex items-center justify-center gap-2",
-            "w-full",
-            "px-6 py-4",
-            "text-lg font-semibold text-white",
-            "rounded-xl",
-            "cursor-pointer transition-all hover:opacity-90 active:scale-[0.98]",
-          ]}
-          style:background-color={teamColor.toRgb()}
-          onclick={onResume}
-        >
-          <i class="fa-solid fa-play text-base"></i>
+        <Button variant="standard" size="lg" icon="fa-solid fa-play" color={teamColor.toRgb()} fullWidth onclick={onResume}>
           Resume
-        </button>
+        </Button>
       {/if}
 
       {#if showResetTurn && onResetTurn}
-        <button
-          class={[
-            "flex items-center justify-center gap-2",
-            "w-full",
-            "px-6 py-4",
-            "text-lg font-semibold text-white",
-            "bg-white/10",
-            "rounded-xl",
-            "cursor-pointer transition-all hover:bg-white/20 active:scale-[0.98]",
-          ]}
-          onclick={onResetTurn}
-        >
-          <i class="fa-solid fa-rotate-left text-base"></i>
+        <Button variant="standard" size="lg" icon="fa-solid fa-rotate-left" fullWidth onclick={onResetTurn}>
           Reset Turn
-        </button>
+        </Button>
       {/if}
 
-      <button
-        class={[
-          "flex items-center justify-center gap-2",
-          "w-full",
-          "px-6 py-4",
-          "text-lg font-semibold text-white",
-          "bg-white/10",
-          "rounded-xl",
-          "cursor-pointer transition-all hover:bg-white/20 active:scale-[0.98]",
-        ]}
+      <Button
+        variant="standard"
+        size="lg"
+        icon="fa-solid fa-forward-step"
+        fullWidth
         onclick={() => {
           onSkipTeam()
           onClose()
         }}
       >
-        <i class="fa-solid fa-forward-step text-base"></i>
         Skip Team
-      </button>
+      </Button>
 
-      <button
-        class={[
-          "flex items-center justify-center gap-2",
-          "w-full",
-          "px-6 py-4",
-          "text-lg font-semibold text-white/70",
-          "bg-white/10",
-          "rounded-xl",
-          "cursor-pointer transition-all hover:bg-white/20 hover:text-white active:scale-[0.98]",
-        ]}
-        onclick={onEndGame}
-      >
-        <i class="fa-solid fa-house text-base"></i>
+      <Button variant="outline" size="lg" icon="fa-solid fa-house" fullWidth onclick={onEndGame}>
         End Game
-      </button>
+      </Button>
     </div>
   </div>
 </Modal>

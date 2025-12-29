@@ -21,7 +21,7 @@
 
   type GamePhase = "splash" | "getReady" | "play" | "results" | "finalResults"
 
-  const ROUND_TIME = 10
+  const ROUND_TIME = 60
 
   // Game state
   let phase = $state<GamePhase>("splash")

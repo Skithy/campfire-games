@@ -2,6 +2,7 @@
   import { getGameContainerContext } from "$lib/components/layout/gameContainerContext.svelte"
   import PageActions from "$lib/components/layout/PageActions.svelte"
   import GameMenu from "$lib/components/taboo/GameMenu.svelte"
+  import { IconButton } from "$lib/components/ui"
   import type { Color } from "$lib/utils/colors"
 
   let {
@@ -27,21 +28,12 @@
 </script>
 
 <!-- Menu button -->
-<button
-  class={[
-    "absolute top-4 right-4",
-    "flex items-center justify-center",
-    "h-10 w-10",
-    "text-white",
-    "bg-white/10",
-    "rounded-full",
-    "cursor-pointer transition-all hover:bg-white/20 active:scale-95",
-  ]}
+<IconButton
+  icon="fa-solid fa-bars"
+  label="Open menu"
+  class="absolute top-4 right-4"
   onclick={() => (showMenu = true)}
-  aria-label="Open menu"
->
-  <i class="fa-solid fa-bars text-lg"></i>
-</button>
+/>
 
 <div class="flex flex-1 flex-col items-center justify-between gap-6">
   <div class="flex flex-1 flex-col items-center justify-center gap-6">
@@ -86,7 +78,7 @@
     </div>
   </div>
 
-  <PageActions singleButton={true} onPrimary={onStart} primaryLabel="Start Round" />
+  <PageActions right={{ label: "Start Round", onclick: onStart }} />
 </div>
 
 <GameMenu

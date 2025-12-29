@@ -1,5 +1,6 @@
 <script lang="ts">
   import { getGameContainerContext } from "$lib/components/layout/gameContainerContext.svelte"
+  import { Button } from "$lib/components/ui"
   import { TEAM_BLUE, TEAM_RED } from "$lib/constants/teams"
 
   let {
@@ -60,33 +61,17 @@
 
   <!-- Action buttons -->
   <div class="flex w-full max-w-sm flex-col gap-3">
-    <button
-      class={[
-        "px-8 py-4",
-        "text-lg font-semibold text-white",
-        "rounded-xl",
-        "cursor-pointer transition-all hover:opacity-90 active:scale-[0.98]",
-      ]}
-      style:background-color={winner ? winner.color.toRgb() : TEAM_RED.color.toRgb()}
+    <Button
+      variant="standard"
+      size="lg"
+      icon="fa-solid fa-rotate-right"
+      color={winner ? winner.color.toRgb() : TEAM_RED.color.toRgb()}
       onclick={onPlayAgain}
     >
-      <i class="fa-solid fa-rotate-right mr-2 text-base"></i>
       Play Again
-    </button>
-
-    <a
-      href="/"
-      class={[
-        "px-8 py-4",
-        "text-center text-lg font-semibold text-white/70",
-        "bg-white/10",
-        "rounded-2xl",
-        "backdrop-blur-sm",
-        "transition-all hover:bg-white/20 hover:text-white active:scale-95",
-      ]}
-    >
-      <i class="fa-solid fa-arrow-left mr-2 text-base"></i>
+    </Button>
+    <Button variant="outline" size="lg" icon="fa-solid fa-arrow-left" href="/">
       Back to Games
-    </a>
+    </Button>
   </div>
 </div>

@@ -2,14 +2,15 @@
   import type { Snippet } from "svelte"
   import type { HTMLAnchorAttributes, HTMLButtonAttributes } from "svelte/elements"
 
-  type Variant = "primary" | "secondary" | "tertiary" | "ghost"
-  type Size = "sm" | "md" | "lg"
+  type Variant = "primary" | "standard" | "outline"
+  type Size = "sm" | "md" | "lg" | "xl"
 
   type BaseProps = {
     variant?: Variant
     size?: Size
     icon?: string
     gradient?: string
+    color?: string
     disabled?: boolean
     fullWidth?: boolean
     children: Snippet
@@ -26,10 +27,11 @@
     }
 
   let {
-    variant = "secondary",
+    variant = "standard",
     size = "md",
     icon,
     gradient,
+    color,
     disabled = false,
     fullWidth = false,
     href,
@@ -42,15 +44,20 @@
     sm: "px-4 py-2 text-sm",
     md: "px-6 py-3 text-base",
     lg: "px-8 py-4 text-lg",
+    xl: "px-8 py-4 text-xl",
   }
 
   const variantClasses: Record<Variant, string> = {
-    primary: "group relative overflow-hidden p-0.5 rounded-2xl",
-    secondary:
-      "flex items-center justify-center gap-2 font-semibold text-white/80 bg-white/10 rounded-2xl border border-white/20 hover:bg-white/15 hover:text-white",
-    tertiary:
-      "text-center font-semibold text-white/70 bg-white/5 rounded-2xl backdrop-blur-sm hover:bg-white/10 hover:text-white",
-    ghost: "font-semibold text-white bg-white/10 rounded-xl hover:bg-white/20",
+    primary: "group relative overflow-hidden p-0.5 rounded-2xl cursor-pointer transition-all",
+    standard: "flex items-center justify-center gap-2 font-semibold text-white/80 bg-white/10 rounded-2xl",
+    outline:
+      "flex items-center justify-center gap-2 font-semibold text-white/70 bg-transparent rounded-2xl border border-white/20",
+  }
+
+  const variantHoverClasses: Record<Variant, string> = {
+    primary: "",
+    standard: "hover:bg-white/15 hover:text-white",
+    outline: "hover:bg-white/10 hover:text-white",
   }
 
   const baseClasses = "cursor-pointer transition-all active:scale-[0.98]"
@@ -77,7 +84,7 @@
           "font-bold text-white",
           "bg-[#1a1a1a]",
           "rounded-[14px]",
-          "transition-colors group-hover:bg-transparent group-hover:text-black",
+          disabled ? "" : "transition-colors group-hover:bg-transparent group-hover:text-black",
         ]}
       >
         {#if icon}
@@ -106,7 +113,7 @@
           "font-bold text-white",
           "bg-[#1a1a1a]",
           "rounded-[14px]",
-          "transition-colors group-hover:bg-transparent group-hover:text-black",
+          disabled ? "" : "transition-colors group-hover:bg-transparent group-hover:text-black",
         ]}
       >
         {#if icon}
@@ -122,11 +129,14 @@
     class={[
       baseClasses,
       variantClasses[variant],
+      !disabled && variantHoverClasses[variant],
       sizeClasses[size],
       disabled ? disabledClasses : "",
+      !disabled && color && "hover:opacity-90",
       fullWidth && "w-full",
       className,
     ]}
+    style:background-color={color}
     {...restProps as HTMLAnchorAttributes}
   >
     {#if icon}
@@ -140,11 +150,14 @@
     class={[
       baseClasses,
       variantClasses[variant],
+      !disabled && variantHoverClasses[variant],
       sizeClasses[size],
       disabled ? disabledClasses : "",
+      !disabled && color && "hover:opacity-90",
       fullWidth && "w-full",
       className,
     ]}
+    style:background-color={color}
     {disabled}
     {...restProps as HTMLButtonAttributes}
   >

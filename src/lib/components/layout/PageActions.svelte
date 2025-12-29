@@ -1,79 +1,77 @@
 <script lang="ts">
+  import { Button, IconButton } from "$lib/components/ui"
+
+  type Variant = "primary" | "standard" | "outline"
+
+  type ButtonProps = {
+    label: string
+    onclick: () => void
+    variant?: Variant
+    icon?: string
+    color?: string
+    iconOnly?: boolean
+    disabled?: boolean
+  }
+
+  // eslint-disable-next-line svelte/no-unused-props
   let {
-    onBack,
-    onPrimary,
-    primaryLabel,
-    backLabel = "Go back",
-    equalButtons = false,
-    singleButton = false,
-    backIcon,
-    primaryIcon,
-    primaryColor,
+    left,
+    right,
   }: {
-    onBack?: () => void
-    onPrimary: () => void
-    primaryLabel: string
-    backLabel?: string
-    equalButtons?: boolean
-    singleButton?: boolean
-    backIcon?: string
-    primaryIcon?: string
-    primaryColor?: string
+    left?: ButtonProps
+    right: ButtonProps
   } = $props()
 </script>
 
-{#if singleButton}
-  <div class="w-full">
-    <button
-      class={["w-full", "px-6 py-4", "text-lg font-semibold text-white", "bg-white/15", "rounded-xl", "cursor-pointer transition-all hover:bg-white/25 active:scale-[0.98]"]}
-      style:background-color={primaryColor}
-      onclick={onPrimary}
-      type="button"
+{#if left}
+  <div class="flex w-full items-center gap-3">
+    {#if left.iconOnly && left.icon}
+      <IconButton
+        icon={left.icon}
+        shape="square"
+        size="lg"
+        variant="outline"
+        label={left.label}
+        disabled={left.disabled}
+        onclick={left.onclick}
+      />
+    {:else}
+      <Button
+        variant={left.variant ?? "outline"}
+        size="lg"
+        icon={left.icon}
+        color={left.color}
+        disabled={left.disabled}
+        class="flex-1"
+        onclick={left.onclick}
+      >
+        {left.label}
+      </Button>
+    {/if}
+    <Button
+      variant={right.variant ?? "standard"}
+      size="lg"
+      icon={right.icon}
+      color={right.color}
+      disabled={right.disabled}
+      class="flex-1"
+      onclick={right.onclick}
     >
-      {primaryLabel}
-    </button>
-  </div>
-{:else if equalButtons}
-  <div class="flex gap-3 w-full">
-    <button
-      class={["flex flex-1 items-center justify-center gap-2", "px-6 py-4", "text-lg font-semibold text-white", "bg-white/10", "rounded-xl", "cursor-pointer transition-all hover:bg-white/20 active:scale-[0.98]"]}
-      onclick={onBack}
-      type="button"
-      aria-label={backLabel}
-    >
-      {#if backIcon}
-        <i class="{backIcon} text-base"></i>
-      {/if}
-      {backLabel}
-    </button>
-    <button
-      class={["flex flex-1 items-center justify-center gap-2", "px-6 py-4", "text-lg font-semibold text-white", "rounded-xl", "cursor-pointer transition-all hover:opacity-90 active:scale-[0.98]"]}
-      style:background-color={primaryColor || "rgb(255 255 255 / 0.15)"}
-      onclick={onPrimary}
-      type="button"
-    >
-      {#if primaryIcon}
-        <i class="{primaryIcon} text-base"></i>
-      {/if}
-      {primaryLabel}
-    </button>
+      {right.label}
+    </Button>
   </div>
 {:else}
-  <div class="flex items-center gap-3 w-full">
-    <button
-      class={["flex items-center justify-center", "h-14 w-14", "text-white/60", "border border-white/20 rounded-xl", "cursor-pointer transition-all hover:bg-white/10 hover:text-white active:scale-[0.98]"]}
-      onclick={onBack}
-      type="button"
-      aria-label={backLabel}
+  <div class="w-full">
+    <Button
+      variant={right.variant ?? "standard"}
+      size="lg"
+      icon={right.icon}
+      color={right.color}
+      disabled={right.disabled}
+      fullWidth
+      onclick={right.onclick}
     >
-      <i class="fa-solid fa-arrow-left text-lg"></i>
-    </button>
-    <button
-      class={["flex-1", "px-6 py-4", "text-lg font-semibold text-white", "bg-white/15", "rounded-xl", "cursor-pointer transition-all hover:bg-white/25 active:scale-[0.98]"]}
-      onclick={onPrimary}
-      type="button"
-    >
-      {primaryLabel}
-    </button>
+      {right.label}
+    </Button>
   </div>
 {/if}
