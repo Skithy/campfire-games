@@ -359,14 +359,8 @@
   </div>
   <div
     class={[
-      currentBeta !== null &&
-        Math.abs(currentBeta) <= TILT_THRESHOLD &&
-        tiltDirection === "positive" &&
-        "text-green-400",
-      currentBeta !== null &&
-        Math.abs(currentBeta) <= TILT_THRESHOLD &&
-        tiltDirection === "negative" &&
-        "text-orange-400",
+      currentBeta !== null && currentBeta >= 0 && currentBeta <= 45 && "text-green-400",
+      currentBeta !== null && currentBeta >= -45 && currentBeta < 0 && "text-orange-400",
     ]}
   >
     Gamma: {currentBeta?.toFixed(1) ?? "—"}°
@@ -375,32 +369,28 @@
     Ready: {tiltReady ? "Yes" : "No (return to vertical)"}
   </div>
   <div class="text-white/60">
-    <div>Direction: {tiltDirection ?? "—"}</div>
-    <div>↓ Correct: +90° → 0° (≤{TILT_THRESHOLD}°)</div>
-    <div>↑ Skip: -90° → 0° (≤{TILT_THRESHOLD}°)</div>
-    <div>⊙ Neutral: |γ| ≥ {NEUTRAL_ZONE}°</div>
+    <div>↓ Correct: 0° to 45°</div>
+    <div>↑ Skip: -45° to 0°</div>
+    <div>⊙ Reset: &gt;80° or &lt;-80°</div>
   </div>
   <!-- Visual tilt indicator -->
   <div class="pt-1">
     <div class="relative h-4 overflow-hidden rounded bg-white/20">
-      <!-- Skip zone (negative gamma path) -->
+      <!-- Skip zone (-45° to 0°) -->
       <div
         class="absolute left-0 h-full bg-orange-500/30"
-        style:width={`${(TILT_THRESHOLD / 90) * 50}%`}
+        style:width={`${(45 / 180) * 100}%`}
       ></div>
-      <!-- Correct zone (positive gamma path) -->
+      <!-- Correct zone (0° to 45°) -->
       <div
         class="absolute right-0 h-full bg-green-500/30"
-        style:width={`${(TILT_THRESHOLD / 90) * 50}%`}
+        style:width={`${(45 / 180) * 100}%`}
       ></div>
-      <!-- Neutral zones (near vertical) -->
-      <div
-        class="absolute left-0 h-full bg-blue-500/30"
-        style:width={`${((90 - NEUTRAL_ZONE) / 180) * 100}%`}
-      ></div>
+      <!-- Reset zones (< -80° and > 80°) -->
+      <div class="absolute left-0 h-full bg-blue-500/30" style:width={`${(10 / 180) * 100}%`}></div>
       <div
         class="absolute right-0 h-full bg-blue-500/30"
-        style:width={`${((90 - NEUTRAL_ZONE) / 180) * 100}%`}
+        style:width={`${(10 / 180) * 100}%`}
       ></div>
       <!-- Current position indicator -->
       {#if currentBeta !== null}
