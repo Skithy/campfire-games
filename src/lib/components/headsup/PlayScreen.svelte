@@ -188,7 +188,7 @@
   })
 </script>
 
-<div class="flex h-full w-full flex-col gap-2">
+<div class="flex h-full w-full flex-col gap-6">
   <!-- Skip zone (top) -->
   <button
     class={[
@@ -241,24 +241,26 @@
     </div>
 
     <!-- Word display -->
-    {#key word}
-      <div
-        class={[
-          "flex items-center justify-center",
-          "transition-all duration-300",
-          isExiting && exitDirection === "correct" && "translate-y-16 opacity-0",
-          isExiting && exitDirection === "skip" && "-translate-y-16 opacity-0",
-        ]}
-        in:fly={{ y: exitDirection === "correct" ? 50 : -50, duration: 200, opacity: 0 }}
-      >
-        <h1
-          class="text-center text-5xl font-black tracking-tight text-white uppercase drop-shadow-lg"
-          style:text-shadow="0 4px 20px rgba(0,0,0,0.3)"
+    <div class="relative h-full w-full px-8">
+      {#key word}
+        <div
+          class="absolute inset-0 flex items-center justify-center"
+          in:fly={{ x: -50, duration: 200, opacity: 0 }}
+          out:fly={{
+            y: exitDirection === "correct" ? 50 : exitDirection === "skip" ? -50 : 0,
+            duration: 200,
+            opacity: 0,
+          }}
         >
-          {word}
-        </h1>
-      </div>
-    {/key}
+          <h1
+            class="text-center text-5xl font-black tracking-tight text-white uppercase drop-shadow-lg"
+            style:text-shadow="0 4px 20px rgba(0,0,0,0.3)"
+          >
+            {word}
+          </h1>
+        </div>
+      {/key}
+    </div>
   </div>
 
   <!-- Correct zone (bottom) -->
