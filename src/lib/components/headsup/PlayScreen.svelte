@@ -87,7 +87,7 @@
   // gamma: 0° = phone horizontal (screen up OR screen down)
   // Correct: 0° to 45° (tilting down)
   // Skip: -45° to 0° (tilting up)
-  // Reset: > 80° or < -80°
+  // Reset: > 70° or < -70°
 
   let tiltReady = $state(true) // Must return to neutral before next tilt
 
@@ -107,7 +107,7 @@
     const gamma = e.gamma
 
     // Check if returned to near-vertical (neutral) zone
-    if (!tiltReady && (gamma > 80 || gamma < -80)) {
+    if (!tiltReady && (gamma > 70 || gamma < -70)) {
       tiltReady = true
     }
 
@@ -368,74 +368,3 @@
     </div>
   </div>
 </Modal>
-
-<!-- Debug overlay for tilt controls -->
-<div
-  class={[
-    "fixed bottom-4 left-4",
-    "p-3",
-    "font-mono text-xs text-white",
-    "bg-black/70",
-    "rounded-lg",
-    "space-y-1",
-  ]}
->
-  <div class="font-bold text-yellow-400">Tilt Debug</div>
-  <div class="text-[10px] text-white/60">{permissionStatus ?? "checking..."}</div>
-  <div>
-    Events: {eventCount} | Supported: {orientationSupported === null
-      ? "?"
-      : orientationSupported
-        ? "Yes"
-        : "No (gamma null)"}
-  </div>
-  <div
-    class={[
-      currentBeta !== null && currentBeta >= 0 && currentBeta <= 45 && "text-green-400",
-      currentBeta !== null && currentBeta >= -45 && currentBeta < 0 && "text-orange-400",
-    ]}
-  >
-    Gamma: {currentBeta?.toFixed(1) ?? "—"}°
-  </div>
-  <div class={["border-t border-white/20 pt-1", tiltReady ? "text-green-400" : "text-white/40"]}>
-    Ready: {tiltReady ? "Yes" : "No (return to vertical)"}
-  </div>
-  <div class="text-white/60">
-    <div>↓ Correct: 0° to 45°</div>
-    <div>↑ Skip: -45° to 0°</div>
-    <div>⊙ Reset: &gt;80° or &lt;-80°</div>
-  </div>
-  <!-- Visual tilt indicator -->
-  <div class="pt-1">
-    <div class="relative h-4 overflow-hidden rounded bg-white/20">
-      <!-- Skip zone (-45° to 0°) -->
-      <div
-        class="absolute left-0 h-full bg-orange-500/30"
-        style:width={`${(45 / 180) * 100}%`}
-      ></div>
-      <!-- Correct zone (0° to 45°) -->
-      <div
-        class="absolute right-0 h-full bg-green-500/30"
-        style:width={`${(45 / 180) * 100}%`}
-      ></div>
-      <!-- Reset zones (< -80° and > 80°) -->
-      <div class="absolute left-0 h-full bg-blue-500/30" style:width={`${(10 / 180) * 100}%`}></div>
-      <div
-        class="absolute right-0 h-full bg-blue-500/30"
-        style:width={`${(10 / 180) * 100}%`}
-      ></div>
-      <!-- Current position indicator -->
-      {#if currentBeta !== null}
-        <div
-          class="absolute top-0 h-full w-1 bg-white"
-          style:left={`${Math.min(100, Math.max(0, ((currentBeta + 90) / 180) * 100))}%`}
-        ></div>
-      {/if}
-    </div>
-    <div class="flex justify-between text-[10px] text-white/40">
-      <span>-90°</span>
-      <span>0°</span>
-      <span>90°</span>
-    </div>
-  </div>
-</div>
