@@ -9,6 +9,8 @@
   import { GREEN, PURPLE } from "$lib/constants/colors"
   import { checkSensorPermissions, SensorPermissionStatus } from "$lib/utils/sensors"
 
+  import SensorWarning from "./SensorWarning.svelte"
+
   let {
     onStart,
   }: {
@@ -23,9 +25,11 @@
 
   let hasTiltControls = $state(true)
   let instructionsReady = $state(false)
+  let permissionStatus = $state<SensorPermissionStatus | null>(null)
 
   onMount(async () => {
     const status = await checkSensorPermissions()
+    permissionStatus = status
     hasTiltControls = status === SensorPermissionStatus.Granted
     instructionsReady = true
   })
@@ -34,6 +38,8 @@
     onStart()
   }
 </script>
+
+<SensorWarning {permissionStatus} />
 
 <div class="relative flex h-full w-full flex-row items-stretch gap-4">
   <LandscapeNavbar />
