@@ -140,21 +140,8 @@
 
   onMount(() => {
     window.addEventListener("keydown", handleKeydown)
-    if (typeof DeviceOrientationEvent !== "undefined") {
-      // @ts-expect-error - requestPermission is iOS-specific
-      if (typeof DeviceOrientationEvent.requestPermission === "function") {
-        // @ts-expect-error - requestPermission is iOS-specific
-        DeviceOrientationEvent.requestPermission()
-          .then((permission: string) => {
-            if (permission === "granted") {
-              window.addEventListener("deviceorientation", handleOrientation)
-            }
-          })
-          .catch(console.error)
-      } else {
-        window.addEventListener("deviceorientation", handleOrientation)
-      }
-    }
+    // Permission is requested in GetReadyScreen before navigating here
+    window.addEventListener("deviceorientation", handleOrientation)
 
     return () => {
       window.removeEventListener("keydown", handleKeydown)

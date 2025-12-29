@@ -13,6 +13,22 @@
   $effect(() => {
     ctx.setBackground(GREEN, PURPLE)
   })
+
+  async function handleStart() {
+    // Request device orientation permission on iOS (must be from user gesture)
+    if (typeof DeviceOrientationEvent !== "undefined") {
+      // @ts-expect-error - requestPermission is iOS-specific
+      if (typeof DeviceOrientationEvent.requestPermission === "function") {
+        try {
+          // @ts-expect-error - requestPermission is iOS-specific
+          await DeviceOrientationEvent.requestPermission()
+        } catch {
+          // Permission denied or error, continue anyway (tap controls still work)
+        }
+      }
+    }
+    onStart()
+  }
 </script>
 
 <div class="flex flex-1 flex-col items-center justify-between gap-6">
@@ -55,5 +71,5 @@
     </div>
   </div>
 
-  <PageActions right={{ label: "Start Round", onclick: onStart, color: GREEN.toRgb() }} />
+  <PageActions right={{ label: "Start Round", onclick: handleStart, color: GREEN.toRgb() }} />
 </div>
