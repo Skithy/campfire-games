@@ -110,21 +110,20 @@
     {/if}
   </div>
 
-  <!-- Right: Start button -->
-  <div class="flex flex-col items-center justify-center">
-    <button
-      class={[
-        "flex items-center justify-center",
-        "h-16 w-16",
-        "text-2xl text-white",
-        "rounded-full",
-        "cursor-pointer",
-        "transition-transform hover:scale-105 active:scale-95",
-      ]}
-      style:background-color={GREEN.toRgb()}
-      onclick={handleStart}
-    >
-      <i class="fa-solid fa-play"></i>
-    </button>
-  </div>
+  <!-- Right: Large tap target to start -->
+  <button
+    class={[
+      "flex flex-col items-center justify-center gap-2",
+      "w-40",
+      "cursor-pointer",
+      "rounded-2xl",
+      "transition-all active:brightness-110",
+    ]}
+    style:background-color={GREEN.toRgba(0.2)}
+    onclick={handleStart}
+    aria-label="Tap to start"
+  >
+    <i class="fa-solid fa-play text-3xl" style:color={GREEN.toRgb()}></i>
+    <span class="text-sm font-medium" style:color={GREEN.toRgb()}>Tap to Start</span>
+  </button>
 </div>
