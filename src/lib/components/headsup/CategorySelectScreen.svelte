@@ -15,12 +15,12 @@
   })
 </script>
 
-<div class={["flex flex-1 flex-col", "px-4 pb-6"]}>
+<div class={["flex flex-1 flex-col overflow-hidden", "px-4 pb-6"]}>
   <div class="mb-6 text-center">
     <h2 class="text-2xl font-bold text-white">Choose a Category</h2>
   </div>
 
-  <div class="grid flex-1 grid-cols-2 gap-3">
+  <div class={["grid auto-rows-min grid-cols-2 gap-3", "flex-1 overflow-y-auto"]}>
     {#each headsupCategories as category (category.id)}
       <button
         class={[
