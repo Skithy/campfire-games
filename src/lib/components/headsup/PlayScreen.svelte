@@ -269,23 +269,19 @@
     </div>
   </div>
 
-  <!-- Right side: Pause button and Timer -->
-  <div class="flex w-24 flex-col items-center justify-center gap-4">
-    <button
-      class={[
-        "flex items-center justify-center",
-        "h-16 w-16",
-        "cursor-pointer",
-        "text-2xl text-white/60",
-        "bg-white/10",
-        "rounded-full",
-        "transition-colors hover:bg-white/20 active:scale-95",
-      ]}
-      onclick={onTogglePause}
-      aria-label="Pause game"
-    >
-      <i class="fa-solid fa-pause"></i>
-    </button>
+  <!-- Right side: Pause tap target and Timer -->
+  <button
+    class={[
+      "flex flex-col items-center justify-center gap-4",
+      "w-24",
+      "cursor-pointer",
+      "bg-transparent",
+      "transition-colors active:bg-white/10",
+    ]}
+    onclick={onTogglePause}
+    aria-label="Pause game"
+  >
+    <i class="fa-solid fa-pause text-2xl text-white/60"></i>
 
     <div
       class={[
@@ -300,7 +296,7 @@
     >
       {timeRemaining}
     </div>
-  </div>
+  </button>
 </div>
 
 <GameMenu
