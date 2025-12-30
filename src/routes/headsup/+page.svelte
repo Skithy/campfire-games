@@ -216,7 +216,7 @@
 
 <svelte:head>
   <title>Heads Up - Campfire Games</title>
-  <meta name="description" content="Hold the phone to your forehead and guess the word" />
+  <meta name="description" content="What's on your head? Find out!" />
 </svelte:head>
 
 <div class={["relative", "h-full w-full"]}>

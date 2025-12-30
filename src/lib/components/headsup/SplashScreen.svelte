@@ -44,7 +44,7 @@
       >
         Heads Up
       </h1>
-      <p class="text-lg text-white/50">Guess the word on your forehead</p>
+      <p class="text-lg text-white/50">What's on your head? Find out!</p>
     </div>
   </div>
 

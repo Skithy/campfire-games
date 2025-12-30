@@ -46,7 +46,7 @@
       >
         Monikers
       </h1>
-      <p class="text-lg text-white/50">Guess the name in 3 rounds</p>
+      <p class="text-lg text-white/50">One deck, three ways to guess</p>
     </div>
   </div>
 

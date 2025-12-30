@@ -264,7 +264,7 @@
 
 <svelte:head>
   <title>Monikers - Campfire Games</title>
-  <meta name="description" content="Guess the name in 3 rounds" />
+  <meta name="description" content="One deck, three ways to guess" />
 </svelte:head>
 
 <div class={["relative", "h-full w-full"]}>

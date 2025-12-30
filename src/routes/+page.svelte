@@ -17,19 +17,19 @@
     },
     {
       name: "Taboo",
-      description: "Guess the word without forbidden clues",
+      description: "The word-guessing game with a twist",
       url: "/taboo",
       gradient: Color.toGradient(RED, BLUE),
     },
     {
       name: "Heads Up",
-      description: "Guess the word on your forehead",
+      description: "What's on your head? Find out!",
       url: "/headsup",
       gradient: Color.toGradient(GREEN, PURPLE),
     },
     {
       name: "Monikers",
-      description: "Guess the name in 3 rounds",
+      description: "One deck, three ways to guess",
       url: "/monikers",
       gradient: Color.toGradient(RED, BLUE),
     },
