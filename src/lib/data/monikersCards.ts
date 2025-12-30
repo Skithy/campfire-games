@@ -1,0 +1,73 @@
+export interface MonikersCard {
+  name: string
+  description: string
+  category: "person" | "character" | "concept"
+}
+
+export const monikersCards: MonikersCard[] = [
+  // Real People
+  { name: "Albert Einstein", description: "Physicist known for the theory of relativity and E=mc²", category: "person" },
+  { name: "Beyoncé", description: "Pop superstar, former Destiny's Child member, married to Jay-Z", category: "person" },
+  { name: "Elon Musk", description: "CEO of Tesla and SpaceX, bought Twitter", category: "person" },
+  { name: "Taylor Swift", description: "Pop country singer known for songs about her exes", category: "person" },
+  { name: "Gordon Ramsay", description: "British chef famous for yelling at people on Hell's Kitchen", category: "person" },
+  { name: "Oprah Winfrey", description: "Talk show host known for giving away cars", category: "person" },
+  { name: "Michael Jordan", description: "Basketball legend, 6-time NBA champion, Air Jordans", category: "person" },
+  { name: "Queen Elizabeth II", description: "Longest-reigning British monarch, loved corgis", category: "person" },
+  { name: "Steve Jobs", description: "Apple co-founder, turtleneck enthusiast", category: "person" },
+  { name: "Marilyn Monroe", description: "1950s Hollywood icon, sang Happy Birthday to JFK", category: "person" },
+  { name: "Bob Ross", description: "Painter with an afro who loved happy little trees", category: "person" },
+  { name: "Muhammad Ali", description: "Boxing legend who floated like a butterfly", category: "person" },
+  { name: "Freddie Mercury", description: "Queen frontman, iconic mustache, Bohemian Rhapsody", category: "person" },
+  { name: "Leonardo da Vinci", description: "Renaissance artist and inventor, painted the Mona Lisa", category: "person" },
+  { name: "Cleopatra", description: "Ancient Egyptian queen, had affairs with Caesar and Mark Antony", category: "person" },
+  { name: "Elvis Presley", description: "The King of Rock and Roll, hip shaker", category: "person" },
+  { name: "Dwayne 'The Rock' Johnson", description: "Wrestler turned actor, can you smell what he's cooking?", category: "person" },
+  { name: "Abraham Lincoln", description: "16th US President, tall guy with a top hat, freed the slaves", category: "person" },
+  { name: "Marie Curie", description: "Scientist who discovered radioactivity, won 2 Nobel Prizes", category: "person" },
+  { name: "David Attenborough", description: "British naturalist who narrates nature documentaries", category: "person" },
+
+  // Fictional Characters
+  { name: "Darth Vader", description: "Star Wars villain, Luke's father, heavy breather", category: "character" },
+  { name: "Harry Potter", description: "The boy who lived, has a lightning scar", category: "character" },
+  { name: "Shrek", description: "Green ogre who lives in a swamp, loves Fiona", category: "character" },
+  { name: "James Bond", description: "British spy, 007, shaken not stirred", category: "character" },
+  { name: "Batman", description: "Dark Knight of Gotham, has a butler named Alfred", category: "character" },
+  { name: "Elsa", description: "Frozen queen who let it go", category: "character" },
+  { name: "Homer Simpson", description: "Yellow cartoon dad who loves donuts and Duff beer", category: "character" },
+  { name: "Mario", description: "Italian plumber who saves Princess Peach", category: "character" },
+  { name: "Gollum", description: "Lord of the Rings creature obsessed with his precious", category: "character" },
+  { name: "SpongeBob SquarePants", description: "Yellow sponge who lives in a pineapple under the sea", category: "character" },
+  { name: "Sherlock Holmes", description: "Detective who says 'elementary, my dear Watson'", category: "character" },
+  { name: "Winnie the Pooh", description: "Bear who loves honey and has no pants", category: "character" },
+  { name: "The Joker", description: "Batman's nemesis, clown makeup, chaos agent", category: "character" },
+  { name: "Captain Jack Sparrow", description: "Drunk pirate who wants rum and the Black Pearl", category: "character" },
+  { name: "Forrest Gump", description: "Man who ran across America, life is like a box of chocolates", category: "character" },
+  { name: "Cinderella", description: "Princess who lost her glass slipper at midnight", category: "character" },
+  { name: "Gandalf", description: "Wizard who shall not let you pass", category: "character" },
+  { name: "The Grinch", description: "Green creature who stole Christmas", category: "character" },
+  { name: "Pikachu", description: "Yellow electric mouse Pokémon", category: "character" },
+  { name: "Katniss Everdeen", description: "Hunger Games heroine, volunteers as tribute", category: "character" },
+
+  // Concepts/Things
+  { name: "A Hot Dog", description: "Sausage in a bun, baseball stadium food", category: "concept" },
+  { name: "A Selfie", description: "Photo you take of yourself with a phone", category: "concept" },
+  { name: "Netflix and Chill", description: "Watching streaming TV that leads to something else", category: "concept" },
+  { name: "The Walk of Shame", description: "Going home in last night's clothes", category: "concept" },
+  { name: "A Food Coma", description: "Being sleepy after eating too much", category: "concept" },
+  { name: "Dad Jokes", description: "Corny puns that make you groan", category: "concept" },
+  { name: "Monday Morning", description: "The worst day to start the work week", category: "concept" },
+  { name: "A Karen", description: "Person who demands to speak to the manager", category: "concept" },
+  { name: "FOMO", description: "Fear of missing out on something fun", category: "concept" },
+  { name: "A Hangover", description: "Feeling terrible after drinking too much", category: "concept" },
+  { name: "A Bad Hair Day", description: "When your hair won't cooperate", category: "concept" },
+  { name: "Mansplaining", description: "When a man explains something condescendingly", category: "concept" },
+  { name: "A Couch Potato", description: "Someone who watches TV all day", category: "concept" },
+  { name: "Déjà Vu", description: "Feeling like you've experienced something before", category: "concept" },
+  { name: "Procrastination", description: "Putting off things you should be doing", category: "concept" },
+  { name: "A Brain Freeze", description: "Headache from eating ice cream too fast", category: "concept" },
+  { name: "Road Rage", description: "Getting angry at other drivers", category: "concept" },
+  { name: "An Awkward Silence", description: "When nobody knows what to say", category: "concept" },
+  { name: "A Midlife Crisis", description: "Buying a sports car at 50", category: "concept" },
+  { name: "Ghosting", description: "Disappearing and not responding to messages", category: "concept" },
+]

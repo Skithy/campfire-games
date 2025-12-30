@@ -9,6 +9,7 @@
   let isWavelength = $derived($page.url.pathname.includes("wavelength"))
   let isTaboo = $derived($page.url.pathname.includes("taboo"))
   let isHeadsup = $derived($page.url.pathname.includes("headsup"))
+  let isMonikers = $derived($page.url.pathname.includes("monikers"))
 
   let isSettingsOpen = $state(false)
 
@@ -96,6 +97,28 @@
         style:color="transparent"
       >
         Heads Up
+      </a>
+    {:else if isMonikers}
+      <a
+        href="/"
+        class="text-base font-bold tracking-tight transition-opacity hover:opacity-80 sm:text-lg"
+        style:background={Color.toGradient(ORANGE, GOLD)}
+        style:-webkit-background-clip="text"
+        style:background-clip="text"
+        style:color="transparent"
+      >
+        Campfire Games
+      </a>
+      <span class="text-base text-white/30 sm:text-lg">/</span>
+      <a
+        href="/monikers?reset=true"
+        class="text-base font-bold tracking-tight transition-opacity hover:opacity-80 sm:text-lg"
+        style:background={Color.toGradient(RED, BLUE)}
+        style:-webkit-background-clip="text"
+        style:background-clip="text"
+        style:color="transparent"
+      >
+        Monikers
       </a>
     {:else}
       <a

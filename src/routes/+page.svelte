@@ -27,6 +27,12 @@
       url: "/headsup",
       gradient: Color.toGradient(GREEN, PURPLE),
     },
+    {
+      name: "Monikers",
+      description: "Guess the name in 3 rounds",
+      url: "/monikers",
+      gradient: Color.toGradient(RED, BLUE),
+    },
   ]
 </script>
 
