@@ -1,11 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte"
 
-  import {
-    getGameContainerContext,
-    Orientation,
-  } from "$lib/components/layout/gameContainerContext.svelte"
-  import LandscapeNavbar from "$lib/components/layout/LandscapeNavbar.svelte"
+  import { getGameContainerContext } from "$lib/components/layout/gameContainerContext.svelte"
   import { GREEN, PURPLE } from "$lib/constants/colors"
   import { checkSensorPermissions, SensorPermissionStatus } from "$lib/utils/sensors"
 
@@ -13,14 +9,15 @@
 
   let {
     onStart,
+    onBack,
   }: {
     onStart: () => void
+    onBack: () => void
   } = $props()
 
   const ctx = getGameContainerContext()
   $effect(() => {
     ctx.setBackground(GREEN, PURPLE)
-    ctx.setOrientation(Orientation.Landscape)
   })
 
   let hasTiltControls = $state(true)
@@ -41,8 +38,23 @@
 
 <SensorWarning {permissionStatus} />
 
-<div class="relative flex h-full w-full flex-row items-stretch gap-4">
-  <LandscapeNavbar />
+<div class="relative flex h-full w-full flex-row items-stretch gap-4 p-4">
+  <!-- Left: Back button -->
+  <button
+    class={[
+      "flex flex-col items-center justify-center gap-2",
+      "w-40",
+      "cursor-pointer",
+      "rounded-2xl",
+      "bg-white/5",
+      "transition-all active:brightness-110",
+    ]}
+    onclick={onBack}
+    aria-label="Back to categories"
+  >
+    <i class="fa-solid fa-arrow-left text-2xl text-white/60"></i>
+    <span class="text-sm font-medium text-white/60">Categories</span>
+  </button>
 
   <!-- Center: Instructions -->
   <div class="flex flex-1 flex-col items-center justify-center gap-4">

@@ -2,10 +2,7 @@
   import { onMount } from "svelte"
   import { fly } from "svelte/transition"
 
-  import {
-    getGameContainerContext,
-    Orientation,
-  } from "$lib/components/layout/gameContainerContext.svelte"
+  import { getGameContainerContext } from "$lib/components/layout/gameContainerContext.svelte"
   import { getSettingsContext } from "$lib/components/layout/settingsContext.svelte"
   import { GREEN, PURPLE } from "$lib/constants/colors"
   import countdownSound from "$lib/sounds/game-countdown-3.mp3"
@@ -39,7 +36,6 @@
 
   $effect(() => {
     ctx.setBackground(GREEN, PURPLE)
-    ctx.setOrientation(Orientation.Landscape)
   })
 
   // Play countdown sound at 3 seconds
