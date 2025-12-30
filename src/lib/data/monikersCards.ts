@@ -553,6 +553,191 @@ export const monikersCards: MonikersCard[] = [
     description: "Your body remembering how to do things automatically",
     category: "concept",
   },
+  {
+    name: "A Dad Bod",
+    description: "Slightly chubby physique that comes with fatherhood",
+    category: "concept",
+  },
+  {
+    name: "Jet Lag",
+    description: "Being exhausted and confused after flying across time zones",
+    category: "concept",
+  },
+  {
+    name: "A Cheat Day",
+    description: "Day when you ignore your diet and eat whatever you want",
+    category: "concept",
+  },
+  {
+    name: "A Shower Thought",
+    description: "Random deep insight that comes while bathing",
+    category: "concept",
+  },
+  {
+    name: "A Food Baby",
+    description: "Bloated belly after eating way too much",
+    category: "concept",
+  },
+  {
+    name: "Second-Hand Embarrassment",
+    description: "Cringing at someone else's awkward moment",
+    category: "concept",
+  },
+  {
+    name: "A Jump Scare",
+    description: "Sudden scary moment in a horror movie",
+    category: "concept",
+  },
+  {
+    name: "A Plot Hole",
+    description: "Logical gap in a story that doesn't make sense",
+    category: "concept",
+  },
+  {
+    name: "The Snooze Button",
+    description: "Hitting it five more times every morning",
+    category: "concept",
+  },
+  {
+    name: "A Backhanded Compliment",
+    description: "Insult disguised as something nice",
+    category: "concept",
+  },
+  {
+    name: "YOLO",
+    description: "You only live once, excuse for bad decisions",
+    category: "concept",
+  },
+  {
+    name: "An Earworm",
+    description: "Song stuck in your head that won't leave",
+    category: "concept",
+  },
+  {
+    name: "A Staycation",
+    description: "Vacation where you don't go anywhere",
+    category: "concept",
+  },
+  {
+    name: "A Victory Lap",
+    description: "Celebrating your success for everyone to see",
+    category: "concept",
+  },
+  {
+    name: "The Walk of Fame",
+    description: "Hollywood sidewalk with celebrity stars",
+    category: "concept",
+  },
+  {
+    name: "A Standing Ovation",
+    description: "When the audience stands up clapping",
+    category: "concept",
+  },
+  {
+    name: "A Guilty Conscience",
+    description: "That nagging feeling when you did something wrong",
+    category: "concept",
+  },
+  {
+    name: "Inside Joke",
+    description: "Humor that only your friend group understands",
+    category: "concept",
+  },
+  {
+    name: "The Five-Second Rule",
+    description: "Dropped food is still okay if picked up quickly",
+    category: "concept",
+  },
+  {
+    name: "Tantrum",
+    description: "When a child (or adult) loses it completely",
+    category: "concept",
+  },
+  {
+    name: "Typo",
+    description: "Accidental spelling mistake that changes everything",
+    category: "concept",
+  },
+  {
+    name: "Plot Device",
+    description: "Convenient story element that moves things forward",
+    category: "concept",
+  },
+  {
+    name: "The Munchies",
+    description: "Intense hunger that comes after smoking weed",
+    category: "concept",
+  },
+  {
+    name: "White Lie",
+    description: "Small harmless lie to spare someone's feelings",
+    category: "concept",
+  },
+  {
+    name: "Double Take",
+    description: "Looking twice because you can't believe what you saw",
+    category: "concept",
+  },
+  {
+    name: "Cliffhanger",
+    description: "Story ending that leaves you desperate for more",
+    category: "concept",
+  },
+  {
+    name: "Rain Check",
+    description: "Postponing plans for another time",
+    category: "concept",
+  },
+  {
+    name: "Reality Check",
+    description: "Brutal truth that brings you back to earth",
+    category: "concept",
+  },
+  {
+    name: "Cold Shoulder",
+    description: "Ignoring someone to show you're upset",
+    category: "concept",
+  },
+  {
+    name: "Wild Card",
+    description: "Unpredictable person who could do anything",
+    category: "concept",
+  },
+  {
+    name: "A Third Wheel",
+    description: "Awkward person hanging out with a couple",
+    category: "concept",
+  },
+  {
+    name: "Spit Take",
+    description: "Spitting out your drink because something's so funny",
+    category: "concept",
+  },
+  {
+    name: "Slow Clap",
+    description: "Sarcastic or building applause",
+    category: "concept",
+  },
+  {
+    name: "Trust Fall",
+    description: "Falling backwards hoping someone catches you",
+    category: "concept",
+  },
+  {
+    name: "Frenemies",
+    description: "Friend who's also kind of your enemy",
+    category: "concept",
+  },
+  {
+    name: "One-Hit Wonder",
+    description: "Artist famous for only one song",
+    category: "concept",
+  },
+  {
+    name: "Wardrobe Change",
+    description: "Quick costume swap, usually dramatic",
+    category: "concept",
+  },
 
   // Mythology
   {
