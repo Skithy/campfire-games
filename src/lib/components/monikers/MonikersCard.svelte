@@ -14,8 +14,11 @@
 
   const categoryIcons: Record<string, string> = {
     person: "fa-solid fa-user",
-    character: "fa-solid fa-mask",
     concept: "fa-solid fa-lightbulb",
+    mythology: "fa-solid fa-dragon",
+    history: "fa-solid fa-landmark",
+    geography: "fa-solid fa-earth-americas",
+    entertainment: "fa-solid fa-film",
   }
 </script>
 
