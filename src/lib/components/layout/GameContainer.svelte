@@ -103,15 +103,7 @@
 </script>
 
 <div
-  class={[
-    "relative overflow-hidden",
-    "flex flex-col items-center",
-    needsRotation
-      ? "px-4 py-6"
-      : orientation === Orientation.Landscape
-        ? "mx-auto my-auto h-full max-h-112 w-full max-w-200 px-4 py-6 md:rounded-2xl md:border md:border-white/10 md:shadow-2xl"
-        : "mx-auto my-auto h-full w-full max-w-md px-4 py-6 md:max-h-175 md:rounded-2xl md:border md:border-white/10 md:shadow-2xl",
-  ]}
+  class={["relative overflow-hidden", "flex flex-col items-center", "h-full w-full", "px-4 py-6"]}
   style:width={needsRotation ? `${windowHeight}px` : undefined}
   style:height={needsRotation ? `${windowWidth}px` : undefined}
   style:transform={needsRotation ? "rotate(90deg)" : undefined}
@@ -126,7 +118,14 @@
   {#if orientation !== Orientation.Landscape}
     <Navbar />
   {/if}
-  <div class={["relative", "min-h-0 w-full flex-1"]}>
+  <div
+    class={[
+      "relative",
+      orientation === Orientation.Landscape
+        ? "my-auto h-full max-h-96 w-full max-w-2xl"
+        : "min-h-0 w-full max-w-lg flex-1",
+    ]}
+  >
     {@render children()}
   </div>
 </div>

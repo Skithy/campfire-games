@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { onMount } from "svelte"
+
   import { getSettingsContext } from "$lib/components/layout/settingsContext.svelte"
   import type { Prompt } from "$lib/data/wavelengthPrompts"
   import { Color, sliderToDisplayValue } from "$lib/utils/colors"
@@ -132,6 +134,24 @@
     ondragend?.()
   }
 
+  function handleKeydown(e: KeyboardEvent) {
+    if (!interactive) return
+
+    if (e.key === "ArrowLeft") {
+      e.preventDefault()
+      value = Math.max(-10, value - 1)
+    } else if (e.key === "ArrowRight") {
+      e.preventDefault()
+      value = Math.min(10, value + 1)
+    }
+  }
+
+  onMount(() => {
+    if (!interactive) return
+    window.addEventListener("keydown", handleKeydown)
+    return () => window.removeEventListener("keydown", handleKeydown)
+  })
+
   // Tick marks for the dial (every 20% = every 2 slider units)
   const tickAngles = [
     { value: -8, angle: 162 },
@@ -169,7 +189,6 @@
       class:cursor-grab={!isDragging}
       class:cursor-grabbing={isDragging}
       role="slider"
-      tabindex="0"
       aria-valuemin={-10}
       aria-valuemax={10}
       aria-valuenow={value}
@@ -177,10 +196,6 @@
       onpointermove={handlePointerMove}
       onpointerup={handlePointerUp}
       onpointercancel={handlePointerUp}
-      onkeydown={(e) => {
-        if (e.key === "ArrowLeft") value = Math.max(-10, value - 1)
-        if (e.key === "ArrowRight") value = Math.min(10, value + 1)
-      }}
     >
       {@render dialContent()}
     </div>

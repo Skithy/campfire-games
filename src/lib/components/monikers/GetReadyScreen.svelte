@@ -71,7 +71,9 @@
     </div>
 
     <div class="space-y-2 text-center">
-      <p class="text-sm font-medium tracking-widest text-white/60 uppercase">Round {currentRound}</p>
+      <p class="text-sm font-medium tracking-widest text-white/60 uppercase">
+        Round {currentRound}
+      </p>
       <h1 class="text-3xl font-black text-white" style:color={teamColor.toRgb()}>
         {teamName}
       </h1>
@@ -98,6 +100,11 @@
       <div class="flex items-center justify-center gap-2 pt-2 text-sm text-white/60">
         <i class="fa-solid fa-layer-group"></i>
         <span>{cardsRemaining} cards remaining</span>
+      </div>
+      <div class="hidden text-[10px] text-white/40 lg:flex lg:items-center lg:justify-center lg:gap-6">
+        <span>← Skip</span>
+        <span>→ Correct</span>
+        <span>Esc Menu</span>
       </div>
     </div>
   </div>

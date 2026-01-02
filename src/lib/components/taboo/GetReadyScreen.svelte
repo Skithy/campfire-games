@@ -75,6 +75,11 @@
           <span>60 seconds per round</span>
         </li>
       </ul>
+      <div class="hidden pt-2 text-[10px] text-white/40 lg:flex lg:items-center lg:justify-center lg:gap-6">
+        <span>← Skip</span>
+        <span>→ Correct</span>
+        <span>Esc Menu</span>
+      </div>
     </div>
   </div>
 

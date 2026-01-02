@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { onMount } from "svelte"
   import { fly } from "svelte/transition"
 
   import { getGameContainerContext } from "$lib/components/layout/gameContainerContext.svelte"
@@ -138,6 +139,29 @@
     if (isExiting) return
     swipeOut(-1, onSkip)
   }
+
+  function handleKeydown(e: KeyboardEvent) {
+    if (e.key === "Escape") {
+      e.preventDefault()
+      onTogglePause()
+      return
+    }
+
+    if (isPaused || isExiting) return
+
+    if (e.key === "ArrowLeft") {
+      e.preventDefault()
+      swipeOut(-1, onSkip)
+    } else if (e.key === "ArrowRight") {
+      e.preventDefault()
+      swipeOut(1, onCorrect)
+    }
+  }
+
+  onMount(() => {
+    window.addEventListener("keydown", handleKeydown)
+    return () => window.removeEventListener("keydown", handleKeydown)
+  })
 </script>
 
 <div class="flex flex-1 flex-col gap-4">

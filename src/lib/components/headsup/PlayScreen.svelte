@@ -171,6 +171,12 @@
   }
 
   function handleKeydown(e: KeyboardEvent) {
+    if (e.key === "Escape") {
+      e.preventDefault()
+      onTogglePause()
+      return
+    }
+
     if (isPaused || isExiting) return
 
     if (e.key === "ArrowUp") {
