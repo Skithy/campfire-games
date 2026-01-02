@@ -9,11 +9,11 @@
 
   let showInstructions = $state(false)
 
-  const gradient = Color.toGradient(TEAM_RED.color, TEAM_BLUE.color)
+  const gradient = Color.toGradient(TEAM_BLUE.color, TEAM_RED.color)
 
   const ctx = getGameContainerContext()
   $effect(() => {
-    ctx.setBackground(TEAM_RED.color, TEAM_BLUE.color)
+    ctx.setBackground(TEAM_BLUE.color, TEAM_RED.color)
   })
 
   function toggleInstructions() {
@@ -126,8 +126,8 @@
 
       <div class="space-y-2 border-t border-white/10 pt-4">
         <p class="text-sm text-white/70">
-          <strong class="text-white">Teams:</strong> Take turns with 60 seconds per turn. Team with
-          the most points after all 3 rounds wins!
+          <strong class="text-white">Teams:</strong> Take turns with 60 seconds per turn. Team with the
+          most points after all 3 rounds wins!
         </p>
       </div>
 

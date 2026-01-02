@@ -31,7 +31,7 @@
       name: "Monikers",
       description: "One deck, three ways to guess",
       url: "/monikers",
-      gradient: Color.toGradient(RED, BLUE),
+      gradient: Color.toGradient(BLUE, RED),
     },
   ]
 </script>

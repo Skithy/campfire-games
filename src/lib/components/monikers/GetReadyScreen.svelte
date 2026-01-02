@@ -49,7 +49,7 @@
   <div class="flex flex-1 flex-col items-center justify-center gap-6">
     <!-- Round indicator -->
     <div class="flex items-center gap-2">
-      {#each [1, 2, 3] as round}
+      {#each [1, 2, 3] as round (round)}
         <div
           class={[
             "flex items-center justify-center",
@@ -101,7 +101,9 @@
         <i class="fa-solid fa-layer-group"></i>
         <span>{cardsRemaining} cards remaining</span>
       </div>
-      <div class="hidden text-[10px] text-white/40 lg:flex lg:items-center lg:justify-center lg:gap-6">
+      <div
+        class="hidden text-[10px] text-white/40 lg:flex lg:items-center lg:justify-center lg:gap-6"
+      >
         <span>← Skip</span>
         <span>→ Correct</span>
         <span>Esc Menu</span>

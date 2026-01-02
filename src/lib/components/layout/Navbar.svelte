@@ -113,7 +113,7 @@
       <a
         href="/monikers?reset=true"
         class="text-base font-bold tracking-tight transition-opacity hover:opacity-80 sm:text-lg"
-        style:background={Color.toGradient(RED, BLUE)}
+        style:background={Color.toGradient(BLUE, RED)}
         style:-webkit-background-clip="text"
         style:background-clip="text"
         style:color="transparent"
