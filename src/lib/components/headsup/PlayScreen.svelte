@@ -188,14 +188,24 @@
     }
   }
 
+  // Reactively add/remove tilt listener when setting changes
+  $effect(() => {
+    if (settings.isTiltEnabled) {
+      window.addEventListener("deviceorientation", handleOrientation)
+    } else {
+      window.removeEventListener("deviceorientation", handleOrientation)
+    }
+
+    return () => {
+      window.removeEventListener("deviceorientation", handleOrientation)
+    }
+  })
+
   onMount(() => {
     window.addEventListener("keydown", handleKeydown)
-    // Permission is requested in GetReadyScreen before navigating here
-    window.addEventListener("deviceorientation", handleOrientation)
 
     return () => {
       window.removeEventListener("keydown", handleKeydown)
-      window.removeEventListener("deviceorientation", handleOrientation)
     }
   })
 </script>

@@ -3,6 +3,7 @@
 
   import { browser } from "$app/environment"
   import type { Color } from "$lib/utils/colors"
+  import { checkSensorPermissions, SensorPermissionStatus } from "$lib/utils/sensors"
 
   import { Orientation, setGameContainerContext } from "./gameContainerContext.svelte"
   import Navbar from "./Navbar.svelte"
@@ -13,6 +14,7 @@
 
   const MUSIC_STORAGE_KEY = "settings:musicEnabled"
   const VIBRATION_STORAGE_KEY = "settings:vibrationEnabled"
+  const TILT_STORAGE_KEY = "settings:tiltEnabled"
 
   function loadSetting(key: string, defaultValue: boolean): boolean {
     if (!browser) return defaultValue
@@ -43,6 +45,8 @@
 
   let isMusicEnabled = $state(loadSetting(MUSIC_STORAGE_KEY, true))
   let isVibrationEnabled = $state(loadSetting(VIBRATION_STORAGE_KEY, true))
+  let isTiltEnabled = $state(loadSetting(TILT_STORAGE_KEY, true))
+  let isTiltSupported = $state(true) // Assume supported until checked
 
   function setBackground(top: Color, bottom: Color) {
     backgroundTop = top
@@ -61,6 +65,22 @@
   function toggleVibration() {
     isVibrationEnabled = !isVibrationEnabled
     saveSetting(VIBRATION_STORAGE_KEY, isVibrationEnabled)
+  }
+
+  function toggleTilt() {
+    if (!isTiltSupported) return
+    isTiltEnabled = !isTiltEnabled
+    saveSetting(TILT_STORAGE_KEY, isTiltEnabled)
+  }
+
+  async function checkTiltSupport() {
+    const status = await checkSensorPermissions()
+    isTiltSupported =
+      status === SensorPermissionStatus.Granted || status === SensorPermissionStatus.Prompt
+    // If not supported, disable tilt
+    if (!isTiltSupported) {
+      isTiltEnabled = false
+    }
   }
 
   setGameContainerContext({
@@ -87,8 +107,15 @@
     get isVibrationEnabled() {
       return isVibrationEnabled
     },
+    get isTiltEnabled() {
+      return isTiltEnabled
+    },
+    get isTiltSupported() {
+      return isTiltSupported
+    },
     toggleMusic,
     toggleVibration,
+    toggleTilt,
   })
 
   function handleResize() {
@@ -98,6 +125,7 @@
 
   onMount(() => {
     window.addEventListener("resize", handleResize)
+    checkTiltSupport()
     return () => window.removeEventListener("resize", handleResize)
   })
 </script>

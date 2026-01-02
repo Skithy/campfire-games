@@ -149,7 +149,7 @@
 </nav>
 
 <Modal bind:isOpen={isSettingsOpen} title="Settings">
-  <div class="grid grid-cols-2 gap-4 p-6">
+  <div class="grid grid-cols-3 gap-4 p-6">
     <button
       onclick={settingsContext.toggleMusic}
       class={[
@@ -179,5 +179,47 @@
       <i class="fa-solid fa-mobile-screen-button text-4xl"></i>
       <span class="text-sm font-medium">Vibration</span>
     </button>
+
+    <button
+      onclick={settingsContext.toggleTilt}
+      disabled={!settingsContext.isTiltSupported}
+      class={[
+        "relative",
+        "flex flex-col items-center justify-center gap-3",
+        "aspect-square",
+        "p-6",
+        "rounded-2xl",
+        "transition-all",
+        settingsContext.isTiltSupported
+          ? "hover:brightness-110 active:scale-95"
+          : "cursor-not-allowed opacity-50",
+        settingsContext.isTiltEnabled && settingsContext.isTiltSupported
+          ? "bg-white/20 text-white"
+          : "bg-white/5 text-white/50",
+      ]}
+    >
+      <i class="fa-solid fa-rotate text-4xl"></i>
+      <span class="text-sm font-medium">Tilt</span>
+      {#if !settingsContext.isTiltSupported}
+        <span
+          class={[
+            "absolute -top-1 -right-1",
+            "flex items-center justify-center",
+            "h-5 w-5",
+            "text-[10px]",
+            "bg-yellow-500",
+            "rounded-full",
+          ]}
+          title="Tilt controls not supported on this device"
+        >
+          <i class="fa-solid fa-exclamation"></i>
+        </span>
+      {/if}
+    </button>
   </div>
+  {#if !settingsContext.isTiltSupported}
+    <p class="px-6 pb-4 text-center text-xs text-yellow-500/80">
+      Tilt controls not available on this device
+    </p>
+  {/if}
 </Modal>
