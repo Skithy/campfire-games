@@ -208,7 +208,7 @@
 
 <svelte:head>
   <title>Taboo - Campfire Games</title>
-  <meta name="description" content="Guess the word without forbidden clues" />
+  <meta name="description" content="The word-guessing game with a twist" />
 </svelte:head>
 
 <div class={["relative", "h-full w-full"]}>

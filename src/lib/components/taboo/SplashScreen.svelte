@@ -45,7 +45,7 @@
       >
         Taboo
       </h1>
-      <p class="text-lg text-white/50">Guess the word without forbidden clues</p>
+      <p class="text-lg text-white/50">The word-guessing game with a twist</p>
     </div>
   </div>
 
