@@ -61,12 +61,7 @@
       {#each games as game (game.name)}
         <a
           href={game.url}
-          class={[
-            "group relative",
-            "p-0.5",
-            "rounded-xl",
-            "transition-all hover:scale-[1.02] active:scale-[0.98]",
-          ]}
+          class={["group relative", "p-0.75", "rounded-2xl"]}
           style:background={game.gradient}
         >
           <div
@@ -74,7 +69,7 @@
               "flex flex-col gap-2",
               "px-5 py-4",
               "bg-[#1a1a1a]",
-              "rounded-[10px]",
+              "rounded-xl",
               "transition-colors group-hover:bg-transparent",
             ]}
           >
