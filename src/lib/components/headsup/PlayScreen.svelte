@@ -236,8 +236,8 @@
           class={[
             "absolute touch-none select-none",
             "flex items-center justify-center",
-            "h-44 w-80",
-            "px-6 py-4",
+            "h-56 w-96",
+            "px-8 py-6",
             "bg-white/10",
             "rounded-2xl",
             "backdrop-blur-sm",
@@ -258,7 +258,7 @@
           <h1
             class={[
               "text-center font-black tracking-tight text-white uppercase drop-shadow-lg",
-              word.length > 12 ? "text-3xl" : "text-4xl",
+              word.length > 12 ? "text-4xl" : "text-6xl",
             ]}
             style:text-shadow="0 4px 20px rgba(0,0,0,0.3)"
           >
