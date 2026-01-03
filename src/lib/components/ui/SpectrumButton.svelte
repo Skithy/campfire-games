@@ -45,8 +45,8 @@
     <span
       class={[
         "flex flex-1 items-center justify-center",
-        "px-3 py-5",
-        "text-center text-base font-bold whitespace-nowrap",
+        "px-3 py-5 md:px-6 md:py-6",
+        "text-center text-base font-bold whitespace-nowrap md:text-2xl",
       ]}
       style:color={leftColor.toHsl()}
     >
@@ -56,8 +56,8 @@
     <span
       class={[
         "flex flex-1 items-center justify-center",
-        "px-3 py-5",
-        "text-center text-base font-bold whitespace-nowrap",
+        "px-3 py-5 md:px-6 md:py-6",
+        "text-center text-base font-bold whitespace-nowrap md:text-2xl",
       ]}
       style:color={rightColor.toHsl()}
     >

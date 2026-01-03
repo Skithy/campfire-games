@@ -22,9 +22,9 @@
   } = $props()
 </script>
 
-<div class={["flex flex-col items-center gap-4", "min-h-0 w-full flex-1"]}>
+<div class={["flex flex-col items-center gap-4 md:gap-8", "min-h-0 w-full flex-1"]}>
   <!-- Dial Container -->
-  <div class={["flex flex-col items-center justify-center", "min-h-0 w-full flex-1"]}>
+  <div class={["flex flex-col items-center justify-center", "min-h-0 w-full flex-1", "pb-16 md:pb-24"]}>
     <WavelengthDial {prompt} {leftColor} {rightColor} value={guess} targetValue={target} />
   </div>
 

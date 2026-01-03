@@ -27,7 +27,7 @@
 
 <div class={["flex flex-col items-center gap-4", "min-h-0 w-full flex-1"]}>
   <div class={["flex flex-col items-center", "min-h-0 w-full flex-1", "overflow-y-auto"]}>
-    <div class="flex w-full flex-col gap-5">
+    <div class="flex w-full flex-col gap-5 md:gap-6">
       {#each prompts as prompt, i (i)}
         {@const colors = promptColors[i]}
         <SpectrumButton

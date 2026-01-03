@@ -255,7 +255,7 @@
       {#if phase === "splash"}
         <SplashScreen onStart={handleStartGame} />
       {:else if phase === "prompt"}
-        <div class="h-30 shrink-0"></div>
+        <div class="h-30 shrink-0 md:h-48"></div>
         <PromptScreen
           prompts={currentPrompts}
           promptColors={promptListColors}
@@ -263,7 +263,7 @@
           onReroll={handleReroll}
         />
       {:else if phase === "psychic" && selectedPrompt}
-        <div class="h-30 shrink-0"></div>
+        <div class="h-30 shrink-0 md:h-40"></div>
         <PsychicScreen
           {selectedPrompt}
           {target}
@@ -273,7 +273,7 @@
           onBack={handleBackToPrompts}
         />
       {:else if phase === "guess" && selectedPrompt}
-        <div class="h-30 shrink-0"></div>
+        <div class="h-30 shrink-0 md:h-40"></div>
         <GuessScreen
           prompt={selectedPrompt}
           leftColor={promptColors[0]}
@@ -282,7 +282,7 @@
           onBack={handleBackToPsychic}
         />
       {:else if phase === "reveal" && selectedPrompt}
-        <div class="h-30 shrink-0"></div>
+        <div class="h-30 shrink-0 md:h-40"></div>
         <RevealScreen
           prompt={selectedPrompt}
           {target}

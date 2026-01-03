@@ -43,8 +43,8 @@
   const sizeClasses: Record<Size, string> = {
     sm: "px-4 py-2 text-sm",
     md: "px-6 py-3 text-base",
-    lg: "px-8 py-4 text-lg",
-    xl: "px-8 py-4 text-xl",
+    lg: "px-8 py-4 text-lg md:px-10 md:py-5 md:text-2xl",
+    xl: "px-8 py-4 text-xl md:px-12 md:py-6 md:text-3xl",
   }
 
   const variantClasses: Record<Variant, string> = {

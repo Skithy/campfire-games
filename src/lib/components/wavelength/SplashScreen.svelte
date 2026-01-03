@@ -36,18 +36,36 @@
   }
 </script>
 
-<div class="flex h-full flex-col items-center justify-center gap-12 px-4 py-6" in:fade>
+<div class="flex h-full flex-col items-center justify-center gap-12 px-4 py-6 md:gap-16" in:fade>
   <!-- Dial decoration -->
-  <div class="relative flex flex-col items-center gap-6">
+  <div class="relative flex flex-col items-center gap-6 md:gap-8">
     <!-- Mini dial illustration -->
-    <div class="relative h-24 w-48">
+    <div class="relative h-24 w-48 md:h-36 md:w-72">
       <div class="absolute inset-0 rounded-t-full" style:background={gradient}></div>
       <div class="absolute inset-0 rounded-t-full border-2 border-b-0 border-white/30"></div>
       <!-- Dial hand with circular pivot and triangular pointer -->
       <div class="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2">
         <!-- Pointer using SVG with arrow tip -->
         <svg
-          class="absolute bottom-1/2 left-1/2 origin-bottom -translate-x-1/2 transition-transform duration-100"
+          class="absolute bottom-1/2 left-1/2 hidden origin-bottom -translate-x-1/2 transition-transform duration-100 md:block"
+          style:transform="rotate({rotation}deg)"
+          width="30"
+          height="120"
+          viewBox="0 0 20 80"
+        >
+          <line
+            x1="10"
+            y1="16"
+            x2="10"
+            y2="80"
+            stroke="black"
+            stroke-width="8"
+            stroke-linecap="round"
+          />
+          <polygon points="10,0 2,16 18,16" fill="black" />
+        </svg>
+        <svg
+          class="absolute bottom-1/2 left-1/2 origin-bottom -translate-x-1/2 transition-transform duration-100 md:hidden"
           style:transform="rotate({rotation}deg)"
           width="20"
           height="80"
@@ -65,15 +83,15 @@
           <polygon points="10,0 2,16 18,16" fill="black" />
         </svg>
         <!-- Pivot circle -->
-        <div class="relative h-10 w-10 rounded-full bg-black">
-          <div class="absolute inset-2.5 rounded-full bg-gray-600"></div>
+        <div class="relative h-10 w-10 rounded-full bg-black md:h-14 md:w-14">
+          <div class="absolute inset-2.5 rounded-full bg-gray-600 md:inset-3.5"></div>
         </div>
       </div>
     </div>
 
-    <div class="space-y-3 text-center">
+    <div class="space-y-3 text-center md:space-y-4">
       <h1
-        class="pb-1 text-5xl font-black tracking-tight"
+        class="pb-2 text-5xl font-black tracking-tight md:pb-3 md:text-7xl"
         style:background={gradient}
         style:-webkit-background-clip="text"
         style:background-clip="text"
@@ -81,11 +99,11 @@
       >
         Wavelength
       </h1>
-      <p class="text-lg text-white/50">A game of telepathy and empathy</p>
+      <p class="text-lg text-white/50 md:text-2xl">A game of telepathy and empathy</p>
     </div>
   </div>
 
-  <div class="flex w-full max-w-xs flex-col gap-3">
+  <div class="flex w-full max-w-xs flex-col gap-3 md:max-w-md md:gap-4">
     <Button variant="primary" size="xl" icon="fa-solid fa-play" {gradient} onclick={onStart}>
       Start Game
     </Button>
@@ -101,14 +119,14 @@
   </div>
 
   <Modal bind:isOpen={showInstructions} title="How to Play">
-    <div class="space-y-6 p-6 text-left">
-      <div class="space-y-4 text-white/70">
-        <div class="flex gap-3">
+    <div class="space-y-6 p-6 text-left md:space-y-8 md:p-8">
+      <div class="space-y-4 text-white/70 md:space-y-6 md:text-lg">
+        <div class="flex gap-3 md:gap-4">
           <span
             class={[
               "flex shrink-0 items-center justify-center",
-              "h-7 w-7",
-              "text-sm font-bold",
+              "h-7 w-7 md:h-9 md:w-9",
+              "text-sm font-bold md:text-base",
               "rounded-full",
             ]}
             style:background-color={PURPLE.toRgba(0.2)}
@@ -119,12 +137,12 @@
             and sees where the target is located.
           </p>
         </div>
-        <div class="flex gap-3">
+        <div class="flex gap-3 md:gap-4">
           <span
             class={[
               "flex shrink-0 items-center justify-center",
-              "h-7 w-7",
-              "text-sm font-bold",
+              "h-7 w-7 md:h-9 md:w-9",
+              "text-sm font-bold md:text-base",
               "rounded-full",
             ]}
             style:background-color={PURPLE.toRgba(0.2)}
@@ -135,12 +153,12 @@
             at where the target sits.
           </p>
         </div>
-        <div class="flex gap-3">
+        <div class="flex gap-3 md:gap-4">
           <span
             class={[
               "flex shrink-0 items-center justify-center",
-              "h-7 w-7",
-              "text-sm font-bold",
+              "h-7 w-7 md:h-9 md:w-9",
+              "text-sm font-bold md:text-base",
               "rounded-full",
             ]}
             style:background-color={GOLD.toRgba(0.2)}
@@ -151,12 +169,12 @@
             they think the target is.
           </p>
         </div>
-        <div class="flex gap-3">
+        <div class="flex gap-3 md:gap-4">
           <span
             class={[
               "flex shrink-0 items-center justify-center",
-              "h-7 w-7",
-              "text-sm font-bold text-white",
+              "h-7 w-7 md:h-9 md:w-9",
+              "text-sm font-bold text-white md:text-base",
               "bg-white/10",
               "rounded-full",
             ]}>4</span
@@ -169,7 +187,9 @@
       </div>
 
       <div class="flex justify-end pt-2">
-        <Button variant="standard" onclick={() => (showInstructions = false)}>Got it!</Button>
+        <Button variant="standard" size="lg" onclick={() => (showInstructions = false)}
+          >Got it!</Button
+        >
       </div>
     </div>
   </Modal>

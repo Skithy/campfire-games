@@ -181,11 +181,11 @@
   let diffAngle = $derived(diffEnd - diffStart)
 </script>
 
-<div class={["flex flex-col items-center", "w-full", "px-8"]}>
+<div class={["flex flex-col items-center", "w-full", "px-8 md:px-12"]}>
   {#if interactive}
     <div
       bind:this={dialEl}
-      class={["relative", "aspect-2/1 w-full max-w-xs", "touch-none select-none"]}
+      class={["relative", "aspect-2/1 w-full max-w-xs md:max-w-xl", "touch-none select-none"]}
       class:cursor-grab={!isDragging}
       class:cursor-grabbing={isDragging}
       role="slider"
@@ -200,7 +200,7 @@
       {@render dialContent()}
     </div>
   {:else}
-    <div bind:this={dialEl} class={["relative", "aspect-2/1 w-full max-w-xs"]}>
+    <div bind:this={dialEl} class={["relative", "aspect-2/1 w-full max-w-xs md:max-w-xl"]}>
       {@render dialContent()}
     </div>
   {/if}
@@ -322,8 +322,8 @@
       "-translate-x-1/2 translate-y-1/2",
     ]}
   >
-    <div class={["relative", "h-10 w-10", "bg-black", "rounded-full"]}>
-      <div class={["absolute inset-2.5", "bg-gray-600", "rounded-full"]}></div>
+    <div class={["relative", "h-10 w-10 md:h-20 md:w-20", "bg-black", "rounded-full"]}>
+      <div class={["absolute inset-2.5 md:inset-5", "bg-gray-600", "rounded-full"]}></div>
     </div>
   </div>
   <!-- Percentage display below pivot -->
@@ -332,23 +332,41 @@
       class={[
         "absolute bottom-0 left-1/2",
         "pointer-events-none",
-        "-translate-x-1/2 translate-y-[calc(100%+1.5rem)]",
+        "-translate-x-1/2 translate-y-[calc(100%+1.5rem)] md:translate-y-[calc(100%+2.5rem)]",
       ]}
     >
-      <div class={["text-2xl font-bold"]} style:color={arrows[0].color}>
+      <div class={["text-2xl font-bold md:text-5xl"]} style:color={arrows[0].color}>
         {arrows[0].displayValue}%
       </div>
     </div>
   {/if}
 
   <!-- Prompt labels integrated at dial ends -->
-  <div class={["absolute bottom-0 -left-4", "max-w-24", "pt-2", "text-center", "translate-y-full"]}>
-    <span class={["text-base font-bold"]} style:color={leftColor.toHsl()}>{prompt[0]}</span>
+  <div
+    class={[
+      "absolute bottom-0 -left-4 md:-left-8",
+      "max-w-24 md:max-w-40",
+      "pt-2 md:pt-3",
+      "text-center",
+      "translate-y-full",
+    ]}
+  >
+    <span class={["text-base font-bold md:text-2xl"]} style:color={leftColor.toHsl()}
+      >{prompt[0]}</span
+    >
   </div>
   <div
-    class={["absolute -right-4 bottom-0", "max-w-24", "pt-2", "text-center", "translate-y-full"]}
+    class={[
+      "absolute -right-4 bottom-0 md:-right-8",
+      "max-w-24 md:max-w-40",
+      "pt-2 md:pt-3",
+      "text-center",
+      "translate-y-full",
+    ]}
   >
-    <span class={["text-base font-bold"]} style:color={rightColor.toHsl()}>{prompt[1]}</span>
+    <span class={["text-base font-bold md:text-2xl"]} style:color={rightColor.toHsl()}
+      >{prompt[1]}</span
+    >
   </div>
 
   <!-- Legend for multiple arrows -->
@@ -356,16 +374,18 @@
     <div
       class={[
         "absolute bottom-0 left-1/2",
-        "flex gap-8",
-        "pt-12",
+        "flex gap-8 md:gap-12",
+        "pt-12 md:pt-20",
         "-translate-x-1/2 translate-y-full",
       ]}
     >
       {#each arrows as arrow, i (i)}
         {#if arrow.label}
           <div class={["flex flex-col items-center gap-1"]}>
-            <span class={["text-xs tracking-wide text-gray-400 uppercase"]}>{arrow.label}</span>
-            <span class={["text-2xl font-bold"]} style:color={arrow.color}
+            <span class={["text-xs tracking-wide text-gray-400 uppercase md:text-sm"]}
+              >{arrow.label}</span
+            >
+            <span class={["text-2xl font-bold md:text-5xl"]} style:color={arrow.color}
               >{#if arrow.displayValue !== undefined}{arrow.displayValue}%{/if}</span
             >
           </div>

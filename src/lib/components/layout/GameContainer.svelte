@@ -151,7 +151,7 @@
       "relative",
       orientation === Orientation.Landscape
         ? "my-auto h-full max-h-96 w-full max-w-2xl"
-        : "min-h-0 w-full max-w-lg flex-1",
+        : "min-h-0 w-full max-w-lg flex-1 md:max-w-2xl",
     ]}
   >
     {@render children()}

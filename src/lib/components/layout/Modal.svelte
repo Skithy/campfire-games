@@ -49,20 +49,22 @@
     tabindex="-1"
   >
     <div
-      class="mx-auto w-full max-w-sm rounded-2xl p-0.5 shadow-2xl"
+      class="mx-auto w-full max-w-sm rounded-2xl p-0.5 shadow-2xl md:max-w-lg"
       style:background={gradient}
       style:max-height="85vh"
       transition:scale={{ duration: 200, start: 0.95 }}
     >
       <div class="flex h-full flex-col rounded-[14px] bg-[#1a1a1a]">
-        <div class="flex shrink-0 items-center justify-between border-b border-white/10 px-6 py-4">
-          <h2 class="text-xl font-bold text-white/90">{title}</h2>
+        <div
+          class="flex shrink-0 items-center justify-between border-b border-white/10 px-6 py-4 md:px-8 md:py-5"
+        >
+          <h2 class="text-xl font-bold text-white/90 md:text-2xl">{title}</h2>
           <button
             onclick={handleClose}
             class="text-white/50 transition-colors hover:text-white"
             aria-label="Close"
           >
-            <i class="fa-solid fa-xmark text-2xl"></i>
+            <i class="fa-solid fa-xmark text-2xl md:text-3xl"></i>
           </button>
         </div>
         <div class="flex-1 overflow-y-auto">
